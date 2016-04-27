@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Context>
+	<Resource
+	    name="jdbc/turnos"
+	    auth="Container" 
+	    type="javax.sql.DataSource"
+		driverClassName="com.mysql.jdbc.Driver" 
+		url="jdbc:mysql://raspberrypi:3306/turnos_desarrollo"
+		username="turnos" password="Turnos_turnos"
+		maxTotal="50" maxIdle="15" initialSize="5"
+		maxWaitMillis="10000"/>
+	 
+</Context>
