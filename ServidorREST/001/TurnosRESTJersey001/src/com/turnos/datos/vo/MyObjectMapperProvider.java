@@ -1,4 +1,4 @@
-package com.turnos.datos;
+package com.turnos.datos.vo;
 
 import javax.ws.rs.ext.ContextResolver;
 
