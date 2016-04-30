@@ -36,8 +36,8 @@ public class ResidenciaServicio {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public static Response listaResidencias (
-			@QueryParam("cod_muni") @DefaultValue("") String municipio,
-			@QueryParam("cod_prov") @DefaultValue("") String provincia) {
+			@QueryParam("cod_prov") @DefaultValue("") String provincia,
+			@QueryParam("cod_muni") @DefaultValue("") String municipio) {
 		ErrorBean eb = new ErrorBean();
 		ArrayList<ResidenciaBean> listaResidencias;
 		if (!"".equals(municipio)) {

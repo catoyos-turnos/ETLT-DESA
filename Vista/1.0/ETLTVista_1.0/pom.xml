@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>ETLT</groupId>
-  <artifactId>ETLTServidorREST</artifactId>
+  <artifactId>ETLTVista</artifactId>
   <version>1.0</version>
   <packaging>war</packaging>
-  <name>ETLTServidorREST</name>
+  <name>ETLTVista</name>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -29,21 +29,18 @@
   <dependencies>
   	<dependency>
   		<groupId>ETLT</groupId>
-  		<artifactId>ETLTComun</artifactId>
+  		<artifactId>ETLTClienteAPI</artifactId>
   		<version>1.0</version>
   	</dependency>
   	<dependency>
-  		<groupId>mysql</groupId>
-  		<artifactId>mysql-connector-java</artifactId>
-  		<version>6.0.2</version>
+  		<groupId>javax.servlet.jsp.jstl</groupId>
+  		<artifactId>jstl-api</artifactId>
+  		<version>1.2-rev-1</version>
   	</dependency>
   	<dependency>
-  		<groupId>org.glassfish.jersey.containers</groupId>
-  		<artifactId>jersey-container-servlet</artifactId>
-  		<version>${jersey.version}</version>
+  		<groupId>javax.servlet</groupId>
+  		<artifactId>jstl</artifactId>
+  		<version>1.2</version>
   	</dependency>
   </dependencies>
-  <properties>
-  	<jersey.version>2.22.2</jersey.version>
-  </properties>
 </project>

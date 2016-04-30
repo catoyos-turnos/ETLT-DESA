@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="ETLTVista_1.0">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <dependent-module archiveName="ETLTClienteAPI-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ETLTClienteAPI_1.0/ETLTClienteAPI_1.0">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ETLTComun-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ETLTComun_1.0/ETLTComun_1.0">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="ETLTVista"/>
+        <property name="java-output-path" value="/ETLTVista_1.0/build/classes"/>
+    </wb-module>
+</project-modules>
