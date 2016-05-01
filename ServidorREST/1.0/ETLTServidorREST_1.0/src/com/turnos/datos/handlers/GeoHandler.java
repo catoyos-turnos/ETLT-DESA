@@ -1,9 +1,5 @@
 package com.turnos.datos.handlers;
 
-import java.sql.Connection;
-
-import com.turnos.datos.vo.ErrorBean;
-
 public class GeoHandler extends GenericHandler {
 	private static final String QUERY_GET_GEO_INFO =
 		"SELECT muni.id_municipio as municipioCod, muni.nombre as municipioNombre, "

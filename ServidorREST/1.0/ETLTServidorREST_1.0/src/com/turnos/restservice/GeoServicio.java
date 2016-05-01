@@ -16,6 +16,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.vo.FestivoBean.TipoFiesta;
+import com.turnos.datos.vo.MunicipioBean;
+import com.turnos.datos.vo.PaisBean;
+import com.turnos.datos.vo.ProvinciaBean;
 
 @Path(WebServUtils.PREF_GEO_PATH)
 public class GeoServicio {

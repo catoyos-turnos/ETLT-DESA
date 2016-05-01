@@ -20,10 +20,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.handlers.FestivoHandler;
-import com.turnos.datos.handlers.TurnoTrabajadorDiaHandler;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.FestivoBean;
-import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 import com.turnos.datos.vo.FestivoBean.TipoFiesta;
 
 @Path(WebServUtils.PREF_FEST_PATH)
