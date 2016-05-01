@@ -23,25 +23,23 @@ import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.TrabajadorBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 
-@Path("/res" + ResidenciaServicio.COD_RES_PATH + "/trab")
+@Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH + WebServUtils.PREF_TRAB_PATH)
 public class TrabajadorServicio {
-	public static final String COD_TRAB_PATH = "/{codTrab: [A-Z0-9_]{3,32}}";
-//	public static final String CODS_TRABS_PATH = "/{codsTrabs: ([A-Z0-9_]{3,32},)*[A-Z0-9_]{3,32}}";
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response listaTrabajadores (@PathParam("codRes") String codRes) {
+	public static Response listaTrabajadores (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		//TODO Listar trabajadores de una residencia filtrar por xxx
 		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).build();
 	}
 	
 	@GET
-	@Path(COD_TRAB_PATH)
+	@Path(WebServUtils.COD_TRAB_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getTrabajador (@PathParam("codRes") String codRes,
-			@PathParam("codTrab") String codTrab) {
+	public static Response getTrabajador (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		//TODO get trabajador por ids
 		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTrab).build();
 	}
@@ -51,41 +49,42 @@ public class TrabajadorServicio {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public static Response nuevoTrabajador(TrabajadorBean trabRaw,
-			@PathParam("codRes") String codRes) {
+			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		// TODO borra trabajador
 		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).build();
 	}
 	
 	@PUT
-	@Path(COD_TRAB_PATH)
+	@Path(WebServUtils.COD_TRAB_PATH)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public static Response modTrabajador(TrabajadorBean trabRaw,
-			@PathParam("codRes") String codRes,
-			@PathParam("codTrab") String codTrab) {
+			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		// TODO borra trabajador
 		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTrab).build();
 	}
 	
 	@DELETE
-	@Path(COD_TRAB_PATH)
+	@Path(WebServUtils.COD_TRAB_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public static Response borraTrabajador (@PathParam("codRes") String codRes,
-			@PathParam("codTrab") String codTrab) {
+			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		//TODO borra trabajador
 		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTrab).build();
 	}
 	
 	
 	@GET
-	@Path(COD_TRAB_PATH + "/dia")
+	@Path(WebServUtils.COD_TRAB_PATH + WebServUtils.PREF_DIA_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public Response getHorarioTrabajadorDia(@PathParam("codRes") String codRes,
-			@PathParam("codTrab") String codTrab,
-			@DefaultValue("-1") @QueryParam("fecha") int time) {
+	public Response getHorarioTrabajadorDia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
+			@QueryParam(WebServUtils.Q_PARAM_FECHA)
+			@DefaultValue("-1") int time) {
 		Date fecha = null;
 		try {
 			if (time > 0) {
@@ -108,13 +107,15 @@ public class TrabajadorServicio {
 	}
 
 	@GET
-	@Path(COD_TRAB_PATH + "/horario")
+	@Path(WebServUtils.COD_TRAB_PATH + WebServUtils.PREF_HORARIO_PATH)
 	@Produces(MediaType.TEXT_PLAIN)
 	@Valid
-	public Response getHorarioTrabajadorRango(@PathParam("codRes") String codRes,
-			@PathParam("codTrab") String codTrab,
-			@DefaultValue("-1") @QueryParam("fecha_ini") int time_ini,
-			@DefaultValue("-1") @QueryParam("fecha_fin") int time_fin) {
+	public Response getHorarioTrabajadorRango(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
+			@DefaultValue("-1") int time_ini,
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
+			@DefaultValue("-1") int time_fin) {
 		Date fecha_ini = null;
 		Date fecha_fin = null;
 		try {

@@ -15,26 +15,27 @@ import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.vo.ServicioBean;
 
-@Path("/res" + ResidenciaServicio.COD_RES_PATH + "/turno" + TurnoServicio.COD_TURNO_PATH + "/serv")
+@Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH
+		+ WebServUtils.PREF_TURNO_PATH + WebServUtils.COD_TURNO_PATH
+		+ WebServUtils.PREF_SERV_PATH)
 public class ServicioServicio {
-	public static final String COD_TURNO_PATH = "/{codServ: [0-9]{1,10}}";
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response listaTurnos (@PathParam("codRes") String codRes,
-			@PathParam("codTurno") String codTurno) {
+	public static Response listaTurnos (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		//TODO Listar trabajadores de una residencia filtrar por xxx
 		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTurno).build();
 	}
 	
 	@GET
-	@Path(COD_TURNO_PATH)
+	@Path(WebServUtils.COD_SERV_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getTurno (@PathParam("codRes") String codRes,
-			@PathParam("codTurno") String codTurno,
-			@PathParam("codServ") String codServ) {
+	public static Response getTurno (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
+			@PathParam(WebServUtils.P_PARAM_COD_SERV) String codServ) {
 		//TODO get trabajador por ids
 		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTurno).entity(codServ).build();
 	}
@@ -44,32 +45,32 @@ public class ServicioServicio {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public static Response nuevoTurno(ServicioBean servicioRaw,
-			@PathParam("codRes") String codRes,
-			@PathParam("codTurno") String codTurno) {
+			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		// TODO borra trabajador
 		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTurno).build();
 	}
 	
 	@PUT
-	@Path(COD_TURNO_PATH)
+	@Path(WebServUtils.COD_SERV_PATH)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public static Response modTurno(ServicioBean servicioRaw,
-			@PathParam("codRes") String codRes,
-			@PathParam("codTurno") String codTurno,
-			@PathParam("codServ") String codServ) {
+			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
+			@PathParam(WebServUtils.P_PARAM_COD_SERV) String codServ) {
 		// TODO borra trabajador
 		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTurno).entity(codServ).build();
 	}
 	
 	@DELETE
-	@Path(COD_TURNO_PATH)
+	@Path(WebServUtils.COD_SERV_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response borraTurno(@PathParam("codRes") String codRes,
-			@PathParam("codTurno") String codTurno,
-			@PathParam("codServ") String codServ) {
+	public static Response borraTurno(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
+			@PathParam(WebServUtils.P_PARAM_COD_SERV) String codServ) {
 		//TODO borra trabajador
 		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTurno).entity(codServ).build();
 	}

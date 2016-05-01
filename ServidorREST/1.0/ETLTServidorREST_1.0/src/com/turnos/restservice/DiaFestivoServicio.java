@@ -1,38 +1,110 @@
 package com.turnos.restservice;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
+import com.turnos.datos.handlers.FestivoHandler;
+import com.turnos.datos.handlers.TurnoTrabajadorDiaHandler;
+import com.turnos.datos.vo.ErrorBean;
+import com.turnos.datos.vo.FestivoBean;
+import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 import com.turnos.datos.vo.FestivoBean.TipoFiesta;
 
-@Path("/festivos")
+@Path(WebServUtils.PREF_FEST_PATH)
 public class DiaFestivoServicio {
-	public static final String COD_FESTIVO_PATH = "/{codFest: [0-9]{1,11}}";
 
 	// ---------------------GET-----------------------------------------------
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static String listaDiasFestivos(String codPais, String codProvincia,
-			String codMunicipio, TipoFiesta tipo, int time_ini, int time_fin,
-			int limit, boolean completo) {
-		return null;
+	public static Response listaDiasFestivos(
+			@QueryParam(WebServUtils.Q_PARAM_COD_PAIS)
+			@DefaultValue("") String codPais,
+			@QueryParam(WebServUtils.Q_PARAM_COD_PROV)
+			@DefaultValue("") String codProvincia,
+			@QueryParam(WebServUtils.Q_PARAM_COD_MUNI)
+			@DefaultValue("") String codMunicipio,
+			@QueryParam(WebServUtils.Q_PARAM_TIPO_FIESTA)
+			TipoFiesta tipo,
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
+			@DefaultValue("-1") int time_ini,
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
+			@DefaultValue("-1") int time_fin,
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE)
+			@DefaultValue("-1") int limit,
+			@QueryParam(WebServUtils.Q_PARAM_COMPLETO)
+			@DefaultValue("false") boolean completo) {
+		
+		ErrorBean eb = new ErrorBean();
+		
+		Date fecha_ini = null;
+		Date fecha_fin = null;
+		try {
+			if (time_ini > 0) {
+				fecha_ini = new Date(time_ini * 1000l);
+			}
+			if (time_fin > 0) {
+				fecha_fin = new Date(time_fin * 1000l);
+			}
+			if(fecha_ini == null && fecha_fin == null) {
+				fecha_ini = Calendar.getInstance().getTime();
+			}
+
+			if (limit < 0 || limit > 25) {
+				limit = 25;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		ArrayList<FestivoBean> listaFestivos = null;
+		if (!"".equals(codMunicipio)) {
+			listaFestivos = FestivoHandler.getFestivosMunicipio(null, codMunicipio, tipo, fecha_ini, fecha_fin, limit, completo, eb);
+		} else if (!"".equals(codProvincia)) {
+			listaFestivos = FestivoHandler.getFestivosProvincia(null, codProvincia, tipo, fecha_ini, fecha_fin, limit, completo, eb);
+		} else if (!"".equals(codPais)) {
+			listaFestivos = FestivoHandler.getFestivosPais(null, codPais, tipo, fecha_ini, fecha_fin, limit, completo, eb);
+		} else {
+			//TODO ERROR
+		}
+		
+		if(listaFestivos == null) {
+			return Response.status(eb.getHttpCode()).entity(eb).build();
+		} else {
+			return Response.status(Status.OK).entity(listaFestivos).build();
+		}
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path(COD_FESTIVO_PATH)
+	@Path(WebServUtils.COD_FEST_PATH)
 	@Valid
-	public static String getDiaFestivo(String codFest) {
-		return null;
+	public static Response getDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) String codFest) {
+		ErrorBean eb = new ErrorBean();
+		FestivoBean festivo = FestivoHandler.getFestivo(null, codFest, eb);
+		if(festivo == null) {
+			return Response.status(eb.getHttpCode()).entity(eb).build();
+		} else {
+			return Response.status(Status.OK).entity(festivo).build();
+		}
 	}
 
 	// ---------------------POST----------------------------------------------
@@ -41,7 +113,7 @@ public class DiaFestivoServicio {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Valid
-	public static String nuevoDiaFestivo(String[] festRaw) {
+	public static Response nuevoDiaFestivo(FestivoBean festRaw) {
 		return null;
 	}
 
@@ -50,9 +122,10 @@ public class DiaFestivoServicio {
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path(COD_FESTIVO_PATH)
+	@Path(WebServUtils.COD_FEST_PATH)
 	@Valid
-	public static String modDiaFestivo(String codFest, String[] festRaw) {
+	public static Response modDiaFestivo(FestivoBean festRaw,
+			@PathParam(WebServUtils.P_PARAM_COD_FEST) String codFest) {
 		return null;
 	}
 
@@ -60,9 +133,9 @@ public class DiaFestivoServicio {
 
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path(COD_FESTIVO_PATH)
+	@Path(WebServUtils.COD_FEST_PATH)
 	@Valid
-	public static String borraDiaFestivo(String codFest) {
+	public static Response borraDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) String codFest) {
 		return null;
 	}
 

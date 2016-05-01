@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.FestivoBean;
+import com.turnos.datos.vo.FestivoBean.TipoFiesta;
 
 //80xxxx
 public class FestivoHandler extends GenericHandler {
@@ -33,7 +34,7 @@ public class FestivoHandler extends GenericHandler {
 				+ "LIMIT ?";
 	
 	//00xx
-	public static ArrayList<FestivoBean> getFestivos(Connection conexion,
+	public static ArrayList<FestivoBean> getFestivosResidencia(Connection conexion,
 			String codigo, Date fecha_ini, Date fecha_fin, int limit,
 			ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
@@ -106,5 +107,30 @@ public class FestivoHandler extends GenericHandler {
 		}
 		return listaFests;
 	}
+
+	public static ArrayList<FestivoBean> getFestivosMunicipio(Connection conexion, String codMunicipio, TipoFiesta tipo,
+			Date fecha_ini, Date fecha_fin, int limit, boolean completo, ErrorBean errorBean) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static ArrayList<FestivoBean> getFestivosProvincia(Connection conexion, String codProvincia, TipoFiesta tipo,
+			Date fecha_ini, Date fecha_fin, int limit, boolean completo, ErrorBean errorBean) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static ArrayList<FestivoBean> getFestivosPais(Connection conexion, String codProvincia, TipoFiesta tipo,
+			Date fecha_ini, Date fecha_fin, int limit, boolean completo, ErrorBean errorBean) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static FestivoBean getFestivo(Connection conexion, String codFest, ErrorBean errorBean) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 
 }

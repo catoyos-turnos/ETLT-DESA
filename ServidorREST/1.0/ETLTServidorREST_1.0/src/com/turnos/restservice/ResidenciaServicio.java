@@ -28,16 +28,15 @@ import com.turnos.datos.vo.FestivoBean;
 import com.turnos.datos.vo.ResidenciaBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 
-@Path("/res")
+@Path(WebServUtils.PREF_RES_PATH)
 public class ResidenciaServicio {
-	public static final String COD_RES_PATH = "/{codRes: [A-Z0-9_]{3,32}}";
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public static Response listaResidencias (
-			@QueryParam("cod_prov") @DefaultValue("") String provincia,
-			@QueryParam("cod_muni") @DefaultValue("") String municipio) {
+			@QueryParam(WebServUtils.Q_PARAM_COD_PROV) @DefaultValue("") String provincia,
+			@QueryParam(WebServUtils.Q_PARAM_COD_PROV) @DefaultValue("") String municipio) {
 		ErrorBean eb = new ErrorBean();
 		ArrayList<ResidenciaBean> listaResidencias;
 		if (!"".equals(municipio)) {
@@ -60,10 +59,10 @@ public class ResidenciaServicio {
 	}
 	
 	@GET
-	@Path(COD_RES_PATH)
+	@Path(WebServUtils.COD_RES_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getResidencia(@PathParam("codRes") String codRes) {
+	public static Response getResidencia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
 		ResidenciaBean residencia = ResidenciaHandler.getResidencia(null, codRes, eb);
 		if(residencia == null) {
@@ -89,11 +88,12 @@ public class ResidenciaServicio {
 	}
 	
 	@PUT
-	@Path(COD_RES_PATH)
+	@Path(WebServUtils.COD_RES_PATH)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response modResidencia(ResidenciaBean resRaw, @PathParam("codRes") String codRes) {
+	public static Response modResidencia(ResidenciaBean resRaw,
+			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		System.out.println(resRaw);
 		System.out.println(codRes);
 		ErrorBean eb = new ErrorBean();
@@ -107,10 +107,10 @@ public class ResidenciaServicio {
 	}
 	
 	@DELETE
-	@Path(COD_RES_PATH)
+	@Path(WebServUtils.COD_RES_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response borraResidencia(@PathParam("codRes") String codRes) {
+	public static Response borraResidencia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
 		boolean borrado = ResidenciaHandler.deleteResidencia(null, codRes, eb);
 		
@@ -124,13 +124,16 @@ public class ResidenciaServicio {
 	
 	
 	@GET
-	@Path(COD_RES_PATH + "/festivos")
+	@Path(WebServUtils.COD_RES_PATH + WebServUtils.PREF_FEST_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getDiasFestivos(@PathParam("codRes") String codRes,
-			@DefaultValue("-1") @QueryParam("fecha_ini") int time_ini,
-			@DefaultValue("-1") @QueryParam("fecha_fin") int time_fin, 
-			@DefaultValue("-1") @QueryParam("limite") int limit) {
+	public static Response getDiasFestivos(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
+			@DefaultValue("-1") int time_ini,
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
+			@DefaultValue("-1") int time_fin,
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE)
+			@DefaultValue("-1") int limit) {
 
 		ErrorBean eb = new ErrorBean();
 		Date fecha_ini = null;
@@ -154,7 +157,7 @@ public class ResidenciaServicio {
 			e.printStackTrace();
 		}
 		
-		ArrayList<FestivoBean> listaFestivos = FestivoHandler.getFestivos(null, codRes, fecha_ini, fecha_fin, limit, eb);
+		ArrayList<FestivoBean> listaFestivos = FestivoHandler.getFestivosResidencia(null, codRes, fecha_ini, fecha_fin, limit, eb);
 		if(listaFestivos == null) {
 			return Response.status(eb.getHttpCode()).entity(eb).build();
 		} else {
@@ -163,11 +166,13 @@ public class ResidenciaServicio {
 	}
 	
 	@GET
-	@Path(COD_RES_PATH + "/horario")
+	@Path(WebServUtils.COD_RES_PATH + WebServUtils.PREF_HORARIO_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getHorarioCompletoDia(@PathParam("codRes") String codRes,
-			@DefaultValue("-1") @QueryParam("fecha") int time) {
+	public static Response getHorarioCompletoDia(
+			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+			@QueryParam(WebServUtils.Q_PARAM_FECHA)
+			@DefaultValue("-1") int time) {
 		Date fecha = null;
 		try {
 			if (time > 0) {

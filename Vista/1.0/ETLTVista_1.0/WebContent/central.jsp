@@ -3,16 +3,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>TURNOS</title>
-</head>
+<%@ include file="default-head.jsp" %>
 <body>
+<%@ include file="plantilla-cabecera.jsp" %>
+<%@ include file="plantilla-navbar.jsp" %>
 	<h2>mi residencia</h2>
 	<p><a href="res/${residencia.codigo}">${residencia.nombre} (${residencia.ciudad})</a></p>
 	<h2>mi semana</h2>
 	<table border="1">
-	<tbody>
+	<tbody>	
 <c:set var="fechaHoy" value="${sdfIn.format(hoy)}" />
 <c:forEach var="ts" items="${servicios}" >
 <c:set var="fechaIn" value="${sdfIn.format(ts.fecha)}" /><c:set var="fechaEx" value="${sdfEx.format(ts.fecha)}" />
@@ -31,5 +30,6 @@
 	<p>&nbsp;</p>
 	<p><a href="horario">HORARIO COMPLETO</a></p>
 
+<%@ include file="plantilla-pie.jsp" %>
 </body>
 </html>
