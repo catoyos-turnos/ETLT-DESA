@@ -4,6 +4,7 @@ import javax.ws.rs.ext.ContextResolver;
 
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
@@ -21,7 +22,9 @@ public class ETLTObjectMapperProvider implements ContextResolver<ObjectMapper> {
 	}
 
 	private static ObjectMapper createDefaultMapper() {
-		return new ObjectMapper().setAnnotationIntrospector(createJaxbJacksonAnnotationIntrospector());
+		ObjectMapper om = new ObjectMapper().setAnnotationIntrospector(createJaxbJacksonAnnotationIntrospector());
+		om.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
+		return om;
 	}
 
 	private static AnnotationIntrospector createJaxbJacksonAnnotationIntrospector() {

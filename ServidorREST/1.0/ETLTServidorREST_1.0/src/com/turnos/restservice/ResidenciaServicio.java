@@ -36,20 +36,21 @@ public class ResidenciaServicio {
 	@Valid
 	public static Response listaResidencias (
 			@QueryParam(WebServUtils.Q_PARAM_COD_PROV) @DefaultValue("") String provincia,
-			@QueryParam(WebServUtils.Q_PARAM_COD_PROV) @DefaultValue("") String municipio) {
+			@QueryParam(WebServUtils.Q_PARAM_COD_MUNI) @DefaultValue("") String municipio,
+			@QueryParam(WebServUtils.Q_PARAM_INC_GEO) @DefaultValue("false") boolean includeGeo) {
 		ErrorBean eb = new ErrorBean();
 		ArrayList<ResidenciaBean> listaResidencias;
 		if (!"".equals(municipio)) {
 			String[] busqueda = { municipio };
 			listaResidencias = ResidenciaHandler
-					.listResidencias(null, TipoBusqueda.MUNICIPIO, busqueda, eb);
+					.listResidencias(null, TipoBusqueda.MUNICIPIO, busqueda, includeGeo, eb);
 		} else if (!"".equals(provincia)) {
 			String[] busqueda = { provincia };
 			listaResidencias = ResidenciaHandler
-					.listResidencias(null, TipoBusqueda.PROVINCIA, busqueda, eb);
+					.listResidencias(null, TipoBusqueda.PROVINCIA, busqueda, includeGeo, eb);
 		} else {
 			listaResidencias = ResidenciaHandler
-					.listResidencias(null, TipoBusqueda.TODOS, null, eb);
+					.listResidencias(null, TipoBusqueda.TODOS, null, includeGeo, eb);
 		}
 		if(listaResidencias == null) {
 			return Response.status(eb.getHttpCode()).entity(eb).build();
@@ -64,7 +65,7 @@ public class ResidenciaServicio {
 	@Valid
 	public static Response getResidencia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
-		ResidenciaBean residencia = ResidenciaHandler.getResidencia(null, codRes, eb);
+		ResidenciaBean residencia = ResidenciaHandler.getResidencia(null, codRes, true, eb);
 		if(residencia == null) {
 			return Response.status(eb.getHttpCode()).entity(eb).build();
 		} else {
@@ -94,8 +95,6 @@ public class ResidenciaServicio {
 	@Valid
 	public static Response modResidencia(ResidenciaBean resRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
-		System.out.println(resRaw);
-		System.out.println(codRes);
 		ErrorBean eb = new ErrorBean();
 		ResidenciaBean residencia = ResidenciaHandler.updateResidencia(null, codRes, resRaw, eb);
 		
@@ -157,7 +156,7 @@ public class ResidenciaServicio {
 			e.printStackTrace();
 		}
 		
-		ArrayList<FestivoBean> listaFestivos = FestivoHandler.getFestivosResidencia(null, codRes, fecha_ini, fecha_fin, limit, eb);
+		ArrayList<FestivoBean> listaFestivos = FestivoHandler.getFestivosResidencia(null, codRes, fecha_ini, fecha_fin, limit, false, eb);
 		if(listaFestivos == null) {
 			return Response.status(eb.getHttpCode()).entity(eb).build();
 		} else {

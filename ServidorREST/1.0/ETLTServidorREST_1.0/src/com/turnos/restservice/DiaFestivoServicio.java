@@ -40,7 +40,7 @@ public class DiaFestivoServicio {
 			@QueryParam(WebServUtils.Q_PARAM_COD_MUNI)
 			@DefaultValue("") String codMunicipio,
 			@QueryParam(WebServUtils.Q_PARAM_TIPO_FIESTA)
-			TipoFiesta tipo,
+			String tipoStr,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
 			@DefaultValue("-1") int time_ini,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
@@ -48,9 +48,12 @@ public class DiaFestivoServicio {
 			@QueryParam(WebServUtils.Q_PARAM_LIMITE)
 			@DefaultValue("-1") int limit,
 			@QueryParam(WebServUtils.Q_PARAM_COMPLETO)
-			@DefaultValue("false") boolean completo) {
+			@DefaultValue("false") boolean completo,
+			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
+			@DefaultValue("false") boolean incGeo) {
 		
 		ErrorBean eb = new ErrorBean();
+		TipoFiesta tipo = TipoFiesta.safeValueOf(tipoStr);
 		
 		Date fecha_ini = null;
 		Date fecha_fin = null;
@@ -75,11 +78,11 @@ public class DiaFestivoServicio {
 
 		ArrayList<FestivoBean> listaFestivos = null;
 		if (!"".equals(codMunicipio)) {
-			listaFestivos = FestivoHandler.getFestivosMunicipio(null, codMunicipio, tipo, fecha_ini, fecha_fin, limit, completo, eb);
+			listaFestivos = FestivoHandler.getFestivosMunicipio(null, codMunicipio, tipo, fecha_ini, fecha_fin, limit, completo, incGeo, eb);
 		} else if (!"".equals(codProvincia)) {
-			listaFestivos = FestivoHandler.getFestivosProvincia(null, codProvincia, tipo, fecha_ini, fecha_fin, limit, completo, eb);
+			listaFestivos = FestivoHandler.getFestivosProvincia(null, codProvincia, tipo, fecha_ini, fecha_fin, limit, completo, incGeo, eb);
 		} else if (!"".equals(codPais)) {
-			listaFestivos = FestivoHandler.getFestivosPais(null, codPais, tipo, fecha_ini, fecha_fin, limit, completo, eb);
+			listaFestivos = FestivoHandler.getFestivosPais(null, codPais, tipo, fecha_ini, fecha_fin, limit, completo, incGeo, eb);
 		} else {
 			//TODO ERROR
 		}
@@ -95,9 +98,11 @@ public class DiaFestivoServicio {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.COD_FEST_PATH)
 	@Valid
-	public static Response getDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) String codFest) {
+	public static Response getDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest,
+			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
+			@DefaultValue("false") boolean incGeo) {
 		ErrorBean eb = new ErrorBean();
-		FestivoBean festivo = FestivoHandler.getFestivo(null, codFest, eb);
+		FestivoBean festivo = FestivoHandler.getFestivo(null, codFest, incGeo, eb);
 		if(festivo == null) {
 			return Response.status(eb.getHttpCode()).entity(eb).build();
 		} else {
@@ -112,7 +117,14 @@ public class DiaFestivoServicio {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Valid
 	public static Response nuevoDiaFestivo(FestivoBean festRaw) {
-		return null;
+		ErrorBean eb = new ErrorBean();
+		FestivoBean festivo = FestivoHandler.insertFestivo(null, festRaw, eb);
+		
+		if(festivo == null) {
+			return Response.status(eb.getHttpCode()).entity(eb).build();
+		} else {
+			return Response.status(Status.CREATED).entity(festivo).build();
+		}
 	}
 
 	// ---------------------PUT-----------------------------------------------
@@ -123,8 +135,15 @@ public class DiaFestivoServicio {
 	@Path(WebServUtils.COD_FEST_PATH)
 	@Valid
 	public static Response modDiaFestivo(FestivoBean festRaw,
-			@PathParam(WebServUtils.P_PARAM_COD_FEST) String codFest) {
-		return null;
+			@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
+		ErrorBean eb = new ErrorBean();
+		FestivoBean festivo = FestivoHandler.updateFestivo(null, codFest, festRaw, eb);
+		
+		if(festivo == null) {
+			return Response.status(eb.getHttpCode()).entity(eb).build();
+		} else {
+			return Response.status(Status.ACCEPTED).entity(festivo).build();
+		}
 	}
 
 	// ---------------------DELETE--------------------------------------------
@@ -133,10 +152,22 @@ public class DiaFestivoServicio {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.COD_FEST_PATH)
 	@Valid
-	public static Response borraDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) String codFest) {
-		return null;
+	public static Response borraDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
+		ErrorBean eb = new ErrorBean();
+		boolean borrado = FestivoHandler.deleteFestivo(null, codFest, eb);
+		
+		if(borrado) {
+			return Response.status(Status.ACCEPTED).build();
+		} else {
+			return Response.status(eb.getHttpCode()).entity(eb).build();
+		}
 	}
 
 	// ---------------------misc.---------------------------------------------
 
+	
+
+	
+	
+	
 }

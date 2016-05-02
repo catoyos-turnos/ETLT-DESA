@@ -13,7 +13,7 @@ import com.turnos.datos.vo.TrabajadorBean;
 import com.turnos.datos.vo.TurnoBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 
-public class TurnoTrabajadorDiaHandler {
+public class TurnoTrabajadorDiaHandler extends GenericHandler {
 	private static final String QUERY_GET_LISTA_TURNOS = 
 			"SELECT tr.codigo as codTrab, tr.nombre as nomTrab, tr.apellidos as apeTrab, tu.codigo as codTurno, tu.tipo as tipoTurno, "
 					+ "se.id_servicio as idServ, se.hora_pres as horaPresServ, se.hora_ret as horaRetServ, se.tiempo_toma as tiempoToma, se.tiempo_deje as tiempoDeje, "
@@ -47,7 +47,7 @@ public class TurnoTrabajadorDiaHandler {
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		
 		ArrayList<TurnoTrabajadorDiaBean> listaTurnos = null;
-		java.sql.Date sqldate = new java.sql.Date(fecha.getTime());
+		java.sql.Date sqldate = javaDateToSQLDate(fecha);
 		String[] infoDia = GenericHandler.getInfoDia(nconexion, codRes, sqldate, errorBean);
 		PreparedStatement ps;
 		ResultSet rs;
@@ -117,7 +117,7 @@ public class TurnoTrabajadorDiaHandler {
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		
 		TurnoTrabajadorDiaBean ttd = null;
-		java.sql.Date sqldate = new java.sql.Date(fecha.getTime());
+		java.sql.Date sqldate = javaDateToSQLDate(fecha);
 		String[] infoDia = GenericHandler.getInfoDia(nconexion, codRes, sqldate, errorBean);
 		PreparedStatement ps;
 		ResultSet rs;

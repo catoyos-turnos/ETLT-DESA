@@ -4,10 +4,13 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @XmlRootElement(name = "turno_dia")
 @JsonRootName(value = "turno_dia")
+@JsonInclude(Include.NON_NULL)
 public class TurnoTrabajadorDiaBean {
 	private TrabajadorBean trabajador;
 	private ServicioBean servicio;

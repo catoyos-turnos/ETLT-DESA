@@ -4,13 +4,20 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @XmlRootElement(name = "festivo")
 @JsonRootName(value = "festivo")
+@JsonInclude(Include.NON_NULL)
 public class FestivoBean {
 	public enum TipoFiesta {
-		NACIONAL, AUTONOMICA, LOCAL
+		NACIONAL, AUTONOMICA, LOCAL;
+		public static TipoFiesta safeValueOf(String arg) {
+			try{return valueOf(arg);}
+			catch(Exception e){return null;}
+		}
 	};
 
 	private int codigo;
@@ -24,7 +31,6 @@ public class FestivoBean {
 	private String provinciaNombre;
 	private String paisCod;
 	private String paisNombre;
-	private String tz;
 
 	public int getCodigo() {
 		return codigo;
@@ -59,11 +65,12 @@ public class FestivoBean {
 	}
 
 	public String getTipo() {
-		return tipo.toString();
+		if (tipo == null) return null;
+		return tipo.name();
 	}
 
 	public void setTipo(String tipo) {
-		this.tipo = TipoFiesta.valueOf(tipo);
+		this.tipo = TipoFiesta.safeValueOf(tipo);
 	}
 
 	public String getMunicipioCod() {
@@ -112,14 +119,6 @@ public class FestivoBean {
 
 	public void setPaisNombre(String paisNombre) {
 		this.paisNombre = paisNombre;
-	}
-
-	public String getTZ() {
-		return tz;
-	}
-
-	public void setTZ(String tz) {
-		this.tz = tz;
 	}
 
 }

@@ -52,6 +52,7 @@ public class WebServUtils {
 	public static final String Q_PARAM_TIEMPO_FIN = "tiempo_fin";
 	public static final String Q_PARAM_LIMITE = "limite";
 	public static final String Q_PARAM_COMPLETO = "completo";
+	public static final String Q_PARAM_INC_GEO = "inc_geo";
 	
 	
 	public static Date getFecha(int anio, int mes, int dia) {

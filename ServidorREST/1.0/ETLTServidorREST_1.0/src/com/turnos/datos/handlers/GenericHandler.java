@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.regex.Pattern;
 
@@ -19,6 +20,18 @@ public class GenericHandler {
 	private static final String QUERY_GET_INFO_DIA = "SELECT get_info_residencia_dia(?, ?) AS infodia";
 	private static final String QUERY_GET_INFO_RANGO_DIAS = "SELECT get_info_residencia_rango_dias(?, ?, ?) AS infodias";
 
+
+	
+	protected static java.sql.Date javaDateToSQLDate(Date fecha) {
+		if(fecha == null) return null;
+		return new java.sql.Date(fecha.getTime());
+	}
+	
+	protected static Date sqlDateToJavaDate(java.sql.Date fecha) {
+		if(fecha == null) return null;
+		return new Date(fecha.getTime());
+	}
+	
 	protected static Connection aseguraConexion(Connection conexion) {
 		boolean nuevaConexion = (conexion == null);
 		if (!nuevaConexion) {
