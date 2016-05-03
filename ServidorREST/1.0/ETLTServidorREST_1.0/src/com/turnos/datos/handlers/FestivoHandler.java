@@ -509,7 +509,7 @@ public class FestivoHandler extends GenericHandler {
 			ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(conexion);
+		boolean aut = autenticar(nconexion);
 		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57800600");
@@ -532,7 +532,7 @@ public class FestivoHandler extends GenericHandler {
 				int c = ps.executeUpdate();
 				if (c > 0 && ps.getGeneratedKeys().next()) {
 					int codigo = ps.getGeneratedKeys().getInt(1);
-					fest = FestivoHandler.getFestivo(conexion, codigo, false, errorBean);
+					fest = FestivoHandler.getFestivo(nconexion, codigo, false, errorBean);
 					if(fest == null) {
 						errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
 						errorBean.updateErrorCode("69800603");
@@ -562,7 +562,7 @@ public class FestivoHandler extends GenericHandler {
 			FestivoBean festRaw, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(conexion);
+		boolean aut = autenticar(nconexion);
 		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57800700");
@@ -666,7 +666,7 @@ public class FestivoHandler extends GenericHandler {
 			ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(conexion);
+		boolean aut = autenticar(nconexion);
 		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57800800");

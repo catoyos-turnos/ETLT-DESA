@@ -35,11 +35,12 @@ public class ResidenciaServicio {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public static Response listaResidencias (
+			@QueryParam(WebServUtils.Q_PARAM_COD_PAIS) @DefaultValue("") String pais,
 			@QueryParam(WebServUtils.Q_PARAM_COD_PROV) @DefaultValue("") String provincia,
 			@QueryParam(WebServUtils.Q_PARAM_COD_MUNI) @DefaultValue("") String municipio,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO) @DefaultValue("false") boolean includeGeo) {
 		ErrorBean eb = new ErrorBean();
-		ArrayList<ResidenciaBean> listaResidencias;
+		ArrayList<ResidenciaBean> listaResidencias = null;
 		if (!"".equals(municipio)) {
 			String[] busqueda = { municipio };
 			listaResidencias = ResidenciaHandler
@@ -48,10 +49,14 @@ public class ResidenciaServicio {
 			String[] busqueda = { provincia };
 			listaResidencias = ResidenciaHandler
 					.listResidencias(null, TipoBusqueda.PROVINCIA, busqueda, includeGeo, eb);
-		} else {
+		} else if (!"".equals(pais)) {
+			String[] busqueda = { pais };
 			listaResidencias = ResidenciaHandler
-					.listResidencias(null, TipoBusqueda.TODOS, null, includeGeo, eb);
+					.listResidencias(null, TipoBusqueda.PAIS, busqueda, includeGeo, eb);
+		} else {
+			//TODO error
 		}
+		
 		if(listaResidencias == null) {
 			return Response.status(eb.getHttpCode()).entity(eb).build();
 		} else {

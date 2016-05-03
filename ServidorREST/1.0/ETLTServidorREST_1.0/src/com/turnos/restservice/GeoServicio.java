@@ -1,5 +1,7 @@
 package com.turnos.restservice;
 
+import java.util.ArrayList;
+
 import javax.validation.Valid;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -11,7 +13,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.turnos.datos.handlers.GeoHandler;
+import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.FestivoBean.TipoFiesta;
+import com.turnos.datos.vo.MunicipioBean;
+import com.turnos.datos.vo.PaisBean;
+import com.turnos.datos.vo.ProvinciaBean;
 
 @Path(WebServUtils.PREF_GEO_PATH)
 public class GeoServicio {
@@ -23,7 +30,14 @@ public class GeoServicio {
 	@Path(WebServUtils.PREF_PAIS_PATH)
 	@Valid
 	public static Response listaPaises() {
-		return Response.status(Status.NOT_IMPLEMENTED).build();
+		ErrorBean errorBean = new ErrorBean();
+		ArrayList<PaisBean> listaPaises = GeoHandler.listPaises(null, errorBean);
+		
+		if(listaPaises == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.OK).entity(listaPaises).build();
+		}
 	}
 
 	@GET
@@ -31,7 +45,13 @@ public class GeoServicio {
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH)
 	@Valid
 	public static Response getPais(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais) {
-		return Response.status(Status.NOT_IMPLEMENTED).build();
+		ErrorBean errorBean = new ErrorBean();
+		PaisBean pais = GeoHandler.getPais(null, codPais, errorBean);
+		if(pais == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.OK).entity(pais).build();
+		}
 	}
 
 	@GET
@@ -40,7 +60,14 @@ public class GeoServicio {
 			+ WebServUtils.PREF_PROV_PATH)
 	@Valid
 	public static Response listaProvincias(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais) {
-		return Response.status(Status.NOT_IMPLEMENTED).build();
+		ErrorBean errorBean = new ErrorBean();
+		ArrayList<ProvinciaBean> listaProvincias = GeoHandler.listProvincias(null, codPais, errorBean);
+
+		if(listaProvincias == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.OK).entity(listaProvincias).build();
+		}
 	}
 
 	@GET
@@ -50,7 +77,13 @@ public class GeoServicio {
 	@Valid
 	public static Response getProvincia(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia) {
-		return Response.status(Status.NOT_IMPLEMENTED).build();
+		ErrorBean errorBean = new ErrorBean();
+		ProvinciaBean provincia = GeoHandler.getProvincia(null, codProvincia, errorBean);
+		if(provincia == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.OK).entity(provincia).build();
+		}
 	}
 
 	@GET
@@ -61,7 +94,14 @@ public class GeoServicio {
 	@Valid
 	public static Response listaMunicipios(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia) {
-		return Response.status(Status.NOT_IMPLEMENTED).build();
+		ErrorBean errorBean = new ErrorBean();
+		ArrayList<MunicipioBean> listaMunicipios = GeoHandler.listMunicipios(null, codProvincia, errorBean);
+
+		if(listaMunicipios == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.OK).entity(listaMunicipios).build();
+		}
 	}
 
 	@GET
@@ -73,7 +113,13 @@ public class GeoServicio {
 	public static Response getMunicipio(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
 			@PathParam(WebServUtils.P_PARAM_COD_MUNI) String codMunicipio) {
-		return Response.status(Status.NOT_IMPLEMENTED).build();
+		ErrorBean errorBean = new ErrorBean();
+		MunicipioBean municipio = GeoHandler.getMunicipio(null, codMunicipio, errorBean);
+		if(municipio == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.OK).entity(municipio).build();
+		}
 	}
 
 	// ---------------------misc.---------------------------------------------
@@ -148,6 +194,18 @@ public class GeoServicio {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH
+			+ WebServUtils.PREF_RES_PATH)
+	@Valid
+	public static Response getResidenciasPais(
+			@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
+			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
+			@DefaultValue("false") boolean incGeo) {
+		return ResidenciaServicio.listaResidencias(codPais, null, null, incGeo);
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH
 			+ WebServUtils.PREF_PROV_PATH + WebServUtils.COD_PROV_PATH
 			+ WebServUtils.PREF_RES_PATH)
 	@Valid
@@ -156,7 +214,7 @@ public class GeoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo) {
-		return ResidenciaServicio.listaResidencias(codProvincia, "", incGeo);
+		return ResidenciaServicio.listaResidencias(codPais, codProvincia, null, incGeo);
 	}
 
 	@GET
@@ -172,7 +230,7 @@ public class GeoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_MUNI) String codMunicipio,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo) {
-		return ResidenciaServicio.listaResidencias(codProvincia, codMunicipio, incGeo);
+		return ResidenciaServicio.listaResidencias(codPais, codProvincia, codMunicipio, incGeo);
 	}
 
 }

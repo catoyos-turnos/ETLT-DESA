@@ -20,6 +20,7 @@ public class WebServUtils {
 	public static final String PREF_TURNO_PATH = "/turno";
 	public static final String COD_TURNO_PATH = "/{codTurno: [A-Z0-9_]{3,32}}";
 	public static final String P_PARAM_COD_TURNO  = "codTurno";
+	public static final String Q_PARAM_TIPO_TURNO = "tipo_fiesta";
 	
 	public static final String PREF_SERV_PATH = "/serv";
 	public static final String COD_SERV_PATH = "/{codServ: [0-9]{1,11}}";

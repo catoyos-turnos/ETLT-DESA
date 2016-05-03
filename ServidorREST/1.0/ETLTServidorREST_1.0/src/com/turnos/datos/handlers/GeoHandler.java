@@ -126,7 +126,7 @@ public class GeoHandler extends GenericHandler {
 	}
 	
 	//03xx
-	public static ArrayList<ProvinciaBean> listProvincia(Connection conexion, String codPais, ErrorBean errorBean) {
+	public static ArrayList<ProvinciaBean> listProvincias(Connection conexion, String codPais, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 

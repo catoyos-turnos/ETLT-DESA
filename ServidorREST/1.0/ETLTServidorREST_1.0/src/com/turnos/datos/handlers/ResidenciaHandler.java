@@ -14,13 +14,14 @@ import com.turnos.datos.vo.ResidenciaBean;
 //70xxxx
 public class ResidenciaHandler extends GenericHandler {
 
-	public static enum TipoBusqueda{MUNICIPIO, PROVINCIA, TODOS};
+	public static enum TipoBusqueda{MUNICIPIO, PROVINCIA, PAIS};
 
 	private static final String QUERY_RESIDENCIA_EXISTS_COD =
 			"SELECT count(*) as existe FROM residencia res WHERE res.codigo=?";
 
 	private static final String QUERY_GET_RESIDENCIA_COD =
-		"SELECT res.codigo, res.nombre, res.descripcion, res.ciudad "
+		"SELECT res.codigo, res.nombre, res.descripcion, res.ciudad, "
+		+ "res.id_municipio as municipioCod "
 		+ "FROM residencia res WHERE res.codigo=?";
 	
 	private static final String QUERY_GET_RESIDENCIA_COD_GEO =
@@ -35,7 +36,8 @@ public class ResidenciaHandler extends GenericHandler {
 		+ "WHERE res.codigo=?";
 	
 	private static final String QUERY_GET_LISTA_RESIDENCIAS_MUNI = 
-		"SELECT res.codigo, res.nombre, res.descripcion, res.ciudad "
+		"SELECT res.codigo, res.nombre, res.descripcion, res.ciudad, "
+		+ "res.id_municipio as municipioCod "
 		+ "FROM residencia res WHERE res.id_municipio=? "
 		+ "ORDER BY res.id_municipio, res.codigo";
 	
@@ -52,7 +54,8 @@ public class ResidenciaHandler extends GenericHandler {
 		+ "ORDER BY res.id_municipio, res.codigo";
 	
 	private static final String QUERY_GET_LISTA_RESIDENCIAS_PROV = 
-		"SELECT res.codigo, res.nombre, res.descripcion, res.ciudad "
+		"SELECT res.codigo, res.nombre, res.descripcion, res.ciudad, "
+		+ "res.id_municipio as municipioCod "
 		+ "FROM residencia res "
 			+ "INNER JOIN geo_municipio muni ON res.id_municipio=muni.id_municipio "
 			+ "INNER JOIN geo_provincia prov ON muni.id_provincia=prov.id_provincia "
@@ -71,12 +74,17 @@ public class ResidenciaHandler extends GenericHandler {
 		+ "WHERE prov.id_provincia=? "
 		+ "ORDER BY res.id_municipio, res.codigo";
 	
-	private static final String QUERY_GET_LISTA_RESIDENCIAS = 
-		"SELECT res.codigo, res.nombre, res.descripcion, res.ciudad "
+	private static final String QUERY_GET_LISTA_RESIDENCIAS_PAIS = 
+		"SELECT res.codigo, res.nombre, res.descripcion, res.ciudad, "
+			+ "res.id_municipio as municipioCod "
 		+ "FROM residencia res "
+			+ "INNER JOIN geo_municipio muni ON res.id_municipio=muni.id_municipio "
+			+ "INNER JOIN geo_provincia prov ON muni.id_provincia=prov.id_provincia "
+			+ "INNER JOIN geo_pais pais ON muni.cod_pais=pais.cod_pais "
+		+ "WHERE pais.cod_pais=? "
 		+ "ORDER BY res.id_municipio, res.codigo";
 	
-	private static final String QUERY_GET_LISTA_RESIDENCIAS_GEO = 
+	private static final String QUERY_GET_LISTA_RESIDENCIAS_PAIS_GEO = 
 		"SELECT res.codigo, res.nombre, res.descripcion, res.ciudad, "
 				+ "muni.id_municipio as municipioCod, muni.nombre as municipioNombre, "
 				+ "prov.id_provincia as provinciaCod, prov.provincia as provinciaNombre, "
@@ -85,6 +93,7 @@ public class ResidenciaHandler extends GenericHandler {
 			+ "INNER JOIN geo_municipio muni ON res.id_municipio=muni.id_municipio "
 			+ "INNER JOIN geo_provincia prov ON muni.id_provincia=prov.id_provincia "
 			+ "INNER JOIN geo_pais pais ON muni.cod_pais=pais.cod_pais "
+		+ "WHERE pais.cod_pais=? "
 		+ "ORDER BY res.id_municipio, res.codigo";
 
 	private static final String UPDATE_INSERT_NUEVA_RESIDENCIA =
@@ -205,12 +214,13 @@ public class ResidenciaHandler extends GenericHandler {
 				}
 				ps.setString(1, busqueda[0]);
 				break;
-			case TODOS:
+			case PAIS:
 				if(includeGeo) {
-					ps = nconexion.prepareStatement(QUERY_GET_LISTA_RESIDENCIAS_GEO);
+					ps = nconexion.prepareStatement(QUERY_GET_LISTA_RESIDENCIAS_PAIS_GEO);
 				} else {
-					ps = nconexion.prepareStatement(QUERY_GET_LISTA_RESIDENCIAS);
+					ps = nconexion.prepareStatement(QUERY_GET_LISTA_RESIDENCIAS_PAIS);
 				}
+				ps.setString(1, busqueda[0]);
 				break;
 			default:
 				ps = null;
@@ -226,8 +236,8 @@ public class ResidenciaHandler extends GenericHandler {
 					res.setNombre(rs.getString("nombre"));
 					res.setDescripcion(rs.getString("descripcion"));
 					res.setCiudad(rs.getString("ciudad"));
+					res.setMunicipioCod(rs.getString("municipioCod"));
 					if(includeGeo) {
-						res.setMunicipioCod(rs.getString("municipioCod"));
 						res.setMunicipioNombre(rs.getString("municipioNombre"));
 						res.setProvinciaCod(rs.getString("provinciaCod"));
 						res.setProvinciaNombre(rs.getString("provinciaNombre"));
@@ -258,7 +268,7 @@ public class ResidenciaHandler extends GenericHandler {
 	public static ResidenciaBean insertResidencia(Connection conexion, ResidenciaBean resRaw, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(conexion);
+		boolean aut = autenticar(nconexion);
 		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57700300");
@@ -290,7 +300,7 @@ public class ResidenciaHandler extends GenericHandler {
 				ps.setString(5, resRaw.getMunicipioCod());
 				int c = ps.executeUpdate();
 				if (c > 0) {
-					res = getResidencia(conexion, codigo, true, errorBean);
+					res = getResidencia(nconexion, codigo, true, errorBean);
 					if(res == null) {
 						errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
 						errorBean.updateErrorCode("69700304");
@@ -320,7 +330,7 @@ public class ResidenciaHandler extends GenericHandler {
 			ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(conexion);
+		boolean aut = autenticar(nconexion);
 		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57700400");
@@ -358,7 +368,7 @@ public class ResidenciaHandler extends GenericHandler {
 				errorBean.setHttpCode(Status.BAD_REQUEST);
 				errorBean.updateErrorCode("69700401");
 				errorBean.updateMsg("Sin parametros para cambiar");
-			} else if (ResidenciaHandler.existeResidencia(conexion, codigo, errorBean)) {
+			} else if (ResidenciaHandler.existeResidencia(nconexion, codigo, errorBean)) {
 				strs[params++] = codigo;
 				try {
 					PreparedStatement ps = nconexion.prepareStatement(String.format(UPDATE_UPDATE_RESIDENCIA, upd));
@@ -368,7 +378,7 @@ public class ResidenciaHandler extends GenericHandler {
 
 					int c = ps.executeUpdate();
 					if (c > 0) {
-						res = getResidencia(conexion, codigo, true, errorBean);
+						res = getResidencia(nconexion, codigo, true, errorBean);
 						if(res == null) {
 							errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
 							errorBean.updateErrorCode("69700404");
@@ -401,7 +411,7 @@ public class ResidenciaHandler extends GenericHandler {
 	public static boolean deleteResidencia(Connection conexion, String codigo, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(conexion);
+		boolean aut = autenticar(nconexion);
 		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57700500");
@@ -409,7 +419,7 @@ public class ResidenciaHandler extends GenericHandler {
 			return false;
 		}
 		
-		if (ResidenciaHandler.existeResidencia(conexion, codigo, errorBean)) {
+		if (ResidenciaHandler.existeResidencia(nconexion, codigo, errorBean)) {
 			try {
 				PreparedStatement ps = nconexion.prepareStatement(UPDATE_DELETE_RESIDENCIA);
 				ps.setString(1, codigo);

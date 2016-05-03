@@ -1,5 +1,7 @@
 package com.turnos.restservice;
 
+import java.util.ArrayList;
+
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -13,6 +15,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.turnos.datos.handlers.ServicioHandler;
+import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.ServicioBean;
 
 @Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH
@@ -23,32 +27,50 @@ public class ServicioServicio {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response listaTurnos (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+	public static Response listaServicios (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
-		//TODO Listar trabajadores de una residencia filtrar por xxx
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTurno).build();
+		ErrorBean errorBean = new ErrorBean();
+		ArrayList<ServicioBean> listaServicios = ServicioHandler.listServicios(null, codRes, codTurno, errorBean);
+		
+		if(listaServicios == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.OK).entity(listaServicios).build();
+		}
 	}
 	
 	@GET
 	@Path(WebServUtils.COD_SERV_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getTurno (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+	public static Response getServicio (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
-			@PathParam(WebServUtils.P_PARAM_COD_SERV) String codServ) {
-		//TODO get trabajador por ids
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTurno).entity(codServ).build();
+			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
+		ErrorBean errorBean = new ErrorBean();
+		ServicioBean servicio = ServicioHandler.getServicio(null, codServ, errorBean);
+		
+		if(servicio == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.OK).entity(servicio).build();
+		}
 	}
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response nuevoTurno(ServicioBean servicioRaw,
+	public static Response nuevoServicio(ServicioBean servicioRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
-		// TODO borra trabajador
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTurno).build();
+		ErrorBean errorBean = new ErrorBean();
+		ServicioBean servicio = ServicioHandler.insertServicio(null, servicioRaw, errorBean);
+		
+		if(servicio == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.CREATED).entity(servicio).build();
+		}
 	}
 	
 	@PUT
@@ -56,23 +78,35 @@ public class ServicioServicio {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response modTurno(ServicioBean servicioRaw,
+	public static Response modServicio(ServicioBean servicioRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
-			@PathParam(WebServUtils.P_PARAM_COD_SERV) String codServ) {
-		// TODO borra trabajador
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTurno).entity(codServ).build();
+			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
+		ErrorBean errorBean = new ErrorBean();
+		ServicioBean servicio = ServicioHandler.updateServicio(null, codServ, servicioRaw, errorBean);
+		
+		if(servicio == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.ACCEPTED).entity(servicio).build();
+		}
 	}
 	
 	@DELETE
 	@Path(WebServUtils.COD_SERV_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response borraTurno(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+	public static Response borraServicio(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
-			@PathParam(WebServUtils.P_PARAM_COD_SERV) String codServ) {
-		//TODO borra trabajador
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTurno).entity(codServ).build();
+			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
+		ErrorBean errorBean = new ErrorBean();
+		boolean borrado = ServicioHandler.deleteServicio(null, codServ, errorBean);
+		
+		if(borrado) {
+			return Response.status(Status.ACCEPTED).build();
+		} else {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		}
 	}
 
 }
