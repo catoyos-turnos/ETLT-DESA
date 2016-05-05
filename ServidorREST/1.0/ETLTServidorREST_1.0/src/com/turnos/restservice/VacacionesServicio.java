@@ -1,18 +1,26 @@
 package com.turnos.restservice;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.turnos.datos.handlers.VacacionesHandler;
+import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.VacacionesBean;
 
 //PathParams: codRes, codTrab
@@ -26,9 +34,39 @@ public class VacacionesServicio {
 	@Valid
 	public static Response listaVacaciones (
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
-			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
-		//TODO Listar trabajadores de una residencia filtrar por xxx
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTrab).build();
+			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
+			@DefaultValue("-1") int time_ini,
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
+			@DefaultValue("-1") int time_fin) {
+		ErrorBean errorBean = new ErrorBean();
+		
+		Date fecha_ini = null;
+		Date fecha_fin = null;
+		try {
+			if (time_ini > 0) {
+				fecha_ini = new Date(time_ini * 1000l);
+			}
+			if (time_fin > 0) {
+				fecha_fin = new Date(time_fin * 1000l);
+			}
+			if(fecha_ini == null && fecha_fin == null) {
+				fecha_ini = Calendar.getInstance().getTime();
+			}
+			
+		} catch (Exception e) {
+			//TODO error
+			e.printStackTrace();
+		}
+		
+		ArrayList<VacacionesBean> listaVacaciones;
+		listaVacaciones = VacacionesHandler.listVacaciones(null, codRes, codTrab, fecha_ini, fecha_fin, errorBean);
+		
+		if(listaVacaciones == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.OK).entity(listaVacaciones).build();
+		}
 	}
 	
 	@GET
@@ -63,6 +101,7 @@ public class VacacionesServicio {
 		} else {
 			return Response.status(Status.CREATED).entity(vacaciones).build();
 		}
+	}
 	
 	@PUT
 	@Path(WebServUtils.COD_VACS_PATH)

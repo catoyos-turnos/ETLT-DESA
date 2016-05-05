@@ -1,5 +1,6 @@
 package com.turnos.restservice;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -18,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.turnos.datos.handlers.TrabajadorHandler;
 import com.turnos.datos.handlers.TurnoTrabajadorDiaHandler;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.TrabajadorBean;
@@ -29,9 +31,15 @@ public class TrabajadorServicio {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response listaTrabajadores (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
-		//TODO Listar trabajadores de una residencia filtrar por xxx
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).build();
+	public static Response listaTrabajadores (@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
+		ErrorBean errorBean = new ErrorBean();
+		ArrayList<TrabajadorBean> listaTrabajadores = TrabajadorHandler.listTrabajadores(null, codTrab, errorBean);
+		
+		if(listaTrabajadores == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.OK).entity(listaTrabajadores).build();
+		}
 	}
 	
 	@GET
