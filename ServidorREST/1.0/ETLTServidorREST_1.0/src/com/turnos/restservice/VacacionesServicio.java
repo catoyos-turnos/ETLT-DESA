@@ -39,8 +39,13 @@ public class VacacionesServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
 			@PathParam(WebServUtils.P_PARAM_COD_VACS) String codVacs) {
-		//TODO get trabajador por ids
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTrab).entity(codVacs).build();
+		ErrorBean errorBean = new ErrorBean();
+		VacacionesBean vacaciones = VacacionesHandler.getVacaciones(null, codVacs, errorBean);
+		if(vacaciones == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.OK).entity(vacaciones).build();
+		}
 	}
 	
 	@POST
@@ -50,9 +55,14 @@ public class VacacionesServicio {
 	public static Response nuevoVacaciones(VacacionesBean vacsRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
-		// TODO borra trabajador
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTrab).build();
-	}
+		ErrorBean errorBean = new ErrorBean();
+		VacacionesBean vacaciones = VacacionesHandler.insertVacaciones(null, codRes, codTrab, vacsRaw, errorBean);
+		
+		if(vacaciones == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.CREATED).entity(vacaciones).build();
+		}
 	
 	@PUT
 	@Path(WebServUtils.COD_VACS_PATH)
@@ -63,8 +73,14 @@ public class VacacionesServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
 			@PathParam(WebServUtils.P_PARAM_COD_VACS) String codVacs) {
-		// TODO borra trabajador
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTrab).entity(codVacs).build();
+		ErrorBean errorBean = new ErrorBean();
+		VacacionesBean vacaciones = VacacionesHandler.updateVacaciones(null, codVacs, vacsRaw, errorBean);
+		
+		if(vacaciones == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.ACCEPTED).entity(vacaciones).build();
+		}
 	}
 	
 	@DELETE
@@ -75,9 +91,13 @@ public class VacacionesServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
 			@PathParam(WebServUtils.P_PARAM_COD_VACS) String codVacs) {
-		//TODO borra trabajador
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTrab).entity(codVacs).build();
+		ErrorBean errorBean = new ErrorBean();
+		boolean borrado = VacacionesHandler.deleteVacaciones(null, codVacs, errorBean);
+		
+		if(borrado) {
+			return Response.status(Status.ACCEPTED).build();
+		} else {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		}
 	}
-	
-	
 }

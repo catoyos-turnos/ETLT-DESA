@@ -14,19 +14,19 @@ public class WebServUtils {
 	public static final String P_PARAM_COD_TRAB  = "codTrab";
 	
 	public static final String PREF_VACS_PATH = "/turno";
-	public static final String COD_VACS_PATH = "/{vacsServ: [0-9]{1,11}}";
+	public static final String COD_VACS_PATH  = "/{vacsServ: [0-9]{1,11}}";
 	public static final String P_PARAM_COD_VACS  = "vacsServ";
 	
 	public static final String PREF_TURNO_PATH = "/turno";
-	public static final String COD_TURNO_PATH = "/{codTurno: [A-Z0-9_]{3,32}}";
+	public static final String COD_TURNO_PATH  = "/{codTurno: [A-Z0-9_]{3,32}}";
 	public static final String P_PARAM_COD_TURNO  = "codTurno";
 	public static final String Q_PARAM_TIPO_TURNO = "tipo_fiesta";
 	
 	public static final String PREF_SERV_PATH = "/serv";
-	public static final String COD_SERV_PATH = "/{codServ: [0-9]{1,11}}";
+	public static final String COD_SERV_PATH  = "/{codServ: [0-9]{1,11}}";
 	public static final String P_PARAM_COD_SERV  = "codServ";
 	
-	public static final String PREF_GEO_PATH = "/geo";
+	public static final String PREF_GEO_PATH  = "/geo";
 	public static final String PREF_PAIS_PATH = "/pais";
 	public static final String COD_PAIS_PATH  = "/{codPais: [A-Z0-9_]{2}}";
 	public static final String PREF_PROV_PATH = "/prov";
@@ -48,12 +48,34 @@ public class WebServUtils {
 	public static final String P_PARAM_COD_FEST  = "codFest";
 	public static final String Q_PARAM_TIPO_FIESTA = "tipo_fiesta";
 
+	public static final String PREF_USER_PATH = "/usuario";
+	public static final String COD_USER_PATH  = "/{codUser: [0-9]{1,11}}";
+	public static final String P_PARAM_COD_USER = "codUser";
+	public static final String Q_PARAM_COD_USER = "cod_user";
+	public static final String Q_PARAM_COD_OTRO_USER = "cod_user_2";
+	public static final String Q_PARAM_USER = "user";
+
+	public static final String PREF_MENSAJE_PATH = "/msg";
+	public static final String COD_MENSAJE_PATH  = "/{codMsg: [0-9]{1,11}}";
+	public static final String P_PARAM_COD_MENSAJE = "codMsg";
+	public static final String PREF_MSG_RESPUESTA_PATH = "/respuestas";
+
+	public static final String Q_PARAM_ROL_EN_MSG = "msg_rol";
+	public static final String Q_PARAM_MSG_ES_RESP = "msg_rol";
+	public static final String Q_PARAM_MSG_RESP_A = "msg_rol";
+	public static final String Q_PARAM_LISTA_MSG_NO_LEIDOS = "msg_rol";
+	public static final String Q_PARAM_LISTA_MSG_LEIDOS = "msg_rol";
+	public static final String Q_PARAM_LISTA_RESPUESTAS = "msg_rol";
+	public static final String Q_PARAM_INC_RESPUESTAS = "msg_rol";
+	public static final String Q_PARAM_PROF_RESPUESTAS = "prof_respuestas";
+	
 	public static final String Q_PARAM_FECHA = "fecha";
 	public static final String Q_PARAM_TIEMPO_INI = "tiempo_ini";
 	public static final String Q_PARAM_TIEMPO_FIN = "tiempo_fin";
 	public static final String Q_PARAM_LIMITE = "limite";
 	public static final String Q_PARAM_COMPLETO = "completo";
 	public static final String Q_PARAM_INC_GEO = "inc_geo";
+	public static final String Q_PARAM_INC_SERVS = "inc_servs";
 	
 	
 	public static Date getFecha(int anio, int mes, int dia) {

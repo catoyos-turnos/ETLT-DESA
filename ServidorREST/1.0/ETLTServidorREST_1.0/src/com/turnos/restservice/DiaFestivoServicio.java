@@ -73,6 +73,7 @@ public class DiaFestivoServicio {
 			}
 			
 		} catch (Exception e) {
+			//TODO error
 			e.printStackTrace();
 		}
 
@@ -103,6 +104,7 @@ public class DiaFestivoServicio {
 			@DefaultValue("false") boolean incGeo) {
 		ErrorBean eb = new ErrorBean();
 		FestivoBean festivo = FestivoHandler.getFestivo(null, codFest, incGeo, eb);
+		
 		if(festivo == null) {
 			return Response.status(eb.getHttpCode()).entity(eb).build();
 		} else {

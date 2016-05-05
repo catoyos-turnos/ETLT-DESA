@@ -6,19 +6,17 @@ import java.util.ArrayList;
 import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.vo.ErrorBean;
-import com.turnos.datos.vo.TurnoBean;
-import com.turnos.datos.vo.TurnoBean.TipoTurno;
+import com.turnos.datos.vo.ServicioBean;
 
-//73xxxx
-public class TurnoHandler extends GenericHandler {
-
-	// 00xx
-	public static boolean existeTurno(Connection conexion, String codRes,
-			String codTurno, ErrorBean errorBean) {
+//74xxxx
+public class ServicioHandler extends GenericHandler {
+	
+	//00xx
+	public static boolean existeServicio(Connection conexion, int codServ, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-
-		if (codTurno != null && !"".equals(codTurno)) {
+		
+		if(codServ > 0) {
 			return false;
 		} else {
 			try {
@@ -29,112 +27,90 @@ public class TurnoHandler extends GenericHandler {
 		}
 		return false;
 	}
-
-	// 01xx
-	public static ArrayList<TurnoBean> listTodosTurnos(Connection conexion,
-			String codRes, boolean includeServs, ErrorBean errorBean) {
+	
+	//01xx
+	public static ArrayList<ServicioBean> listServicios(Connection conexion, String codRes, String codTurno, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
-		ArrayList<TurnoBean> listaTurnos = new ArrayList<TurnoBean>();
+		ArrayList<ServicioBean> listaServs = new ArrayList<ServicioBean>();
 		try {
 			// TODO Auto-generated method stub
 		} finally {
 			terminaOperacion(nconexion, cierraConexion);
 		}
-		return listaTurnos;
+		return listaServs;
 	}
-
-	// 02xx
-	public static ArrayList<TurnoBean> listTurnosTipo(Connection conexion,
-			String codRes, TipoTurno tipo, boolean includeServs,
-			ErrorBean errorBean) {
-		Connection nconexion = aseguraConexion(conexion);
+	
+	//02xx
+	public static ServicioBean getServicio(Connection conexion, int codServ, ErrorBean errorBean) {Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-
-		ArrayList<TurnoBean> listaTurnos = new ArrayList<TurnoBean>();
-		try {
-			// TODO Auto-generated method stub
-		} finally {
-			terminaOperacion(nconexion, cierraConexion);
-		}
-		return listaTurnos;
-	}
-
-	// 03xx
-	public static TurnoBean getTurno(Connection conexion, String codRes,
-			String codTurno, boolean includeServs, ErrorBean errorBean) {
-		Connection nconexion = aseguraConexion(conexion);
-		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-
-		TurnoBean turno = null;
-		if (codTurno != null && !"".equals(codTurno)) {
+	
+		ServicioBean serv = null;
+		if (codServ > 0) {
 			try {
 				// TODO Auto-generated method stub
 			} finally {
 				terminaOperacion(nconexion, cierraConexion);
 			}
 		}
-		return turno;
+		return serv;
 	}
-
-	// 04xx
-	public static TurnoBean insertTurno(Connection conexion, String codRes,
-			TurnoBean turnoRaw, ErrorBean errorBean) {
+	
+	//03xx
+	public static ServicioBean insertServicio(Connection conexion, ServicioBean servRaw, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		boolean aut = autenticar(nconexion);
-		if (!aut) {
+		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57730300");
+			errorBean.updateErrorCode("57740300");
 			errorBean.updateMsg("Sin autenticar");
 			return null;
 		}
-
-		TurnoBean turno = null;
+		
+		ServicioBean serv = null;
 		try {
 			// TODO Auto-generated method stub
 		} finally {
 			terminaOperacion(nconexion, cierraConexion);
 		}
-		return turno;
+		return serv;
 	}
-
-	// 05xx
-	public static TurnoBean updateTurno(Connection conexion, String codRes,
-			String codTurno, TurnoBean turnoRaw, ErrorBean errorBean) {
+	
+	//04xx
+	public static ServicioBean updateServicio(Connection conexion, int codServ, ServicioBean servRaw, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		boolean aut = autenticar(nconexion);
-		if (!aut) {
+		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57730400");
+			errorBean.updateErrorCode("57740400");
 			errorBean.updateMsg("Sin autenticar");
 			return null;
 		}
-
-		TurnoBean turno = null;
+		
+		ServicioBean serv = null;
 		try {
 			// TODO Auto-generated method stub
 		} finally {
 			terminaOperacion(nconexion, cierraConexion);
 		}
-		return turno;
+		return serv;
 	}
-
-	// 06xx
-	public static boolean deleteTurno(Connection conexion, String codRes,
-			String codTurno, ErrorBean errorBean) {
+	
+	//05xx
+	public static boolean deleteServicio(Connection conexion, int codServ, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		boolean aut = autenticar(nconexion);
-		if (!aut) {
+		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57730500");
+			errorBean.updateErrorCode("57740500");
 			errorBean.updateMsg("Sin autenticar");
 			return false;
 		}
-
+		
 		boolean res = false;
 		try {
 			// TODO Auto-generated method stub
@@ -143,4 +119,5 @@ public class TurnoHandler extends GenericHandler {
 		}
 		return res;
 	}
+
 }

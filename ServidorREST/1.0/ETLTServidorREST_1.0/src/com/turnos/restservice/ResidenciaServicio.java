@@ -23,10 +23,12 @@ import com.turnos.datos.handlers.FestivoHandler;
 import com.turnos.datos.handlers.ResidenciaHandler;
 import com.turnos.datos.handlers.ResidenciaHandler.TipoBusqueda;
 import com.turnos.datos.handlers.TurnoTrabajadorDiaHandler;
+import com.turnos.datos.handlers.VacacionesHandler;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.FestivoBean;
 import com.turnos.datos.vo.ResidenciaBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
+import com.turnos.datos.vo.VacacionesBean;
 
 @Path(WebServUtils.PREF_RES_PATH)
 public class ResidenciaServicio {
@@ -158,6 +160,7 @@ public class ResidenciaServicio {
 			}
 			
 		} catch (Exception e) {
+			//TODO error
 			e.printStackTrace();
 		}
 		
@@ -166,6 +169,36 @@ public class ResidenciaServicio {
 			return Response.status(eb.getHttpCode()).entity(eb).build();
 		} else {
 			return Response.status(Status.OK).entity(listaFestivos).build();
+		}
+	}
+	
+	@GET
+	@Path(WebServUtils.COD_RES_PATH + WebServUtils.PREF_HORARIO_PATH)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Valid
+	public static Response getVacacionesDia(
+			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+			@QueryParam(WebServUtils.Q_PARAM_FECHA)
+			@DefaultValue("-1") int time) {
+		Date fecha = null;
+		try {
+			if (time > 0) {
+				fecha = new Date(time * 1000l);
+			} else {
+				fecha = Calendar.getInstance().getTime();
+			}
+		} catch (Exception e) {
+			//TODO error
+			e.printStackTrace();
+		}
+		if(fecha == null) return Response.status(Status.BAD_REQUEST).entity("momento ("+time+") no parseable, o algo").build();
+		
+		ErrorBean eb = new ErrorBean();
+		ArrayList<VacacionesBean> listaVacaciones = VacacionesHandler.getVacacionesResDia(null, codRes, fecha, eb);
+		if(listaVacaciones == null) {
+			return Response.status(eb.getHttpCode()).entity(eb).build();
+		} else {
+			return Response.status(Status.OK).entity(listaVacaciones).build();
 		}
 	}
 	

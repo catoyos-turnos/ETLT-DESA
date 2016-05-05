@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -28,11 +29,16 @@ public class TurnoServicio {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public static Response listaTurnos (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
-			@QueryParam(WebServUtils.Q_PARAM_TIPO_TURNO)
-			String tipoStr) {
+			@QueryParam(WebServUtils.Q_PARAM_TIPO_TURNO) String tipoStr,
+			@QueryParam(WebServUtils.Q_PARAM_INC_SERVS) @DefaultValue("false") boolean includeServs) {
 		ErrorBean errorBean = new ErrorBean();
-		TipoTurno tipo = TipoTurno.safeValueOf(tipoStr);
-		ArrayList<TurnoBean> listaTurnos = TurnoHandler.listTurnos(null, codRes, tipo, errorBean);
+		ArrayList<TurnoBean> listaTurnos;
+		if (tipoStr == null) {
+			listaTurnos = TurnoHandler.listTodosTurnos(null, codRes, includeServs, errorBean);
+		} else {
+			TipoTurno tipo = TipoTurno.safeValueOf(tipoStr);
+			listaTurnos = TurnoHandler.listTurnosTipo(null, codRes, tipo, includeServs, errorBean);
+		}
 		
 		if(listaTurnos == null) {
 			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
@@ -46,9 +52,10 @@ public class TurnoServicio {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public static Response getTurno (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
-			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
+			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
+			@QueryParam(WebServUtils.Q_PARAM_INC_SERVS) @DefaultValue("false") boolean includeServs) {
 		ErrorBean errorBean = new ErrorBean();
-		TurnoBean turno = TurnoHandler.getTurno(null, codRes, codTurno, errorBean);
+		TurnoBean turno = TurnoHandler.getTurno(null, codRes, codTurno, includeServs, errorBean);
 		if(turno == null) {
 			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
 		} else {
