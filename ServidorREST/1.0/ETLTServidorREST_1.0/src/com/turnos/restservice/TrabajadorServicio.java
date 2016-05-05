@@ -40,8 +40,14 @@ public class TrabajadorServicio {
 	@Valid
 	public static Response getTrabajador (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
-		//TODO get trabajador por ids
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTrab).build();
+		ErrorBean errorBean = new ErrorBean();
+		TrabajadorBean trabajador = TrabajadorHandler.getTrabajador(null, codRes, codTrab, errorBean);
+		
+		if(trabajador == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.OK).entity(trabajador).build();
+		}
 	}
 	
 	@POST
@@ -50,8 +56,14 @@ public class TrabajadorServicio {
 	@Valid
 	public static Response nuevoTrabajador(TrabajadorBean trabRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
-		// TODO borra trabajador
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).build();
+		ErrorBean errorBean = new ErrorBean();
+		TrabajadorBean trabajador = TrabajadorHandler.insertTrabajador(null, codRes, trabRaw, errorBean);
+		
+		if(trabajador == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.CREATED).entity(trabajador).build();
+		}
 	}
 	
 	@PUT
@@ -62,8 +74,14 @@ public class TrabajadorServicio {
 	public static Response modTrabajador(TrabajadorBean trabRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
-		// TODO borra trabajador
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTrab).build();
+		ErrorBean errorBean = new ErrorBean();
+		TrabajadorBean trabajador = TrabajadorHandler.updateTrabajador(null, codRes, codTrab, trabRaw, errorBean);
+		
+		if(trabajador == null) {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		} else {
+			return Response.status(Status.ACCEPTED).entity(trabajador).build();
+		}
 	}
 	
 	@DELETE
@@ -72,8 +90,14 @@ public class TrabajadorServicio {
 	@Valid
 	public static Response borraTrabajador (@PathParam("codRes") String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
-		//TODO borra trabajador
-		return Response.status(Status.NOT_IMPLEMENTED).entity(codRes).entity(codTrab).build();
+		ErrorBean errorBean = new ErrorBean();
+		boolean borrado = TrabajadorHandler.deleteTrabajador(null, codRes, codTrab, errorBean);
+		
+		if(borrado) {
+			return Response.status(Status.ACCEPTED).build();
+		} else {
+			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		}
 	}
 	
 	
