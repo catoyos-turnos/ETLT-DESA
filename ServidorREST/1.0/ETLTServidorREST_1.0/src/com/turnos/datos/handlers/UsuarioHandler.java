@@ -3,6 +3,7 @@ package com.turnos.datos.handlers;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.UsuarioBean;
 
+//90xxxx
 public class UsuarioHandler {
 
 	public static UsuarioBean getUsuario(Object object, int codUser,

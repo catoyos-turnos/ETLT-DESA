@@ -26,7 +26,8 @@ import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.TrabajadorBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 
-@Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH + WebServUtils.PREF_TRAB_PATH)
+@Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH
+		+ WebServUtils.PREF_TRAB_PATH)
 public class TrabajadorServicio {
 
 	@GET
@@ -164,7 +165,7 @@ public class TrabajadorServicio {
 
 	@GET
 	@Path(WebServUtils.COD_TRAB_PATH + WebServUtils.PREF_HORARIO_PATH)
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public Response getHorarioTrabajadorRango(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,

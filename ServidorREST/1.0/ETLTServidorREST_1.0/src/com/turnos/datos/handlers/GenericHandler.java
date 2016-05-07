@@ -15,11 +15,10 @@ import javax.ws.rs.core.Response.Status;
 import com.turnos.datos.AccesoBD;
 import com.turnos.datos.vo.ErrorBean;
 //69xxxx
-public class GenericHandler {
+public abstract class GenericHandler {
 	private static final SimpleDateFormat sdfIn = new SimpleDateFormat("yyyy-MM-dd");
 	private static final String QUERY_GET_INFO_DIA = "SELECT get_info_residencia_dia(?, ?) AS infodia";
 	private static final String QUERY_GET_INFO_RANGO_DIAS = "SELECT get_info_residencia_rango_dias(?, ?, ?) AS infodias";
-
 
 	
 	protected static java.sql.Date javaDateToSQLDate(Date fecha) {

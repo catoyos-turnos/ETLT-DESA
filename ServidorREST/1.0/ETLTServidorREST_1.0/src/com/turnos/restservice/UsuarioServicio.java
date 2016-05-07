@@ -92,6 +92,7 @@ public class UsuarioServicio {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public static Response borraUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
+		/*
 		ErrorBean errorBean = new ErrorBean();
 		boolean borrado = UsuarioHandler.deleteUsuario(null, codUser, errorBean);
 		RespuestaBean<UsuarioBean> respuesta;
@@ -104,6 +105,9 @@ public class UsuarioServicio {
 		}
 
 		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+	*/
+		//TODO Listar trabajadores de una residencia filtrar por xxx
+				return Response.status(Status.NOT_IMPLEMENTED).build();
 	}
 
 }

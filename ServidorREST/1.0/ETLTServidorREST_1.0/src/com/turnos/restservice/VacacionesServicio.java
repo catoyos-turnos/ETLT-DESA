@@ -57,7 +57,7 @@ public class VacacionesServicio {
 			
 		} catch (Exception e) {
 			errorBean.setHttpCode(Status.BAD_REQUEST);
-			errorBean.updateErrorCode("48660000");
+			errorBean.updateErrorCode("48760000");
 			errorBean.updateMsg("momentos ("+time_ini+","+time_fin+") no parseable, o algo");
 			errorBean.updateMsg(e.getMessage());
 		}

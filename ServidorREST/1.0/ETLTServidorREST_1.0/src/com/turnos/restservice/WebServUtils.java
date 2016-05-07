@@ -13,7 +13,7 @@ public class WebServUtils {
 	public static final String COD_TRAB_PATH  = "/{codTrab: [A-Z0-9_]{3,32}}";
 	public static final String P_PARAM_COD_TRAB  = "codTrab";
 	
-	public static final String PREF_VACS_PATH = "/turno";
+	public static final String PREF_VACS_PATH = "/vacs";
 	public static final String COD_VACS_PATH  = "/{vacsServ: [0-9]{1,11}}";
 	public static final String P_PARAM_COD_VACS  = "vacsServ";
 	
