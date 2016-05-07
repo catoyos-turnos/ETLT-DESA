@@ -28,7 +28,7 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 					+ "AND tt.id_turno=tu.id_turno "
 				+ "ORDER BY se.hora_pres, se.hora_ret, tr.codigo";
 	
-	private static final String QUERY_GET_TURNOS_TRABAJADOR = 
+	private static final String QUERY_GET_TURNO_TRABAJADOR_DIA = 
 			"SELECT tr.codigo as codTrab, tr.nombre as nomTrab, tr.apellidos as apeTrab, tu.codigo as codTurno, tu.tipo as tipoTurno, "
 					+ "se.id_servicio as idServ, se.hora_pres as horaPresServ, se.hora_ret as horaRetServ, se.tiempo_toma as tiempoToma, se.tiempo_deje as tiempoDeje, "
 					+ "se.margen_antes as margenAntes, se.margen_despues as margenDespues, se.descripcion as descServ "
@@ -41,6 +41,8 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 					+ "AND (sd.vispera_festivo=? OR sd.vispera_festivo='CUALQUIERA') "
 					+ "AND tt.id_turno=tu.id_turno "
 				+ "ORDER BY se.hora_pres, se.hora_ret, tr.codigo";
+	
+	private static final String QUERY_LISTA_TURNO_TRABAJADOR_RANGO = ""; //TODO
 	
 
 	//00xx
@@ -126,7 +128,7 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 		ResultSet rs;
 		if(infoDia != null && infoDia.length == 3) {
 			try {
-				ps = nconexion.prepareStatement(QUERY_GET_TURNOS_TRABAJADOR);
+				ps = nconexion.prepareStatement(QUERY_GET_TURNO_TRABAJADOR_DIA);
 				ps.setString(1, codRes);
 				ps.setString(2, codTrab);
 				ps.setDate(3, sqldate);

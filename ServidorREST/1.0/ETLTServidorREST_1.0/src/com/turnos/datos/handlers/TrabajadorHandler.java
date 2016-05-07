@@ -9,6 +9,13 @@ import com.turnos.datos.vo.TrabajadorBean;
 //71xxxx
 public class TrabajadorHandler extends GenericHandler {
 
+	private static final String QUERY_EXISTE_TRABAJADOR = ""; // TODO
+	private static final String QUERY_LISTA_TRABAJADORES_RES = ""; // TODO
+	private static final String QUERY_GET_TRABAJADOR_COD = ""; // TODO
+	private static final String UPDATE_INSERT_NUEVO_TRABAJADOR = ""; // TODO
+	private static final String UPDATE_UPDATE_TRABAJADOR = ""; // TODO
+	private static final String UPDATE_DELETE_TRABAJADOR = ""; // TODO
+	
 	//00xx
 	public static boolean existeTrabajador(Object object,
 			String codTrab, ErrorBean errorBean) {

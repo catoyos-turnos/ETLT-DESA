@@ -10,6 +10,12 @@ import com.turnos.datos.vo.ServicioBean;
 
 //74xxxx
 public class ServicioHandler extends GenericHandler {
+
+	private static final String QUERY_LISTA_SERVICIOS_TURNO = ""; // TODO
+	private static final String QUERY_GET_SERVICIO_COD = ""; // TODO
+	private static final String UPDATE_INSERT_NUEVO_SERVICIO = ""; // TODO
+	private static final String UPDATE_UPDATE_SERVICIO = ""; // TODO
+	private static final String UPDATE_DELETE_SERVICIO = ""; // TODO
 	
 	//00xx
 	public static boolean existeServicio(Connection conexion, int codServ, ErrorBean errorBean) {

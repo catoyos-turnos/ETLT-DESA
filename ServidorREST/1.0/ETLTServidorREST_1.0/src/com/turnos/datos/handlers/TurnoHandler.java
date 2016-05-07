@@ -11,7 +11,13 @@ import com.turnos.datos.vo.TurnoBean.TipoTurno;
 
 //73xxxx
 public class TurnoHandler extends GenericHandler {
-
+	
+	private static final String QUERY_LISTA_TURNOS_RES = ""; // TODO
+	private static final String QUERY_GET_TURNO_COD = ""; // TODO
+	private static final String UPDATE_INSERT_NUEVO_TURNO = ""; // TODO
+	private static final String UPDATE_UPDATE_TURNO = ""; // TODO
+	private static final String UPDATE_DELETE_TURNO = ""; // TODO
+	
 	// 00xx
 	public static boolean existeTurno(Connection conexion, String codRes,
 			String codTurno, ErrorBean errorBean) {

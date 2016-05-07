@@ -236,7 +236,7 @@ public class ResidenciaServicio {
 		}
 		
 		if(fecha != null) {
-			listaVacaciones = VacacionesHandler.getVacacionesResDia(null, codRes, fecha, eb);
+			listaVacaciones = VacacionesHandler.listVacacionesResDia(null, codRes, fecha, eb);
 		}
 		
 		if(listaVacaciones == null) {

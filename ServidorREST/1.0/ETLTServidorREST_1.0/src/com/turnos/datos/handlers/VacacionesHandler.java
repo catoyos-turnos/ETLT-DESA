@@ -9,6 +9,12 @@ import com.turnos.datos.vo.VacacionesBean;
 //76xxxx
 public class VacacionesHandler extends GenericHandler {
 
+	private static final String QUERY_LISTA_VACACIONES_TRAB = ""; // TODO
+	private static final String QUERY_LISTA_VACACIONES_RES_DIA = ""; // TODO
+	private static final String QUERY_GET_VACACIONES_COD = ""; // TODO
+	private static final String UPDATE_INSERT_NUEVO_TURNO = ""; // TODO
+	private static final String UPDATE_UPDATE_TURNO = ""; // TODO
+	private static final String UPDATE_DELETE_TURNO = ""; // TODO
 
 	//00xx
 	public static ArrayList<VacacionesBean> listVacaciones(Object object,
@@ -26,7 +32,7 @@ public class VacacionesHandler extends GenericHandler {
 	}
 
 	//02xx
-	public static ArrayList<VacacionesBean> getVacacionesResDia(Object object,
+	public static ArrayList<VacacionesBean> listVacacionesResDia(Object object,
 			String codRes, Date fecha, ErrorBean eb) {
 		// TODO Auto-generated method stub
 		return null;

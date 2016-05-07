@@ -107,7 +107,7 @@ public class UsuarioServicio {
 		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	*/
 		//TODO Listar trabajadores de una residencia filtrar por xxx
-				return Response.status(Status.NOT_IMPLEMENTED).build();
+		return Response.status(Status.NOT_IMPLEMENTED).build();
 	}
 
 }

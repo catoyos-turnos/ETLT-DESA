@@ -5,6 +5,11 @@ import com.turnos.datos.vo.UsuarioBean;
 
 //90xxxx
 public class UsuarioHandler {
+	
+	private static final String QUERY_GET_USER_COD = ""; // TODO
+	private static final String UPDATE_INSERT_NUEVO_USER = ""; // TODO
+	private static final String UPDATE_UPDATE_USER = ""; // TODO
+	private static final String UPDATE_DELETE_USER = ""; // TODO
 
 	public static UsuarioBean getUsuario(Object object, int codUser,
 			ErrorBean errorBean) {
