@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.handlers.TurnoHandler;
 import com.turnos.datos.vo.ErrorBean;
+import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.TurnoBean;
 import com.turnos.datos.vo.TurnoBean.TipoTurno;
 
@@ -33,6 +34,8 @@ public class TurnoServicio {
 			@QueryParam(WebServUtils.Q_PARAM_INC_SERVS) @DefaultValue("false") boolean includeServs) {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<TurnoBean> listaTurnos;
+		RespuestaBean<TurnoBean> respuesta = null;
+		
 		if (tipoStr == null) {
 			listaTurnos = TurnoHandler.listTodosTurnos(null, codRes, includeServs, errorBean);
 		} else {
@@ -41,10 +44,12 @@ public class TurnoServicio {
 		}
 		
 		if(listaTurnos == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<TurnoBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(listaTurnos).build();
+			respuesta = new RespuestaBean<TurnoBean>(listaTurnos);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@GET
@@ -56,11 +61,15 @@ public class TurnoServicio {
 			@QueryParam(WebServUtils.Q_PARAM_INC_SERVS) @DefaultValue("false") boolean includeServs) {
 		ErrorBean errorBean = new ErrorBean();
 		TurnoBean turno = TurnoHandler.getTurno(null, codRes, codTurno, includeServs, errorBean);
+		RespuestaBean<TurnoBean> respuesta = null;
+
 		if(turno == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<TurnoBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(turno).build();
+			respuesta = new RespuestaBean<TurnoBean>(turno);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@POST
@@ -71,12 +80,16 @@ public class TurnoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean errorBean = new ErrorBean();
 		TurnoBean turno = TurnoHandler.insertTurno(null, codRes, turnoRaw, errorBean);
-		
+		RespuestaBean<TurnoBean> respuesta = null;
+
 		if(turno == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<TurnoBean>(errorBean);
 		} else {
-			return Response.status(Status.CREATED).entity(turno).build();
+			respuesta = new RespuestaBean<TurnoBean>(turno);
+			respuesta.setHtmlStatus(Status.CREATED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@PUT
@@ -89,12 +102,16 @@ public class TurnoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
 		TurnoBean turno = TurnoHandler.updateTurno(null, codRes, codTurno, turnoRaw, errorBean);
+		RespuestaBean<TurnoBean> respuesta = null;
 		
 		if(turno == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<TurnoBean>(errorBean);
 		} else {
-			return Response.status(Status.ACCEPTED).entity(turno).build();
+			respuesta = new RespuestaBean<TurnoBean>(turno);
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@DELETE
@@ -105,12 +122,16 @@ public class TurnoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean borrado = TurnoHandler.deleteTurno(null, codRes, codTurno, errorBean);
+		RespuestaBean<TurnoBean> respuesta = null;
 		
 		if(borrado) {
-			return Response.status(Status.ACCEPTED).build();
+			respuesta = new RespuestaBean<TurnoBean>();
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		} else {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<TurnoBean>(errorBean);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 }

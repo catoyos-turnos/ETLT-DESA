@@ -181,7 +181,7 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 	}
 
 
-	public static TurnoTrabajadorDiaBean getTurnosTrabajadorRango(
+	public static ArrayList<TurnoTrabajadorDiaBean> getTurnosTrabajadorRango(
 			Connection conexion, String codRes, String codTrab, Date fecha_ini,
 			Date fecha_fin, ErrorBean errorBean) {
 		// TODO Auto-generated method stub

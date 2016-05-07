@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 import com.turnos.datos.handlers.MensajeHandler;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.MensajeBean;
+import com.turnos.datos.vo.RespuestaBean;
 
 @Path(WebServUtils.PREF_USER_PATH + WebServUtils.COD_USER_PATH + WebServUtils.PREF_MENSAJE_PATH)
 public class MensajeService {
@@ -66,13 +67,16 @@ public class MensajeService {
 			@PathParam(WebServUtils.P_PARAM_COD_MENSAJE) int codMensaje,
 			@QueryParam(WebServUtils.Q_PARAM_PROF_RESPUESTAS) @DefaultValue("1") int profRespuestas) {
 		ErrorBean errorBean = new ErrorBean();
+		RespuestaBean<MensajeBean> respuesta = null;
 		MensajeBean privado = MensajeHandler.getMensaje(null, codMensaje, profRespuestas, errorBean);
 		
 		if (privado == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<MensajeBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(privado).build();
+			respuesta = new RespuestaBean<MensajeBean>(privado);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 	@POST
@@ -82,14 +86,18 @@ public class MensajeService {
 	public static Response nuevoMensaje(MensajeBean privadoRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
 		ErrorBean errorBean = new ErrorBean();
+		RespuestaBean<MensajeBean> respuesta = null;
 		MensajeBean privado = MensajeHandler.insertMensaje(null, privadoRaw,
 				errorBean);
 
-		if (privado == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		if(privado == null) {
+			respuesta = new RespuestaBean<MensajeBean>(errorBean);
 		} else {
-			return Response.status(Status.CREATED).entity(privado).build();
+			respuesta = new RespuestaBean<MensajeBean>(privado);
+			respuesta.setHtmlStatus(Status.CREATED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 }

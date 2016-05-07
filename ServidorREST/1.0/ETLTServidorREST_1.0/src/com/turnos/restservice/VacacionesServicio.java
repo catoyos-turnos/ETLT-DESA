@@ -21,9 +21,9 @@ import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.handlers.VacacionesHandler;
 import com.turnos.datos.vo.ErrorBean;
+import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.VacacionesBean;
 
-//PathParams: codRes, codTrab
 @Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH
 		+ WebServUtils.PREF_TRAB_PATH + WebServUtils.COD_TRAB_PATH
 		+ WebServUtils.PREF_VACS_PATH)
@@ -40,6 +40,7 @@ public class VacacionesServicio {
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
 			@DefaultValue("-1") int time_fin) {
 		ErrorBean errorBean = new ErrorBean();
+		RespuestaBean<VacacionesBean> respuesta = null;
 		
 		Date fecha_ini = null;
 		Date fecha_fin = null;
@@ -55,18 +56,20 @@ public class VacacionesServicio {
 			}
 			
 		} catch (Exception e) {
-			//TODO error
-			e.printStackTrace();
+			errorBean.setHttpCode(Status.BAD_REQUEST);
+			errorBean.updateErrorCode("48660000");
+			errorBean.updateMsg("momentos ("+time_ini+","+time_fin+") no parseable, o algo");
+			errorBean.updateMsg(e.getMessage());
 		}
-		
-		ArrayList<VacacionesBean> listaVacaciones;
-		listaVacaciones = VacacionesHandler.listVacaciones(null, codRes, codTrab, fecha_ini, fecha_fin, errorBean);
+		ArrayList<VacacionesBean> listaVacaciones = VacacionesHandler.listVacaciones(null, codRes, codTrab, fecha_ini, fecha_fin, errorBean);
 		
 		if(listaVacaciones == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<VacacionesBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(listaVacaciones).build();
+			respuesta = new RespuestaBean<VacacionesBean>(listaVacaciones);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@GET
@@ -78,12 +81,16 @@ public class VacacionesServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
 			@PathParam(WebServUtils.P_PARAM_COD_VACS) String codVacs) {
 		ErrorBean errorBean = new ErrorBean();
+		RespuestaBean<VacacionesBean> respuesta = null;
 		VacacionesBean vacaciones = VacacionesHandler.getVacaciones(null, codVacs, errorBean);
+
 		if(vacaciones == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<VacacionesBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(vacaciones).build();
+			respuesta = new RespuestaBean<VacacionesBean>(vacaciones);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@POST
@@ -94,13 +101,17 @@ public class VacacionesServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
+		RespuestaBean<VacacionesBean> respuesta = null;
 		VacacionesBean vacaciones = VacacionesHandler.insertVacaciones(null, codRes, codTrab, vacsRaw, errorBean);
-		
+
 		if(vacaciones == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<VacacionesBean>(errorBean);
 		} else {
-			return Response.status(Status.CREATED).entity(vacaciones).build();
+			respuesta = new RespuestaBean<VacacionesBean>(vacaciones);
+			respuesta.setHtmlStatus(Status.CREATED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@PUT
@@ -113,13 +124,17 @@ public class VacacionesServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
 			@PathParam(WebServUtils.P_PARAM_COD_VACS) String codVacs) {
 		ErrorBean errorBean = new ErrorBean();
+		RespuestaBean<VacacionesBean> respuesta = null;
 		VacacionesBean vacaciones = VacacionesHandler.updateVacaciones(null, codVacs, vacsRaw, errorBean);
 		
 		if(vacaciones == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<VacacionesBean>(errorBean);
 		} else {
-			return Response.status(Status.ACCEPTED).entity(vacaciones).build();
+			respuesta = new RespuestaBean<VacacionesBean>(vacaciones);
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@DELETE
@@ -132,11 +147,15 @@ public class VacacionesServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_VACS) String codVacs) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean borrado = VacacionesHandler.deleteVacaciones(null, codVacs, errorBean);
+		RespuestaBean<VacacionesBean> respuesta = null;
 		
 		if(borrado) {
-			return Response.status(Status.ACCEPTED).build();
+			respuesta = new RespuestaBean<VacacionesBean>();
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		} else {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<VacacionesBean>(errorBean);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 }

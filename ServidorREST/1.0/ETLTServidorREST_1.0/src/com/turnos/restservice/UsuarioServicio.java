@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.handlers.UsuarioHandler;
 import com.turnos.datos.vo.ErrorBean;
+import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.UsuarioBean;
 
 @Path(WebServUtils.PREF_USER_PATH)
@@ -35,12 +36,15 @@ public class UsuarioServicio {
 	public static Response getUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
 		ErrorBean errorBean = new ErrorBean();
 		UsuarioBean usuario = UsuarioHandler.getUsuario(null, codUser, errorBean);
+		RespuestaBean<UsuarioBean> respuesta = null;
 		
 		if(usuario == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<UsuarioBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(usuario).build();
+			respuesta = new RespuestaBean<UsuarioBean>(usuario);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@POST
@@ -50,12 +54,16 @@ public class UsuarioServicio {
 	public static Response nuevoUsuario(UsuarioBean userRaw) {
 		ErrorBean errorBean = new ErrorBean();
 		UsuarioBean usuario = UsuarioHandler.insertUsuario(null, userRaw, errorBean);
-		
+		RespuestaBean<UsuarioBean> respuesta = null;
+
 		if(usuario == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<UsuarioBean>(errorBean);
 		} else {
-			return Response.status(Status.CREATED).entity(usuario).build();
+			respuesta = new RespuestaBean<UsuarioBean>(usuario);
+			respuesta.setHtmlStatus(Status.CREATED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@PUT
@@ -67,12 +75,16 @@ public class UsuarioServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
 		ErrorBean errorBean = new ErrorBean();
 		UsuarioBean usuario = UsuarioHandler.updateUsuario(null, codUser, userRaw, errorBean);
+		RespuestaBean<UsuarioBean> respuesta = null;
 		
 		if(usuario == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<UsuarioBean>(errorBean);
 		} else {
-			return Response.status(Status.ACCEPTED).entity(usuario).build();
+			respuesta = new RespuestaBean<UsuarioBean>(usuario);
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@DELETE
@@ -82,12 +94,16 @@ public class UsuarioServicio {
 	public static Response borraUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean borrado = UsuarioHandler.deleteUsuario(null, codUser, errorBean);
+		RespuestaBean<UsuarioBean> respuesta;
 		
 		if(borrado) {
-			return Response.status(Status.ACCEPTED).build();
+			respuesta = new RespuestaBean<UsuarioBean>();
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		} else {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<UsuarioBean>(errorBean);
 		}
+
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 }

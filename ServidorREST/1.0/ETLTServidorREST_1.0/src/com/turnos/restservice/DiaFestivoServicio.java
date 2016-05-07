@@ -23,6 +23,7 @@ import com.turnos.datos.handlers.FestivoHandler;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.FestivoBean;
 import com.turnos.datos.vo.FestivoBean.TipoFiesta;
+import com.turnos.datos.vo.RespuestaBean;
 
 @Path(WebServUtils.PREF_FEST_PATH)
 public class DiaFestivoServicio {
@@ -54,6 +55,7 @@ public class DiaFestivoServicio {
 		
 		ErrorBean eb = new ErrorBean();
 		TipoFiesta tipo = TipoFiesta.safeValueOf(tipoStr);
+		RespuestaBean<FestivoBean> respuesta = null;
 		
 		Date fecha_ini = null;
 		Date fecha_fin = null;
@@ -68,13 +70,15 @@ public class DiaFestivoServicio {
 				fecha_ini = Calendar.getInstance().getTime();
 			}
 
-			if (limit < 0 || limit > 25) {
-				limit = 25;
+			if (limit < 0 || limit > 20) {
+				limit = 20;
 			}
 			
 		} catch (Exception e) {
-			//TODO error
-			e.printStackTrace();
+			eb.setHttpCode(Status.BAD_REQUEST);
+			eb.updateErrorCode("48800000");
+			eb.updateMsg("momentos ("+time_ini+","+time_fin+") no parseable, o algo");
+			eb.updateMsg(e.getMessage());
 		}
 
 		ArrayList<FestivoBean> listaFestivos = null;
@@ -85,14 +89,20 @@ public class DiaFestivoServicio {
 		} else if (!"".equals(codPais)) {
 			listaFestivos = FestivoHandler.getFestivosPais(null, codPais, tipo, fecha_ini, fecha_fin, limit, completo, incGeo, eb);
 		} else {
-			//TODO ERROR
+			eb.setHttpCode(Status.BAD_REQUEST);
+			eb.updateErrorCode("48800001");
+			eb.updateMsg("debe incluir parametros de busqueda: " + WebServUtils.Q_PARAM_COD_PAIS + ", "
+					+ WebServUtils.Q_PARAM_COD_PROV + ", o " + WebServUtils.Q_PARAM_COD_MUNI);
+		
 		}
 		
 		if(listaFestivos == null) {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
+			respuesta = new RespuestaBean<FestivoBean>(eb);
 		} else {
-			return Response.status(Status.OK).entity(listaFestivos).build();
+			respuesta = new RespuestaBean<FestivoBean>(listaFestivos);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 	@GET
@@ -104,12 +114,15 @@ public class DiaFestivoServicio {
 			@DefaultValue("false") boolean incGeo) {
 		ErrorBean eb = new ErrorBean();
 		FestivoBean festivo = FestivoHandler.getFestivo(null, codFest, incGeo, eb);
-		
+		RespuestaBean<FestivoBean> respuesta;
+
 		if(festivo == null) {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
+			respuesta = new RespuestaBean<FestivoBean>(eb);
 		} else {
-			return Response.status(Status.OK).entity(festivo).build();
+			respuesta = new RespuestaBean<FestivoBean>(festivo);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 	// ---------------------POST----------------------------------------------
@@ -121,12 +134,16 @@ public class DiaFestivoServicio {
 	public static Response nuevoDiaFestivo(FestivoBean festRaw) {
 		ErrorBean eb = new ErrorBean();
 		FestivoBean festivo = FestivoHandler.insertFestivo(null, festRaw, eb);
-		
+		RespuestaBean<FestivoBean> respuesta;
+
 		if(festivo == null) {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
+			respuesta = new RespuestaBean<FestivoBean>(eb);
 		} else {
-			return Response.status(Status.CREATED).entity(festivo).build();
+			respuesta = new RespuestaBean<FestivoBean>(festivo);
+			respuesta.setHtmlStatus(Status.CREATED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 	// ---------------------PUT-----------------------------------------------
@@ -140,12 +157,16 @@ public class DiaFestivoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
 		ErrorBean eb = new ErrorBean();
 		FestivoBean festivo = FestivoHandler.updateFestivo(null, codFest, festRaw, eb);
-		
+		RespuestaBean<FestivoBean> respuesta;
+
 		if(festivo == null) {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
+			respuesta = new RespuestaBean<FestivoBean>(eb);
 		} else {
-			return Response.status(Status.ACCEPTED).entity(festivo).build();
+			respuesta = new RespuestaBean<FestivoBean>(festivo);
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 	// ---------------------DELETE--------------------------------------------
@@ -157,12 +178,16 @@ public class DiaFestivoServicio {
 	public static Response borraDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
 		ErrorBean eb = new ErrorBean();
 		boolean borrado = FestivoHandler.deleteFestivo(null, codFest, eb);
-		
+		RespuestaBean<FestivoBean> respuesta;
+
 		if(borrado) {
-			return Response.status(Status.ACCEPTED).build();
+			respuesta = new RespuestaBean<FestivoBean>();
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		} else {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
+			respuesta = new RespuestaBean<FestivoBean>(eb);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 	// ---------------------misc.---------------------------------------------

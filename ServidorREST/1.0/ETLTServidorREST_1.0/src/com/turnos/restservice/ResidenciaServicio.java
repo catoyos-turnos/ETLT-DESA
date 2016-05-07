@@ -27,12 +27,15 @@ import com.turnos.datos.handlers.VacacionesHandler;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.FestivoBean;
 import com.turnos.datos.vo.ResidenciaBean;
+import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 import com.turnos.datos.vo.VacacionesBean;
 
 @Path(WebServUtils.PREF_RES_PATH)
 public class ResidenciaServicio {
 	
+	// ---------------------GET-----------------------------------------------
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
@@ -43,6 +46,8 @@ public class ResidenciaServicio {
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO) @DefaultValue("false") boolean includeGeo) {
 		ErrorBean eb = new ErrorBean();
 		ArrayList<ResidenciaBean> listaResidencias = null;
+		RespuestaBean<ResidenciaBean> respuesta;
+		
 		if (!"".equals(municipio)) {
 			String[] busqueda = { municipio };
 			listaResidencias = ResidenciaHandler
@@ -56,14 +61,19 @@ public class ResidenciaServicio {
 			listaResidencias = ResidenciaHandler
 					.listResidencias(null, TipoBusqueda.PAIS, busqueda, includeGeo, eb);
 		} else {
-			//TODO error
+			eb.setHttpCode(Status.BAD_REQUEST);
+			eb.updateErrorCode("48700000");
+			eb.updateMsg("debe incluir parametros de busqueda: " + WebServUtils.Q_PARAM_COD_PAIS + ", "
+					+ WebServUtils.Q_PARAM_COD_PROV + ", o " + WebServUtils.Q_PARAM_COD_MUNI);
+		}
+
+		if(listaResidencias == null) {
+			respuesta = new RespuestaBean<ResidenciaBean>(eb);
+		} else {
+			respuesta = new RespuestaBean<ResidenciaBean>(listaResidencias);
 		}
 		
-		if(listaResidencias == null) {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
-		} else {
-			return Response.status(Status.OK).entity(listaResidencias).build();
-		}
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@GET
@@ -73,13 +83,19 @@ public class ResidenciaServicio {
 	public static Response getResidencia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
 		ResidenciaBean residencia = ResidenciaHandler.getResidencia(null, codRes, true, eb);
+		RespuestaBean<ResidenciaBean> respuesta;
+
 		if(residencia == null) {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
+			respuesta = new RespuestaBean<ResidenciaBean>(eb);
 		} else {
-			return Response.status(Status.OK).entity(residencia).build();
+			respuesta = new RespuestaBean<ResidenciaBean>(residencia);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
+	// ---------------------POST----------------------------------------------
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -87,14 +103,20 @@ public class ResidenciaServicio {
 	public static Response nuevaResidencia(ResidenciaBean resRaw) {
 		ErrorBean eb = new ErrorBean();
 		ResidenciaBean residencia = ResidenciaHandler.insertResidencia(null, resRaw, eb);
+		RespuestaBean<ResidenciaBean> respuesta;
 		
 		if(residencia == null) {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
+			respuesta = new RespuestaBean<ResidenciaBean>(eb);
 		} else {
-			return Response.status(Status.CREATED).entity(residencia).build();
+			respuesta = new RespuestaBean<ResidenciaBean>(residencia);
+			respuesta.setHtmlStatus(Status.CREATED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
+	// ---------------------PUT-----------------------------------------------
+
 	@PUT
 	@Path(WebServUtils.COD_RES_PATH)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -104,14 +126,20 @@ public class ResidenciaServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
 		ResidenciaBean residencia = ResidenciaHandler.updateResidencia(null, codRes, resRaw, eb);
+		RespuestaBean<ResidenciaBean> respuesta;
 		
 		if(residencia == null) {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
+			respuesta = new RespuestaBean<ResidenciaBean>(eb);
 		} else {
-			return Response.status(Status.ACCEPTED).entity(residencia).build();
+			respuesta = new RespuestaBean<ResidenciaBean>(residencia);
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		}
+
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
+	// ---------------------DELETE--------------------------------------------
+
 	@DELETE
 	@Path(WebServUtils.COD_RES_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -119,16 +147,20 @@ public class ResidenciaServicio {
 	public static Response borraResidencia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
 		boolean borrado = ResidenciaHandler.deleteResidencia(null, codRes, eb);
+		RespuestaBean<ResidenciaBean> respuesta;
 		
 		if(borrado) {
-			return Response.status(Status.ACCEPTED).build();
+			respuesta = new RespuestaBean<ResidenciaBean>();
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		} else {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
+			respuesta = new RespuestaBean<ResidenciaBean>(eb);
 		}
-	}
 
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+	}
 	
-	
+	// ---------------------misc.---------------------------------------------
+
 	@GET
 	@Path(WebServUtils.COD_RES_PATH + WebServUtils.PREF_FEST_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -140,8 +172,9 @@ public class ResidenciaServicio {
 			@DefaultValue("-1") int time_fin,
 			@QueryParam(WebServUtils.Q_PARAM_LIMITE)
 			@DefaultValue("-1") int limit) {
-
 		ErrorBean eb = new ErrorBean();
+		RespuestaBean<FestivoBean> respuesta = null;
+		ArrayList<FestivoBean> listaFestivos = null;
 		Date fecha_ini = null;
 		Date fecha_fin = null;
 		try {
@@ -155,31 +188,39 @@ public class ResidenciaServicio {
 				fecha_ini = Calendar.getInstance().getTime();
 			}
 
-			if (limit < 0 || limit > 25) {
-				limit = 25;
+			if (limit < 0 || limit > 20) {
+				limit = 20;
 			}
 			
 		} catch (Exception e) {
-			//TODO error
-			e.printStackTrace();
+			eb.setHttpCode(Status.BAD_REQUEST);
+			eb.updateErrorCode("48700500");
+			eb.updateMsg("momentos ("+time_ini+","+time_fin+") no parseable, o algo");
+			eb.updateMsg(e.getMessage());
+		}
+
+		listaFestivos = FestivoHandler.getFestivosResidencia(null, codRes, fecha_ini, fecha_fin, limit, false, eb);
+		
+		if(listaFestivos == null) {
+			respuesta = new RespuestaBean<FestivoBean>(eb);
+		} else {
+			respuesta = new RespuestaBean<FestivoBean>(listaFestivos);
 		}
 		
-		ArrayList<FestivoBean> listaFestivos = FestivoHandler.getFestivosResidencia(null, codRes, fecha_ini, fecha_fin, limit, false, eb);
-		if(listaFestivos == null) {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
-		} else {
-			return Response.status(Status.OK).entity(listaFestivos).build();
-		}
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@GET
-	@Path(WebServUtils.COD_RES_PATH + WebServUtils.PREF_HORARIO_PATH)
+	@Path(WebServUtils.COD_RES_PATH + WebServUtils.PREF_VACS_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public static Response getVacacionesDia(
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@QueryParam(WebServUtils.Q_PARAM_FECHA)
 			@DefaultValue("-1") int time) {
+		ErrorBean eb = new ErrorBean();
+		RespuestaBean<VacacionesBean> respuesta = null;
+		ArrayList<VacacionesBean> listaVacaciones = null;
 		Date fecha = null;
 		try {
 			if (time > 0) {
@@ -188,18 +229,23 @@ public class ResidenciaServicio {
 				fecha = Calendar.getInstance().getTime();
 			}
 		} catch (Exception e) {
-			//TODO error
-			e.printStackTrace();
+			eb.setHttpCode(Status.BAD_REQUEST);
+			eb.updateErrorCode("48700600");
+			eb.updateMsg("momento ("+time+") no parseable, o algo");
+			eb.updateMsg(e.getMessage());
 		}
-		if(fecha == null) return Response.status(Status.BAD_REQUEST).entity("momento ("+time+") no parseable, o algo").build();
 		
-		ErrorBean eb = new ErrorBean();
-		ArrayList<VacacionesBean> listaVacaciones = VacacionesHandler.getVacacionesResDia(null, codRes, fecha, eb);
-		if(listaVacaciones == null) {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
-		} else {
-			return Response.status(Status.OK).entity(listaVacaciones).build();
+		if(fecha != null) {
+			listaVacaciones = VacacionesHandler.getVacacionesResDia(null, codRes, fecha, eb);
 		}
+		
+		if(listaVacaciones == null) {
+			respuesta = new RespuestaBean<VacacionesBean>(eb);
+		} else {
+			respuesta = new RespuestaBean<VacacionesBean>(listaVacaciones);
+		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@GET
@@ -210,6 +256,9 @@ public class ResidenciaServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@QueryParam(WebServUtils.Q_PARAM_FECHA)
 			@DefaultValue("-1") int time) {
+		ErrorBean eb = new ErrorBean();
+		RespuestaBean<TurnoTrabajadorDiaBean> respuesta = null;
+		ArrayList<TurnoTrabajadorDiaBean> listaTurnos = null;
 		Date fecha = null;
 		try {
 			if (time > 0) {
@@ -218,16 +267,22 @@ public class ResidenciaServicio {
 				fecha = Calendar.getInstance().getTime();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			eb.setHttpCode(Status.BAD_REQUEST);
+			eb.updateErrorCode("48700700");
+			eb.updateMsg("momento ("+time+") no parseable, o algo");
+			eb.updateMsg(e.getMessage());
 		}
-		if(fecha == null) return Response.status(Status.BAD_REQUEST).entity("momento ("+time+") no parseable, o algo").build();
 		
-		ErrorBean eb = new ErrorBean();
-		ArrayList<TurnoTrabajadorDiaBean> listaTurnos = TurnoTrabajadorDiaHandler.getTodosTurnosDia(null, codRes, fecha, eb);
-		if(listaTurnos == null) {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
-		} else {
-			return Response.status(Status.OK).entity(listaTurnos).build();
+		if(fecha != null) {
+			listaTurnos = TurnoTrabajadorDiaHandler.getTodosTurnosDia(null, codRes, fecha, eb);
 		}
+		
+		if(listaTurnos == null) {
+			respuesta = new RespuestaBean<TurnoTrabajadorDiaBean>(eb);
+		} else {
+			respuesta = new RespuestaBean<TurnoTrabajadorDiaBean>(listaTurnos);
+		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 }

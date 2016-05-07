@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.handlers.ServicioHandler;
 import com.turnos.datos.vo.ErrorBean;
+import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.ServicioBean;
 
 @Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH
@@ -31,12 +32,15 @@ public class ServicioServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<ServicioBean> listaServicios = ServicioHandler.listServicios(null, codRes, codTurno, errorBean);
-		
-		if(listaServicios == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+		RespuestaBean<ServicioBean> respuesta = null;
+
+		if (listaServicios == null) {
+			respuesta = new RespuestaBean<ServicioBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(listaServicios).build();
+			respuesta = new RespuestaBean<ServicioBean>(listaServicios);
 		}
+
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@GET
@@ -48,12 +52,15 @@ public class ServicioServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
 		ErrorBean errorBean = new ErrorBean();
 		ServicioBean servicio = ServicioHandler.getServicio(null, codServ, errorBean);
-		
+		RespuestaBean<ServicioBean> respuesta = null;
+
 		if(servicio == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<ServicioBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(servicio).build();
+			respuesta = new RespuestaBean<ServicioBean>(servicio);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@POST
@@ -65,12 +72,16 @@ public class ServicioServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
 		ServicioBean servicio = ServicioHandler.insertServicio(null, servicioRaw, errorBean);
-		
+		RespuestaBean<ServicioBean> respuesta = null;
+
 		if(servicio == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<ServicioBean>(errorBean);
 		} else {
-			return Response.status(Status.CREATED).entity(servicio).build();
+			respuesta = new RespuestaBean<ServicioBean>(servicio);
+			respuesta.setHtmlStatus(Status.CREATED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@PUT
@@ -84,12 +95,16 @@ public class ServicioServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
 		ErrorBean errorBean = new ErrorBean();
 		ServicioBean servicio = ServicioHandler.updateServicio(null, codServ, servicioRaw, errorBean);
+		RespuestaBean<ServicioBean> respuesta = null;
 		
 		if(servicio == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<ServicioBean>(errorBean);
 		} else {
-			return Response.status(Status.ACCEPTED).entity(servicio).build();
+			respuesta = new RespuestaBean<ServicioBean>(servicio);
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@DELETE
@@ -101,12 +116,16 @@ public class ServicioServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean borrado = ServicioHandler.deleteServicio(null, codServ, errorBean);
-		
+		RespuestaBean<ServicioBean> respuesta = null;
+
 		if(borrado) {
-			return Response.status(Status.ACCEPTED).build();
+			respuesta = new RespuestaBean<ServicioBean>();
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		} else {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<ServicioBean>(errorBean);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 }

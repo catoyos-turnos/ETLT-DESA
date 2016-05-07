@@ -2,14 +2,11 @@ package com.turnos.datos.vo;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @XmlRootElement(name = "servicio")
 @JsonRootName(value = "servicio")
-@JsonInclude(Include.NON_NULL)
-public class ServicioBean {
+public class ServicioBean extends ETLTBean {
 	private int id_servicio;
 	private String hora_pres;
 	private String hora_ret;

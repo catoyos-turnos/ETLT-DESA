@@ -2,14 +2,11 @@ package com.turnos.datos.vo;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @XmlRootElement(name = "municipio")
 @JsonRootName(value = "municipio")
-@JsonInclude(Include.NON_NULL)
-public class MunicipioBean {
+public class MunicipioBean extends ETLTBean {
 	private String municipioCod;
 	private String municipioNombre;
 	private String provinciaCod;

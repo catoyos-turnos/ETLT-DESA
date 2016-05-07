@@ -16,9 +16,7 @@ public class ErrorBean {
 	private String msg;
 
 	public ErrorBean() {
-		this.httpCode = Status.OK;
-		this.errorCode = "";
-		this.msg = "";
+		this(Status.OK, "", "");
 	}
 
 	public ErrorBean(int httpCode, String errorCode, String msg) {

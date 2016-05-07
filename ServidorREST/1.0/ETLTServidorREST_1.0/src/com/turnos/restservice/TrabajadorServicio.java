@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response.Status;
 import com.turnos.datos.handlers.TrabajadorHandler;
 import com.turnos.datos.handlers.TurnoTrabajadorDiaHandler;
 import com.turnos.datos.vo.ErrorBean;
+import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.TrabajadorBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 
@@ -34,12 +35,15 @@ public class TrabajadorServicio {
 	public static Response listaTrabajadores (@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<TrabajadorBean> listaTrabajadores = TrabajadorHandler.listTrabajadores(null, codTrab, errorBean);
+		RespuestaBean<TrabajadorBean> respuesta = null;
 		
 		if(listaTrabajadores == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<TrabajadorBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(listaTrabajadores).build();
+			respuesta = new RespuestaBean<TrabajadorBean>(listaTrabajadores);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@GET
@@ -50,12 +54,15 @@ public class TrabajadorServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
 		TrabajadorBean trabajador = TrabajadorHandler.getTrabajador(null, codRes, codTrab, errorBean);
-		
+		RespuestaBean<TrabajadorBean> respuesta = null;
+
 		if(trabajador == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<TrabajadorBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(trabajador).build();
+			respuesta = new RespuestaBean<TrabajadorBean>(trabajador);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@POST
@@ -66,12 +73,16 @@ public class TrabajadorServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean errorBean = new ErrorBean();
 		TrabajadorBean trabajador = TrabajadorHandler.insertTrabajador(null, codRes, trabRaw, errorBean);
-		
+		RespuestaBean<TrabajadorBean> respuesta = null;
+
 		if(trabajador == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<TrabajadorBean>(errorBean);
 		} else {
-			return Response.status(Status.CREATED).entity(trabajador).build();
+			respuesta = new RespuestaBean<TrabajadorBean>(trabajador);
+			respuesta.setHtmlStatus(Status.CREATED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@PUT
@@ -84,12 +95,16 @@ public class TrabajadorServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
 		TrabajadorBean trabajador = TrabajadorHandler.updateTrabajador(null, codRes, codTrab, trabRaw, errorBean);
+		RespuestaBean<TrabajadorBean> respuesta = null;
 		
 		if(trabajador == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<TrabajadorBean>(errorBean);
 		} else {
-			return Response.status(Status.ACCEPTED).entity(trabajador).build();
+			respuesta = new RespuestaBean<TrabajadorBean>(trabajador);
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@DELETE
@@ -100,12 +115,16 @@ public class TrabajadorServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean borrado = TrabajadorHandler.deleteTrabajador(null, codRes, codTrab, errorBean);
+		RespuestaBean<TrabajadorBean> respuesta = null;
 		
 		if(borrado) {
-			return Response.status(Status.ACCEPTED).build();
+			respuesta = new RespuestaBean<TrabajadorBean>();
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		} else {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<TrabajadorBean>(errorBean);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	
@@ -118,6 +137,8 @@ public class TrabajadorServicio {
 			@QueryParam(WebServUtils.Q_PARAM_FECHA)
 			@DefaultValue("-1") int time) {
 		Date fecha = null;
+		RespuestaBean<TurnoTrabajadorDiaBean> respuesta = null;
+		ErrorBean eb = new ErrorBean();
 		try {
 			if (time > 0) {
 				fecha = new Date(time * 1000l);
@@ -125,17 +146,20 @@ public class TrabajadorServicio {
 				fecha = Calendar.getInstance().getTime();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			eb.setHttpCode(Status.BAD_REQUEST);
+			eb.updateErrorCode("48610500");
+			eb.updateMsg("momento ("+time+") no parseable, o algo");
+			eb.updateMsg(e.getMessage());
 		}
-		if(fecha == null) return Response.status(Status.BAD_REQUEST).entity("momento ("+time+") no parseable, o algo").build();
 
-		ErrorBean eb = new ErrorBean();
-		TurnoTrabajadorDiaBean turnos = TurnoTrabajadorDiaHandler.getTurnoTrabajadorDia(null, codRes, codTrab, fecha, eb);
-		if(turnos == null) {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
+		TurnoTrabajadorDiaBean turno = TurnoTrabajadorDiaHandler.getTurnoTrabajadorDia(null, codRes, codTrab, fecha, eb);
+		if(turno == null) {
+			respuesta = new RespuestaBean<TurnoTrabajadorDiaBean>(eb);
 		} else {
-			return Response.status(Status.OK).entity(turnos).build();
+			respuesta = new RespuestaBean<TurnoTrabajadorDiaBean>(turno);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 	@GET
@@ -150,6 +174,8 @@ public class TrabajadorServicio {
 			@DefaultValue("-1") int time_fin) {
 		Date fecha_ini = null;
 		Date fecha_fin = null;
+		ErrorBean eb = new ErrorBean();
+		RespuestaBean<TurnoTrabajadorDiaBean> respuesta = null;
 		try {
 			if (time_ini > 0) {
 				fecha_ini = new Date(time_ini * 1000l);
@@ -161,16 +187,20 @@ public class TrabajadorServicio {
 				fecha_ini = Calendar.getInstance().getTime();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			eb.setHttpCode(Status.BAD_REQUEST);
+			eb.updateErrorCode("48610600");
+			eb.updateMsg("momentos ("+time_ini+","+time_fin+") no parseable, o algo");
+			eb.updateMsg(e.getMessage());
 		}
-
-		ErrorBean eb = new ErrorBean();
-		TurnoTrabajadorDiaBean turnos = TurnoTrabajadorDiaHandler.getTurnosTrabajadorRango(null, codRes, codTrab, fecha_ini, fecha_fin, eb);
-		if(turnos == null) {
-			return Response.status(eb.getHttpCode()).entity(eb).build();
+		
+		ArrayList<TurnoTrabajadorDiaBean> listaTurnos = TurnoTrabajadorDiaHandler.getTurnosTrabajadorRango(null, codRes, codTrab, fecha_ini, fecha_fin, eb);
+		if(listaTurnos == null) {
+			respuesta = new RespuestaBean<TurnoTrabajadorDiaBean>(eb);
 		} else {
-			return Response.status(Status.OK).entity(turnos).build();
+			respuesta = new RespuestaBean<TurnoTrabajadorDiaBean>(listaTurnos);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 }

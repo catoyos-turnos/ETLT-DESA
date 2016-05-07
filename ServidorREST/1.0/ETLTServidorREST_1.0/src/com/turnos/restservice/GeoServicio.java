@@ -11,7 +11,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.handlers.GeoHandler;
 import com.turnos.datos.vo.ErrorBean;
@@ -19,6 +18,7 @@ import com.turnos.datos.vo.FestivoBean.TipoFiesta;
 import com.turnos.datos.vo.MunicipioBean;
 import com.turnos.datos.vo.PaisBean;
 import com.turnos.datos.vo.ProvinciaBean;
+import com.turnos.datos.vo.RespuestaBean;
 
 @Path(WebServUtils.PREF_GEO_PATH)
 public class GeoServicio {
@@ -32,12 +32,15 @@ public class GeoServicio {
 	public static Response listaPaises() {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<PaisBean> listaPaises = GeoHandler.listPaises(null, errorBean);
-		
+		RespuestaBean<PaisBean> respuesta = null;
+
 		if(listaPaises == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<PaisBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(listaPaises).build();
+			respuesta = new RespuestaBean<PaisBean>(listaPaises);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 	@GET
@@ -47,11 +50,15 @@ public class GeoServicio {
 	public static Response getPais(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais) {
 		ErrorBean errorBean = new ErrorBean();
 		PaisBean pais = GeoHandler.getPais(null, codPais, errorBean);
+		RespuestaBean<PaisBean> respuesta = null;
+
 		if(pais == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<PaisBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(pais).build();
+			respuesta = new RespuestaBean<PaisBean>(pais);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 	@GET
@@ -62,12 +69,15 @@ public class GeoServicio {
 	public static Response listaProvincias(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais) {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<ProvinciaBean> listaProvincias = GeoHandler.listProvincias(null, codPais, errorBean);
+		RespuestaBean<ProvinciaBean> respuesta = null;
 
 		if(listaProvincias == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<ProvinciaBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(listaProvincias).build();
+			respuesta = new RespuestaBean<ProvinciaBean>(listaProvincias);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 	@GET
@@ -79,11 +89,15 @@ public class GeoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia) {
 		ErrorBean errorBean = new ErrorBean();
 		ProvinciaBean provincia = GeoHandler.getProvincia(null, codProvincia, errorBean);
+		RespuestaBean<ProvinciaBean> respuesta = null;
+
 		if(provincia == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<ProvinciaBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(provincia).build();
+			respuesta = new RespuestaBean<ProvinciaBean>(provincia);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 	@GET
@@ -96,12 +110,15 @@ public class GeoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia) {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<MunicipioBean> listaMunicipios = GeoHandler.listMunicipios(null, codProvincia, errorBean);
+		RespuestaBean<MunicipioBean> respuesta = null;
 
 		if(listaMunicipios == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<MunicipioBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(listaMunicipios).build();
+			respuesta = new RespuestaBean<MunicipioBean>(listaMunicipios);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 	@GET
@@ -115,11 +132,15 @@ public class GeoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_MUNI) String codMunicipio) {
 		ErrorBean errorBean = new ErrorBean();
 		MunicipioBean municipio = GeoHandler.getMunicipio(null, codMunicipio, errorBean);
+		RespuestaBean<MunicipioBean> respuesta = null;
+		
 		if(municipio == null) {
-			return Response.status(errorBean.getHttpCode()).entity(errorBean).build();
+			respuesta = new RespuestaBean<MunicipioBean>(errorBean);
 		} else {
-			return Response.status(Status.OK).entity(municipio).build();
+			respuesta = new RespuestaBean<MunicipioBean>(municipio);
 		}
+		
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 
 	// ---------------------misc.---------------------------------------------

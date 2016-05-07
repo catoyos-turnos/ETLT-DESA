@@ -6,6 +6,7 @@ import java.util.Date;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.VacacionesBean;
 
+//66xxxx
 public class VacacionesHandler extends GenericHandler {
 
 	public static ArrayList<VacacionesBean> listVacaciones(Object object,

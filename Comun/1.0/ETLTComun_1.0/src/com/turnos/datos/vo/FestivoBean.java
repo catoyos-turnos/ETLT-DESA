@@ -4,14 +4,11 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @XmlRootElement(name = "festivo")
 @JsonRootName(value = "festivo")
-@JsonInclude(Include.NON_NULL)
-public class FestivoBean {
+public class FestivoBean extends ETLTBean {
 	public enum TipoFiesta {
 		NACIONAL, AUTONOMICA, LOCAL;
 		public static TipoFiesta safeValueOf(String arg) {
