@@ -12,12 +12,7 @@ public class ResidenciaBean extends ETLTBean {
 	private String descripcion;
 	private String ciudad;
 	private String municipioCod;
-	private String municipioNombre;
-	private String provinciaCod;
-	private String provinciaNombre;
-	private String paisCod;
-	private String paisNombre;
-	private String tz;
+	private MunicipioBean municipio;
 
 	public String getCodigo() {
 		return codigo;
@@ -59,62 +54,12 @@ public class ResidenciaBean extends ETLTBean {
 		this.municipioCod = municipioCod;
 	}
 
-	public String getMunicipioNombre() {
-		return municipioNombre;
+	public MunicipioBean getMunicipio() {
+		return municipio;
 	}
 
-	public void setMunicipioNombre(String municipioNombre) {
-		this.municipioNombre = municipioNombre;
-	}
-
-	public String getProvinciaCod() {
-		return provinciaCod;
-	}
-
-	public void setProvinciaCod(String provinciaCod) {
-		this.provinciaCod = provinciaCod;
-	}
-
-	public String getProvinciaNombre() {
-		return provinciaNombre;
-	}
-
-	public void setProvinciaNombre(String provinciaNombre) {
-		this.provinciaNombre = provinciaNombre;
-	}
-
-	public String getPaisCod() {
-		return paisCod;
-	}
-
-	public void setPaisCod(String paisCod) {
-		this.paisCod = paisCod;
-	}
-
-	public String getPaisNombre() {
-		return paisNombre;
-	}
-
-	public void setPaisNombre(String paisNombre) {
-		this.paisNombre = paisNombre;
-	}
-
-	public String getTZ() {
-		return tz;
-	}
-
-	public void setTZ(String tz) {
-		this.tz = tz;
-	}
-
-	@Override
-	public String toString() {
-		return "ResidenciaBean [codigo=" + codigo + ", nombre=" + nombre
-				+ ", descripcion=" + descripcion + ", ciudad=" + ciudad
-				+ ", municipioCod=" + municipioCod + ", municipioNombre="
-				+ municipioNombre + ", provinciaCod=" + provinciaCod
-				+ ", provinciaNombre=" + provinciaNombre + ", paisCod="
-				+ paisCod + ", paisNombre=" + paisNombre + ", tz=" + tz + "]";
+	public void setMunicipio(MunicipioBean municipio) {
+		this.municipio = municipio;
 	}
 
 }

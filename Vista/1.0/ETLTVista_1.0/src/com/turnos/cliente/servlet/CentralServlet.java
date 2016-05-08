@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.turnos.datos.vo.MunicipioBean;
 import com.turnos.datos.vo.ResidenciaBean;
 import com.turnos.datos.vo.ServicioBean;
 import com.turnos.datos.vo.TrabajadorBean;
@@ -58,15 +59,20 @@ public class CentralServlet extends HttpServlet {
 		residencia.setNombre("Oviedo");
 		residencia.setDescripcion("Estación Uria");
 		residencia.setMunicipioCod( "ES330447");
-		residencia.setMunicipioNombre("Oviedo");
-		residencia.setProvinciaCod("ES33");
-		residencia.setProvinciaNombre("Asturias");
-		residencia.setPaisCod("ES");
-		residencia.setPaisNombre("España");
-		residencia.setTZ("Europe/Madrid");
+		
+		MunicipioBean municipio = new MunicipioBean();
+		municipio.setMunicipioCod( "ES330447");
+		municipio.setMunicipioNombre("Oviedo");
+		municipio.setProvinciaCod("ES33");
+		municipio.setProvinciaNombre("Asturias");
+		municipio.setPaisCod("ES");
+		municipio.setPaisNombre("España");
+		municipio.setTz("Europe/Madrid");
+		residencia.setMunicipio(municipio);
+		
 		sesion.setAttribute("residencia", residencia);
 		
-		Calendar c = Calendar.getInstance(TimeZone.getTimeZone(residencia.getTZ()));
+		Calendar c = Calendar.getInstance(TimeZone.getTimeZone(residencia.getMunicipio().getTz()));
 		c.set(2016, 4, 13);
 		sesion.setAttribute("hoy", c.getTime().clone());
 

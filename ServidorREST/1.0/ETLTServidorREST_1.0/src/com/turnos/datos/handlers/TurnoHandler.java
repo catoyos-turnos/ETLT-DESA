@@ -12,11 +12,16 @@ import com.turnos.datos.vo.TurnoBean.TipoTurno;
 //73xxxx
 public class TurnoHandler extends GenericHandler {
 	
-	private static final String QUERY_LISTA_TURNOS_RES = ""; // TODO
-	private static final String QUERY_GET_TURNO_COD = ""; // TODO
-	private static final String UPDATE_INSERT_NUEVO_TURNO = ""; // TODO
-	private static final String UPDATE_UPDATE_TURNO = ""; // TODO
-	private static final String UPDATE_DELETE_TURNO = ""; // TODO
+	// TODO
+	private static final String QUERY_LISTA_TURNOS_RES = "";
+	// TODO
+	private static final String QUERY_GET_TURNO_COD = "";
+	// TODO
+	private static final String UPDATE_INSERT_NUEVO_TURNO = "";
+	// TODO
+	private static final String UPDATE_UPDATE_TURNO = "";
+	// TODO
+	private static final String UPDATE_DELETE_TURNO = ""; 
 	
 	// 00xx
 	public static boolean existeTurno(Connection conexion, String codRes,
@@ -86,10 +91,9 @@ public class TurnoHandler extends GenericHandler {
 
 	// 04xx
 	public static TurnoBean insertTurno(Connection conexion, String codRes,
-			TurnoBean turnoRaw, ErrorBean errorBean) {
+			TurnoBean turnoRaw, boolean aut, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(nconexion);
 		if (!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57730300");
@@ -108,10 +112,9 @@ public class TurnoHandler extends GenericHandler {
 
 	// 05xx
 	public static TurnoBean updateTurno(Connection conexion, String codRes,
-			String codTurno, TurnoBean turnoRaw, ErrorBean errorBean) {
+			String codTurno, TurnoBean turnoRaw, boolean aut, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(nconexion);
 		if (!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57730400");
@@ -130,10 +133,9 @@ public class TurnoHandler extends GenericHandler {
 
 	// 06xx
 	public static boolean deleteTurno(Connection conexion, String codRes,
-			String codTurno, ErrorBean errorBean) {
+			String codTurno, boolean aut, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(nconexion);
 		if (!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57730500");

@@ -68,7 +68,8 @@ public class MensajeService {
 			@QueryParam(WebServUtils.Q_PARAM_PROF_RESPUESTAS) @DefaultValue("1") int profRespuestas) {
 		ErrorBean errorBean = new ErrorBean();
 		RespuestaBean<MensajeBean> respuesta = null;
-		MensajeBean privado = MensajeHandler.getMensaje(null, codMensaje, profRespuestas, errorBean);
+		boolean aut = MensajeHandler.autenticar(null);
+		MensajeBean privado = MensajeHandler.getMensaje(null, codMensaje, profRespuestas, aut, errorBean);
 		
 		if (privado == null) {
 			respuesta = new RespuestaBean<MensajeBean>(errorBean);
@@ -87,8 +88,8 @@ public class MensajeService {
 			@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
 		ErrorBean errorBean = new ErrorBean();
 		RespuestaBean<MensajeBean> respuesta = null;
-		MensajeBean privado = MensajeHandler.insertMensaje(null, privadoRaw,
-				errorBean);
+		boolean aut = MensajeHandler.autenticar(null);
+		MensajeBean privado = MensajeHandler.insertMensaje(null, privadoRaw, aut, errorBean);
 
 		if(privado == null) {
 			respuesta = new RespuestaBean<MensajeBean>(errorBean);
@@ -99,5 +100,7 @@ public class MensajeService {
 		
 		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
+
+	//TODO leido get/post/put/delete
 
 }

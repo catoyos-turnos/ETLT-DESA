@@ -456,7 +456,7 @@ public class FestivoHandler extends GenericHandler {
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
 		FestivoBean fest = null;
-		if (codFest > 0) {
+		if (codFest >= 0) {
 			try {
 				PreparedStatement ps;
 				if(includeGeo) {
@@ -505,11 +505,10 @@ public class FestivoHandler extends GenericHandler {
 	}
 
 	//06xx
-	public static FestivoBean insertFestivo(Connection conexion, FestivoBean festRaw,
+	public static FestivoBean insertFestivo(Connection conexion, FestivoBean festRaw, boolean aut,
 			ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(nconexion);
 		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57800600");
@@ -559,10 +558,9 @@ public class FestivoHandler extends GenericHandler {
 
 	//07xx
 	public static FestivoBean updateFestivo(Connection conexion, int codFest,
-			FestivoBean festRaw, ErrorBean errorBean) {
+			FestivoBean festRaw, boolean aut, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(nconexion);
 		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57800700");
@@ -662,11 +660,10 @@ public class FestivoHandler extends GenericHandler {
 
 
 	//08xx
-	public static boolean deleteFestivo(Connection conexion, int codFest,
+	public static boolean deleteFestivo(Connection conexion, int codFest, boolean aut,
 			ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(nconexion);
 		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57800800");

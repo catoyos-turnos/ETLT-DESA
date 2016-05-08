@@ -73,7 +73,7 @@ public class ResidenciaServicio {
 			respuesta = new RespuestaBean<ResidenciaBean>(listaResidencias);
 		}
 		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).encoding("UTF-8").build();
 	}
 	
 	@GET
@@ -102,7 +102,8 @@ public class ResidenciaServicio {
 	@Valid
 	public static Response nuevaResidencia(ResidenciaBean resRaw) {
 		ErrorBean eb = new ErrorBean();
-		ResidenciaBean residencia = ResidenciaHandler.insertResidencia(null, resRaw, eb);
+		boolean aut = ResidenciaHandler.autenticar(null);
+		ResidenciaBean residencia = ResidenciaHandler.insertResidencia(null, resRaw, aut, eb);
 		RespuestaBean<ResidenciaBean> respuesta;
 		
 		if(residencia == null) {
@@ -125,7 +126,8 @@ public class ResidenciaServicio {
 	public static Response modResidencia(ResidenciaBean resRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
-		ResidenciaBean residencia = ResidenciaHandler.updateResidencia(null, codRes, resRaw, eb);
+		boolean aut = ResidenciaHandler.autenticar(null);
+		ResidenciaBean residencia = ResidenciaHandler.updateResidencia(null, codRes, resRaw, aut, eb);
 		RespuestaBean<ResidenciaBean> respuesta;
 		
 		if(residencia == null) {
@@ -146,7 +148,8 @@ public class ResidenciaServicio {
 	@Valid
 	public static Response borraResidencia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
-		boolean borrado = ResidenciaHandler.deleteResidencia(null, codRes, eb);
+		boolean aut = ResidenciaHandler.autenticar(null);
+		boolean borrado = ResidenciaHandler.deleteResidencia(null, codRes, aut, eb);
 		RespuestaBean<ResidenciaBean> respuesta;
 		
 		if(borrado) {

@@ -79,7 +79,8 @@ public class TurnoServicio {
 	public static Response nuevoTurno(TurnoBean turnoRaw, 
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean errorBean = new ErrorBean();
-		TurnoBean turno = TurnoHandler.insertTurno(null, codRes, turnoRaw, errorBean);
+		boolean aut = TurnoHandler.autenticar(null);
+		TurnoBean turno = TurnoHandler.insertTurno(null, codRes, turnoRaw, aut, errorBean);
 		RespuestaBean<TurnoBean> respuesta = null;
 
 		if(turno == null) {
@@ -101,7 +102,8 @@ public class TurnoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
-		TurnoBean turno = TurnoHandler.updateTurno(null, codRes, codTurno, turnoRaw, errorBean);
+		boolean aut = TurnoHandler.autenticar(null);
+		TurnoBean turno = TurnoHandler.updateTurno(null, codRes, codTurno, turnoRaw, aut, errorBean);
 		RespuestaBean<TurnoBean> respuesta = null;
 		
 		if(turno == null) {
@@ -121,7 +123,8 @@ public class TurnoServicio {
 	public static Response borraTurno(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean borrado = TurnoHandler.deleteTurno(null, codRes, codTurno, errorBean);
+		boolean aut = TurnoHandler.autenticar(null);
+		boolean borrado = TurnoHandler.deleteTurno(null, codRes, codTurno, aut, errorBean);
 		RespuestaBean<TurnoBean> respuesta = null;
 		
 		if(borrado) {

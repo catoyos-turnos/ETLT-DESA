@@ -133,7 +133,8 @@ public class DiaFestivoServicio {
 	@Valid
 	public static Response nuevoDiaFestivo(FestivoBean festRaw) {
 		ErrorBean eb = new ErrorBean();
-		FestivoBean festivo = FestivoHandler.insertFestivo(null, festRaw, eb);
+		boolean aut = FestivoHandler.autenticar(null);
+		FestivoBean festivo = FestivoHandler.insertFestivo(null, festRaw, aut, eb);
 		RespuestaBean<FestivoBean> respuesta;
 
 		if(festivo == null) {
@@ -156,7 +157,8 @@ public class DiaFestivoServicio {
 	public static Response modDiaFestivo(FestivoBean festRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
 		ErrorBean eb = new ErrorBean();
-		FestivoBean festivo = FestivoHandler.updateFestivo(null, codFest, festRaw, eb);
+		boolean aut = FestivoHandler.autenticar(null);
+		FestivoBean festivo = FestivoHandler.updateFestivo(null, codFest, festRaw, aut, eb);
 		RespuestaBean<FestivoBean> respuesta;
 
 		if(festivo == null) {
@@ -177,7 +179,8 @@ public class DiaFestivoServicio {
 	@Valid
 	public static Response borraDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
 		ErrorBean eb = new ErrorBean();
-		boolean borrado = FestivoHandler.deleteFestivo(null, codFest, eb);
+		boolean aut = FestivoHandler.autenticar(null);
+		boolean borrado = FestivoHandler.deleteFestivo(null, codFest, aut, eb);
 		RespuestaBean<FestivoBean> respuesta;
 
 		if(borrado) {

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "servicio")
 @JsonRootName(value = "servicio")
 public class ServicioBean extends ETLTBean {
-	private int id_servicio;
+	private long id_servicio = -1;
 	private String hora_pres;
 	private String hora_ret;
 	private int tiempo_toma;
@@ -17,11 +17,11 @@ public class ServicioBean extends ETLTBean {
 	private String descripcion;
 
 
-	public void setId_servicio(int id_servicio) {
+	public void setId_servicio(long id_servicio) {
 		this.id_servicio = id_servicio;
 	}
 
-	public int getId_servicio() {
+	public long getId_servicio() {
 		return id_servicio;
 	}
 	

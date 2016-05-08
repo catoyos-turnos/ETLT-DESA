@@ -10,19 +10,23 @@ import com.turnos.datos.vo.ServicioBean;
 
 //74xxxx
 public class ServicioHandler extends GenericHandler {
-
-	private static final String QUERY_LISTA_SERVICIOS_TURNO = ""; // TODO
-	private static final String QUERY_GET_SERVICIO_COD = ""; // TODO
-	private static final String UPDATE_INSERT_NUEVO_SERVICIO = ""; // TODO
-	private static final String UPDATE_UPDATE_SERVICIO = ""; // TODO
-	private static final String UPDATE_DELETE_SERVICIO = ""; // TODO
+	// TODO
+	private static final String QUERY_LISTA_SERVICIOS_TURNO = "";
+	// TODO
+	private static final String QUERY_GET_SERVICIO_COD = "";
+	// TODO
+	private static final String UPDATE_INSERT_NUEVO_SERVICIO = "";
+	// TODO
+	private static final String UPDATE_UPDATE_SERVICIO = "";
+	// TODO
+	private static final String UPDATE_DELETE_SERVICIO = "";
 	
 	//00xx
 	public static boolean existeServicio(Connection conexion, int codServ, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		
-		if(codServ > 0) {
+		if(codServ >= 0) {
 			return false;
 		} else {
 			try {
@@ -53,7 +57,7 @@ public class ServicioHandler extends GenericHandler {
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 	
 		ServicioBean serv = null;
-		if (codServ > 0) {
+		if (codServ >= 0) {
 			try {
 				// TODO Auto-generated method stub
 			} finally {
@@ -64,10 +68,9 @@ public class ServicioHandler extends GenericHandler {
 	}
 	
 	//03xx
-	public static ServicioBean insertServicio(Connection conexion, ServicioBean servRaw, ErrorBean errorBean) {
+	public static ServicioBean insertServicio(Connection conexion, ServicioBean servRaw, boolean aut, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(nconexion);
 		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57740300");
@@ -85,10 +88,9 @@ public class ServicioHandler extends GenericHandler {
 	}
 	
 	//04xx
-	public static ServicioBean updateServicio(Connection conexion, int codServ, ServicioBean servRaw, ErrorBean errorBean) {
+	public static ServicioBean updateServicio(Connection conexion, int codServ, ServicioBean servRaw, boolean aut, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(nconexion);
 		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57740400");
@@ -106,10 +108,9 @@ public class ServicioHandler extends GenericHandler {
 	}
 	
 	//05xx
-	public static boolean deleteServicio(Connection conexion, int codServ, ErrorBean errorBean) {
+	public static boolean deleteServicio(Connection conexion, int codServ, boolean aut, ErrorBean errorBean) {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean aut = autenticar(nconexion);
 		if(!aut) {
 			errorBean.setHttpCode(Status.FORBIDDEN);
 			errorBean.updateErrorCode("57740500");

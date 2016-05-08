@@ -71,7 +71,8 @@ public class ServicioServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
-		ServicioBean servicio = ServicioHandler.insertServicio(null, servicioRaw, errorBean);
+		boolean aut = ServicioHandler.autenticar(null);
+		ServicioBean servicio = ServicioHandler.insertServicio(null, servicioRaw, aut, errorBean);
 		RespuestaBean<ServicioBean> respuesta = null;
 
 		if(servicio == null) {
@@ -94,7 +95,8 @@ public class ServicioServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
 		ErrorBean errorBean = new ErrorBean();
-		ServicioBean servicio = ServicioHandler.updateServicio(null, codServ, servicioRaw, errorBean);
+		boolean aut = ServicioHandler.autenticar(null);
+		ServicioBean servicio = ServicioHandler.updateServicio(null, codServ, servicioRaw, aut, errorBean);
 		RespuestaBean<ServicioBean> respuesta = null;
 		
 		if(servicio == null) {
@@ -115,7 +117,8 @@ public class ServicioServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean borrado = ServicioHandler.deleteServicio(null, codServ, errorBean);
+		boolean aut = ServicioHandler.autenticar(null);
+		boolean borrado = ServicioHandler.deleteServicio(null, codServ, aut, errorBean);
 		RespuestaBean<ServicioBean> respuesta = null;
 
 		if(borrado) {

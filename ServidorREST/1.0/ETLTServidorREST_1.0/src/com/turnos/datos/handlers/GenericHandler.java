@@ -16,9 +16,16 @@ import com.turnos.datos.AccesoBD;
 import com.turnos.datos.vo.ErrorBean;
 //69xxxx
 public abstract class GenericHandler {
-	private static final SimpleDateFormat sdfIn = new SimpleDateFormat("yyyy-MM-dd");
 	private static final String QUERY_GET_INFO_DIA = "SELECT get_info_residencia_dia(?, ?) AS infodia";
 	private static final String QUERY_GET_INFO_RANGO_DIAS = "SELECT get_info_residencia_rango_dias(?, ?, ?) AS infodias";
+	
+	protected static final SimpleDateFormat sdfIn = new SimpleDateFormat("yyyy-MM-dd");
+	protected static final String LMSN_QUERY_LIMIT_NO_OFFSET = " LIMIT ?";
+	protected static final String LMSN_QUERY_LIMIT_OFFSET = " LIMIT ? OFFSET ?";
+	protected static final String LMSN_QUERY_LIMIT_DF_NO_OFFSET = " LIMIT 60";
+	protected static final String LMSN_QUERY_LIMIT_DF_OFFSET = " LIMIT 60 OFFSET ?";
+	protected static final String LMSN_QUERY_NO_LIMIT_NO_OFFSET = "";
+	protected static final String LMSN_QUERY_NO_LIMIT_OFFSET = " LIMIT 123456789 OFFSET ?";
 
 	
 	protected static java.sql.Date javaDateToSQLDate(Date fecha) {
@@ -44,7 +51,7 @@ public abstract class GenericHandler {
 		return nuevaConexion ? AccesoBD.getConexion() : conexion;
 	}
 
-	protected static boolean autenticar(Connection conexion) {
+	public static boolean autenticar(Connection conexion) {
 		return true;
 	}
 	

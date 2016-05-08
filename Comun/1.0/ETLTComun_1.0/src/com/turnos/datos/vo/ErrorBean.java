@@ -53,7 +53,7 @@ public class ErrorBean {
 		if(this.errorCode == null || "".equals(this.errorCode)) {
 			this.errorCode = errorCode;
 		} else {
-			this.errorCode += "->" + errorCode;
+			this.errorCode += "," + errorCode;
 		}
 	}
 
@@ -69,7 +69,7 @@ public class ErrorBean {
 		if(this.msg == null || "".equals(this.msg)) {
 			this.msg = msg;
 		} else {
-			this.msg += "->" + msg;
+			this.msg += "| -> |" + msg;
 		}
 	}
 

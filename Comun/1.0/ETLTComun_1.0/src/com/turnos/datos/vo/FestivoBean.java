@@ -17,7 +17,7 @@ public class FestivoBean extends ETLTBean {
 		}
 	};
 
-	private int codigo;
+	private long codigo = -1;
 	private String fiesta;
 	private String notas;
 	private Date fecha;
@@ -29,11 +29,11 @@ public class FestivoBean extends ETLTBean {
 	private String paisCod;
 	private String paisNombre;
 
-	public int getCodigo() {
+	public long getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(int codigo) {
+	public void setCodigo(long codigo) {
 		this.codigo = codigo;
 	}
 

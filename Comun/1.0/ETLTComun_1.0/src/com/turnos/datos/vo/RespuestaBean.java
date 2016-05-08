@@ -6,10 +6,14 @@ import java.util.List;
 import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @XmlRootElement(name = "respuesta")
 @JsonRootName(value = "respuesta")
+@JsonInclude(Include.NON_NULL)
 public class RespuestaBean<T extends ETLTBean> {
 	private List<T> listaResultados;
 	private ErrorBean error;
@@ -46,12 +50,14 @@ public class RespuestaBean<T extends ETLTBean> {
 		this.listaResultados = listaResultados;
 	}
 
+	@JsonIgnore
 	public T getResultado() {
 		if(listaResultados != null && !listaResultados.isEmpty())
 			return listaResultados.get(0);
 		else return null;
 	}
 
+	@JsonIgnore
 	public void setResultado(T resultado) {
 		if(listaResultados == null) {
 			this.listaResultados = new ArrayList<T>(1);

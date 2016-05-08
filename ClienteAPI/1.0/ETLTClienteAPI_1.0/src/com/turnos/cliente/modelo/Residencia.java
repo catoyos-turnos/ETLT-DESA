@@ -6,9 +6,15 @@ import com.turnos.datos.vo.ResidenciaBean;
 
 public class Residencia {
 	private ResidenciaBean residencia;
+	private ResidenciaBean residenciaAux;
+	private boolean flagNueva;
+	private boolean flagModificada;
 	
-	public Residencia(ResidenciaBean residencia) {
+	protected Residencia(ResidenciaBean residencia, boolean nueva) {
 		this.residencia = residencia;
+		this.flagNueva = nueva;
+		this.flagModificada = false;
+		this.residenciaAux = new ResidenciaBean();
 	}
 	
 	public static List<Residencia> listaResidencias() {
@@ -84,31 +90,70 @@ public class Residencia {
 
 	public void setMunicipioCod(String municipioCod) {
 		residencia.setMunicipioCod(municipioCod);
+		//TODO cambia municipio (null?)
 	}
 
+	//TODO public Municipio getMunicipio() {}
+	
 	public String getMunicipioNombre() {
-		return residencia.getMunicipioNombre();
+		if (residencia.getMunicipio() == null) {
+			return null;
+		}
+		return residencia.getMunicipio().getMunicipioNombre();
 	}
 
 	public String getProvinciaCod() {
-		return residencia.getProvinciaCod();
+		if (residencia.getMunicipio() == null) {
+			return null;
+		}
+		return residencia.getMunicipio().getProvinciaCod();
 	}
 
 	public String getProvinciaNombre() {
-		return residencia.getProvinciaNombre();
+		if (residencia.getMunicipio() == null) {
+			return null;
+		}
+		return residencia.getMunicipio().getProvinciaNombre();
 	}
 
 	public String getPaisCod() {
-		return residencia.getPaisCod();
+		if (residencia.getMunicipio() == null) {
+			return null;
+		}
+		return residencia.getMunicipio().getPaisCod();
 	}
 
 	public String getPaisNombre() {
-		return residencia.getPaisNombre();
+		if (residencia.getMunicipio() == null) {
+			return null;
+		}
+		return residencia.getMunicipio().getPaisNombre();
 	}
 
 	public String getTZ() {
-		return residencia.getTZ();
+		if (residencia.getMunicipio() == null) {
+			return null;
+		}
+		return residencia.getMunicipio().getTz();
 	}
 
+
+	public void graba() {
+		//TODO
+	}
+
+	public void borra() {
+		//TODO
+	}
+
+	public List<DiaFestivo> getDiasFestivos(int time_ini, int time_fin, int limit) {
+		//TODO
+		return null;
+	}
+
+	public List<TurnoTrabajadorDia> getHorarioCompletoDia(int time) {
+		//TODO
+		return null;
+	}
 	
 }
