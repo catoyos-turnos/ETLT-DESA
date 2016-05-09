@@ -215,13 +215,13 @@ public class GeoHandler extends GenericHandler {
 			MunicipioBean muni;
 			while (rs.next()) {
 				muni = new MunicipioBean();
-				muni.setProvinciaCod(rs.getString("municipioCod"));
-				muni.setProvinciaNombre(rs.getString("municipioNombre"));
+				muni.setMunicipioCod(rs.getString("municipioCod"));
+				muni.setMunicipioNombre(rs.getString("municipioNombre"));
 				muni.setProvinciaCod(rs.getString("provinciaCod"));
 				muni.setProvinciaNombre(rs.getString("provinciaNombre"));
 				muni.setPaisCod(rs.getString("paisCod"));
-				muni.setPaisNombre("paisNombre");
-				muni.setTz("tz");
+				muni.setPaisNombre(rs.getString("paisNombre"));
+				muni.setTz(rs.getString("tz"));
 				listaMunicipios.add(muni);
 			}
 		} catch (SQLException e) {
@@ -251,13 +251,13 @@ public class GeoHandler extends GenericHandler {
 				rs = ps.executeQuery();
 				if (rs.next()) {
 					muni = new MunicipioBean();
-					muni.setProvinciaCod(rs.getString("municipioCod"));
-					muni.setProvinciaNombre(rs.getString("municipioNombre"));
+					muni.setMunicipioCod(rs.getString("municipioCod"));
+					muni.setMunicipioNombre(rs.getString("municipioNombre"));
 					muni.setProvinciaCod(rs.getString("provinciaCod"));
 					muni.setProvinciaNombre(rs.getString("provinciaNombre"));
 					muni.setPaisCod(rs.getString("paisCod"));
-					muni.setPaisNombre("paisNombre");
-					muni.setTz("tz");
+					muni.setPaisNombre(rs.getString("paisNombre"));
+					muni.setTz(rs.getString("tz"));
 				} else {
 					errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
 					errorBean.updateErrorCode("69600602");

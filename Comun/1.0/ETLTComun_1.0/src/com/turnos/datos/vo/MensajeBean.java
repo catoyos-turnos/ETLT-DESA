@@ -15,6 +15,7 @@ public class MensajeBean extends ETLTBean {
 	private UsuarioBean remitente;
 	private UsuarioBean destinatario;
 	private long idMsgOriginal = -1;
+	private MensajeBean msgOriginal;
 	private List<MensajeBean> respuestas;
 	private Date hora;
 	private String texto;
@@ -44,12 +45,20 @@ public class MensajeBean extends ETLTBean {
 		this.destinatario = destinatario;
 	}
 
-	public long getIdMsjOriginal() {
+	public long getIdMsgOriginal() {
 		return idMsgOriginal;
 	}
 
-	public void setIdMsjOriginal(long idMsgOriginal) {
+	public void setIdMsgOriginal(long idMsgOriginal) {
 		this.idMsgOriginal = idMsgOriginal;
+	}
+
+	public MensajeBean getMsgOriginal() {
+		return msgOriginal;
+	}
+
+	public void setMsgOriginal(MensajeBean msgOriginal) {
+		this.msgOriginal = msgOriginal;
 	}
 
 	public List<MensajeBean> getRespuestas() {

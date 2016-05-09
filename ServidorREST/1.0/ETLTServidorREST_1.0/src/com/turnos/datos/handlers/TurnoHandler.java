@@ -12,16 +12,30 @@ import com.turnos.datos.vo.TurnoBean.TipoTurno;
 //73xxxx
 public class TurnoHandler extends GenericHandler {
 	
-	// TODO
-	private static final String QUERY_LISTA_TURNOS_RES = "";
-	// TODO
-	private static final String QUERY_GET_TURNO_COD = "";
-	// TODO
-	private static final String UPDATE_INSERT_NUEVO_TURNO = "";
-	// TODO
-	private static final String UPDATE_UPDATE_TURNO = "";
-	// TODO
-	private static final String UPDATE_DELETE_TURNO = ""; 
+	private static final String QUERY_LISTA_TURNOS_RES =
+			"SELECT turno.codigo as codTurno, res.codigo as codRes, turno.tipo as tipo "
+			+ "FROM turno JOIN residencia res ON turno.id_residencia=res.id_residencia "
+			+ "WHERE res.codigo=?";
+	
+	private static final String QUERY_GET_TURNO_COD =
+			"SELECT turno.codigo as codTurno, res.codigo as codRes, turno.tipo as tipo "
+			+ "FROM turno JOIN residencia res ON turno.id_residencia=res.id_residencia "
+			+ "WHERE res.codigo=? AND turno.codigo=?";
+
+	private static final String UPDATE_INSERT_NUEVO_TURNO =
+			"INSERT INTO turno(codigo, id_residencia, tipo) "
+			+ "SELECT ?, res.id_residencia, ? FROM residencia res WHERE res.codigo=?";
+
+	private static final String UPDATE_UPDATE_TURNO =
+			"UPDATE turno "
+				+ "JOIN residencia res ON turno.id_residencia=res.id_residencia "
+			+ "SET %s WHERE turno.codigo=? AND res.codigo=?";
+
+	private static final String UPDATE_DELETE_TURNO =
+			"DELETE turno FROM turno "
+				+ "JOIN residencia res ON turno.id_residencia=res.id_residencia "
+			+ "WHERE turno.codigo=? AND res.codigo=?";
+
 	
 	// 00xx
 	public static boolean existeTurno(Connection conexion, String codRes,

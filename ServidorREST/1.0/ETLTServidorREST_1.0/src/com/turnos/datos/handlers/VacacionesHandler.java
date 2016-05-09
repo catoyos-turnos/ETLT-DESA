@@ -16,11 +16,11 @@ public class VacacionesHandler extends GenericHandler {
 	// TODO
 	private static final String QUERY_GET_VACACIONES_COD = "";
 	// TODO
-	private static final String UPDATE_INSERT_NUEVO_TURNO = "";
+	private static final String UPDATE_INSERT_NUEVO_VACACIONES = "";
 	// TODO
-	private static final String UPDATE_UPDATE_TURNO = "";
+	private static final String UPDATE_UPDATE_VACACIONES = "";
 	// TODO
-	private static final String UPDATE_DELETE_TURNO = ""; 
+	private static final String UPDATE_DELETE_VACACIONES = ""; 
 
 	//00xx
 	public static ArrayList<VacacionesBean> listVacaciones(Object object,

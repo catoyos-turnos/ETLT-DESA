@@ -14,10 +14,7 @@
 		<link rel="stylesheet" href="css/main.css">
 		
 		<script src="js/vendor/modernizr-2.8.3.min.js"></script>
-		<script src="js/vendor/jquery-1.11.2.min.js"></script>
 		<script src="js/vendor/bootstrap.min.js"></script>
-    	<script src="js/ie10-viewport-bug-workaround.js"></script>
-		<script src="js/main.js"></script>
 		<meta name="description" content="${descripcion}">
 		<title>${titulo}</title>
 		

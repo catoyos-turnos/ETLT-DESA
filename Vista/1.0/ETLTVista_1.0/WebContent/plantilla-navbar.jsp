@@ -11,12 +11,14 @@
           <a class="navbar-brand" href="#">ETLT</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
+        <!--
           <c:choose>
           	<c:when test="${usuario != null}">
           	</c:when>
           	<c:otherwise>
           	</c:otherwise>
           </c:choose>
+          -->
         </div><!--/.navbar-collapse -->
       </div>
     </nav>

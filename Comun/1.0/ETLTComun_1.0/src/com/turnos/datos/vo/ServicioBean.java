@@ -1,5 +1,7 @@
 package com.turnos.datos.vo;
 
+import java.util.ArrayList;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -8,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @JsonRootName(value = "servicio")
 public class ServicioBean extends ETLTBean {
 	private long id_servicio = -1;
+	private String codTurno;
+	private String codRes;
 	private String hora_pres;
 	private String hora_ret;
 	private int tiempo_toma;
@@ -15,6 +19,7 @@ public class ServicioBean extends ETLTBean {
 	private int margen_antes;
 	private int margen_despues;
 	private String descripcion;
+	private ArrayList<ServicioTipoDia> tiposDia;
 
 
 	public void setId_servicio(long id_servicio) {
@@ -23,6 +28,22 @@ public class ServicioBean extends ETLTBean {
 
 	public long getId_servicio() {
 		return id_servicio;
+	}
+
+	public String getCodTurno() {
+		return codTurno;
+	}
+
+	public void setCodTurno(String codTurno) {
+		this.codTurno = codTurno;
+	}
+
+	public String getCodRes() {
+		return codRes;
+	}
+
+	public void setCodRes(String codRes) {
+		this.codRes = codRes;
 	}
 	
 	public String getHora_pres() {
@@ -79,6 +100,14 @@ public class ServicioBean extends ETLTBean {
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	public ArrayList<ServicioTipoDia> getTiposDia() {
+		return tiposDia;
+	}
+
+	public void setTiposDia(ArrayList<ServicioTipoDia> tiposDia) {
+		this.tiposDia = tiposDia;
 	}
 
 }
