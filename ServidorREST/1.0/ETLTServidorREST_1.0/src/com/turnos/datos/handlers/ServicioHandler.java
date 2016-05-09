@@ -10,16 +10,62 @@ import com.turnos.datos.vo.ServicioBean;
 
 //74xxxx
 public class ServicioHandler extends GenericHandler {
-	// TODO
-	private static final String QUERY_LISTA_SERVICIOS_TURNO = "";
-	// TODO
-	private static final String QUERY_GET_SERVICIO_COD = "";
-	// TODO
-	private static final String UPDATE_INSERT_NUEVO_SERVICIO = "";
-	// TODO
-	private static final String UPDATE_UPDATE_SERVICIO = "";
-	// TODO
-	private static final String UPDATE_DELETE_SERVICIO = "";
+	
+	private static final String QUERY_LISTA_TIPODIA_SERVICIO_TURNO_COD =
+			"SELECT s_td.id_servicio as id_servicio, s_td.id_turno as id_turno, "
+				+ "s_td.dia as dia, s_td.festivo as festivo, "
+				+ "s_td.vispera_festivo as vispera "
+			+ "FROM servicio_tipodia s_td WHERE s_td.id_turno=?";
+	
+	private static final String QUERY_LISTA_TIPODIA_SERVICIO_TURNO_RES =
+			"SELECT s_td.id_servicio as id_servicio, s_td.id_turno as id_turno, "
+				+ "s_td.dia as dia, s_td.festivo as festivo, "
+				+ "s_td.vispera_festivo as vispera, "
+				+ "turno.codigo as codTurno, res.codigo as codRes "
+			+ "FROM servicio_tipodia s_td "
+				+ "JOIN turno ON s_td.id_turno=turno.id_turno "
+				+ "JOIN residencia res ON res.id_residencia=turno.id_residencia "
+			+ "WHERE turno.codigo=? AND res.codigo=?";
+	
+	private static final String QUERY_LISTA_SERVICIOS_TURNO_COD =
+			"SELECT serv.id_servicio as id_servicio, serv.hora_pres as hora_pres, "
+				+ "serv.hora_ret as hora_ret, serv.tiempo_toma as tiempo_toma, "
+				+ "serv.tiempo_deje as tiempo_deje, serv.margen_antes as margen_antes, "
+				+ "serv.margen_despues as margen_despues, serv.descripcion as descripcion "
+			+ "FROM servicio serv WHERE serv.id_turno=?";
+	
+	private static final String QUERY_LISTA_SERVICIOS_TURNO_RES =
+			"SELECT serv.id_servicio as id_servicio, serv.hora_pres as hora_pres, "
+					+ "serv.hora_ret as hora_ret, serv.tiempo_toma as tiempo_toma, "
+					+ "serv.tiempo_deje as tiempo_deje, serv.margen_antes as margen_antes, "
+					+ "serv.margen_despues as margen_despues, serv.descripcion as descripcion, "
+					+ "turno.codigo as codTurno, res.codigo as codRes "
+			+ "FROM servicio serv "
+				+ "JOIN turno ON serv.id_turno=turno.id_turno "
+				+ "JOIN residencia res ON res.id_residencia=turno.id_residencia "
+			+ "WHERE turno.codigo=? AND res.codigo=?";
+	
+	private static final String QUERY_GET_SERVICIO_COD = 
+			"SELECT serv.id_servicio as id_servicio, serv.hora_pres as hora_pres, "
+					+ "serv.hora_ret as hora_ret, serv.tiempo_toma as tiempo_toma, "
+					+ "serv.tiempo_deje as tiempo_deje, serv.margen_antes as margen_antes, "
+					+ "serv.margen_despues as margen_despues, serv.descripcion as descripcion "
+			+ "FROM servicio serv WHERE serv.codigo=?";
+
+	private static final String UPDATE_INSERT_NUEVO_SERVICIO_TIPODIA =
+			"INSERT INTO servicio_tipodia (id_servicio, id_turno, dia, festivo, vispera_festivo) "
+			+ "SELECT serv.id_servicio, serv.id_turno, ?, ?, ? FROM servicio serv WHERE serv.id_servicio=?";
+
+	private static final String UPDATE_DELETE_SERVICIO_TIPODIA = "DELETE FROM servicio_tipodia WHERE id_servicio_tipodia=?";
+
+	
+	private static final String UPDATE_INSERT_NUEVO_SERVICIO = "INSERT INTO servicio "
+			+ "(id_turno, hora_pres, hora_ret, tiempo_toma, tiempo_deje, margen_antes, margen_despues, descripcion) "
+			+ "VALUES ?,?,?,?,?,?,?,?";
+
+	private static final String UPDATE_UPDATE_SERVICIO = "UPDATE servicio SET %s WHERE id_servicio=?";
+
+	private static final String UPDATE_DELETE_SERVICIO = "DELETE FROM servicio WHERE id_servicio=?";
 	
 	//00xx
 	public static boolean existeServicio(Connection conexion, int codServ, ErrorBean errorBean) {

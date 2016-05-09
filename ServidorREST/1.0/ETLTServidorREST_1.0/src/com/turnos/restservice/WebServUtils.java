@@ -21,6 +21,7 @@ public class WebServUtils {
 	public static final String COD_TURNO_PATH  = "/{codTurno: [A-Z0-9_]{3,32}}";
 	public static final String P_PARAM_COD_TURNO  = "codTurno";
 	public static final String Q_PARAM_TIPO_TURNO = "tipo_fiesta";
+	public static final String Q_PARAM_INC_SERVS = "inc_servs";
 	
 	public static final String PREF_SERV_PATH = "/serv";
 	public static final String COD_SERV_PATH  = "/{codServ: [0-9]{1,11}}";
@@ -60,22 +61,21 @@ public class WebServUtils {
 	public static final String P_PARAM_COD_MENSAJE = "codMsg";
 	public static final String PREF_MSG_RESPUESTA_PATH = "/respuestas";
 
-	public static final String Q_PARAM_ROL_EN_MSG = "msg_rol";
-	public static final String Q_PARAM_MSG_ES_RESP = "msg_rol";
-	public static final String Q_PARAM_MSG_RESP_A = "msg_rol";
-	public static final String Q_PARAM_LISTA_MSG_NO_LEIDOS = "msg_rol";
-	public static final String Q_PARAM_LISTA_MSG_LEIDOS = "msg_rol";
-	public static final String Q_PARAM_LISTA_RESPUESTAS = "msg_rol";
-	public static final String Q_PARAM_INC_RESPUESTAS = "msg_rol";
-	public static final String Q_PARAM_PROF_RESPUESTAS = "prof_respuestas";
-	
-	public static final String Q_PARAM_FECHA = "fecha";
-	public static final String Q_PARAM_TIEMPO_INI = "tiempo_ini";
-	public static final String Q_PARAM_TIEMPO_FIN = "tiempo_fin";
-	public static final String Q_PARAM_LIMITE = "limite";
+	public static final String Q_PARAM_ROL_EN_MSG = "msg_rol"; // (rol de usuario a buscar)
+	public static final String Q_PARAM_MSG_ORIGINAL = "original"; // (mensajes original [para devolver respuestas])
+	public static final String Q_PARAM_INC_MSG_ORIGINAL = "inc_original"; // (incluye mensaje original en respuestas)
+	public static final String Q_PARAM_LISTA_MSG_NO_LEIDOS = "no_leidos"; // (lista mensajes no leidos)
+	public static final String Q_PARAM_LISTA_MSG_LEIDOS = "leidos"; // (lista mensajes ya leidos)
+	public static final String Q_PARAM_LISTA_RESPUESTAS = "respuestas"; // (lista mensajes en respuesta a otros junto a mensajes originales)
+	public static final String Q_PARAM_PROF_RESPUESTAS = "prof_respuestas"; // (niveles de respuesta a devolver)
+
+	public static final String Q_PARAM_FECHA = "fecha"; // (fecha a mostrar)
+	public static final String Q_PARAM_TIEMPO_INI = "tiempo_ini"; // (momento inicial para listar)
+	public static final String Q_PARAM_TIEMPO_FIN = "tiempo_fin"; // (momento final para listar)
+	public static final String Q_PARAM_LIMITE = "limite"; // (cantidad a devolver)
+	public static final String Q_PARAM_OFFSET = "offset"; // (pagina)
 	public static final String Q_PARAM_COMPLETO = "completo";
-	public static final String Q_PARAM_INC_GEO = "inc_geo";
-	public static final String Q_PARAM_INC_SERVS = "inc_servs";
+	public static final String Q_PARAM_INC_GEO = "inc_geo"; // (incluye info geografica en respuesta)
 	
 	
 	public static Date getFecha(int anio, int mes, int dia) {

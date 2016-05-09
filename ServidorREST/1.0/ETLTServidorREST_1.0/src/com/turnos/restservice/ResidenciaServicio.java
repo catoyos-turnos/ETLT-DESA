@@ -73,7 +73,7 @@ public class ResidenciaServicio {
 			respuesta = new RespuestaBean<ResidenciaBean>(listaResidencias);
 		}
 		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).encoding("UTF-8").build();
+		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
 	@GET

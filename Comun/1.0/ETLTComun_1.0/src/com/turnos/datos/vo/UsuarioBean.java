@@ -9,7 +9,9 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 public class UsuarioBean extends ETLTBean {
 	private long idUsuario = -1;
 	private String user;
+	private String codTrab;
 	private TrabajadorBean trabajador;
+	private String codRes; 
 	private ResidenciaBean residencia;
 	private boolean activado;
 
@@ -29,12 +31,28 @@ public class UsuarioBean extends ETLTBean {
 		this.user = user;
 	}
 
+	public String getCodTrab() {
+		return codTrab;
+	}
+
+	public void setCodTrab(String codTrab) {
+		this.codTrab = codTrab;
+	}
+
 	public TrabajadorBean getTrabajador() {
 		return trabajador;
 	}
 
 	public void setTrabajador(TrabajadorBean trabajador) {
 		this.trabajador = trabajador;
+	}
+
+	public String getCodRes() {
+		return codRes;
+	}
+
+	public void setCodRes(String codRes) {
+		this.codRes = codRes;
 	}
 
 	public ResidenciaBean getResidencia() {
