@@ -1,4 +1,4 @@
-package com.turnos.restservice;
+package com.turnos.datos;
 
 import java.util.Calendar;
 import java.util.Date;

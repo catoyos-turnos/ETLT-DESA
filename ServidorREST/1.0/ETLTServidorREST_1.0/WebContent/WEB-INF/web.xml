@@ -6,16 +6,19 @@
 
 	<display-name>Turnos Rest Jersey</display-name>
 	<welcome-file-list>
-	    <!-- TODO: APUNTA A UNA PAGINA ESTATICA -->
-		<welcome-file>rest-api</welcome-file>
+	    <!-- TODO: APUNTAR A UNA PAGINA ESTATICA -->
+		<welcome-file>swagger/index.html</welcome-file>
 	</welcome-file-list>
 	
 	<servlet>
-        <servlet-name>Turnos App</servlet-name>
+        <servlet-name>ETLT API</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>com.turnos.restservice</param-value>
+            <param-value>
+	            io.swagger.jaxrs.listing,
+	            com.turnos.restservice
+            </param-value>
         </init-param>
         <init-param>
             <param-name>jersey.config.server.provider.scanning.recursive</param-name>
@@ -24,9 +27,25 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Turnos App</servlet-name>
-        <url-pattern>/rest-api/*</url-pattern>
+        <servlet-name>ETLT API</servlet-name>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>Jersey2Config</servlet-name>
+        <servlet-class>io.swagger.jersey.config.JerseyJaxrsConfig</servlet-class>
+        <init-param>
+            <param-name>api.version</param-name>
+            <param-value>1.0</param-value>
+        </init-param>
+        <init-param>
+            <param-name>swagger.api.basepath</param-name>
+            <!-- <param-value>http://raspberrypi:8081/ETLTServidorREST-1.0/api</param-value> -->
+            <param-value>http://localhost:9090/ETLTServidorREST/api</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    
 	<resource-ref>
 		<description>AccesoBD</description>
 		<res-ref-name>jdbc/turnos</res-ref-name>
@@ -36,4 +55,5 @@
     <listener>
         <listener-class>com.turnos.restservice.ContextFinalizer</listener-class>
     </listener>
+    
 </web-app>

@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.turnos.datos.WebServUtils;
 import com.turnos.datos.handlers.MensajeHandler;
 import com.turnos.datos.handlers.MensajeHandler.RolUsuario;
 import com.turnos.datos.vo.ErrorBean;

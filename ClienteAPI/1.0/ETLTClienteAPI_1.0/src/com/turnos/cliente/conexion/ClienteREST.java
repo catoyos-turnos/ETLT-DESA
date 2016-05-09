@@ -1,16 +1,25 @@
-package com.mkyong.client;
+package com.turnos.cliente.conexion;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
+import javax.ws.rs.core.MediaType;
+
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import com.turnos.datos.vo.ETLTBean;
+import com.turnos.datos.vo.RespuestaBean;
 
 public class ClienteREST {
 
-	public static final String BASE_URL = "https://raspberrypi:8081/ServidorREST-1.0/rest-api"
+	public static final String BASE_URL = "https://raspberrypi:8081/ServidorREST-1.0/api";
 	public static enum MetodoHTTP{GET, POST, PUT, DELETE, OPTIONS, HEAD};
 
-	public static RespuestaBean<T> llama(T tipo, String recurso, MetodoHTTP metodo, 
-			Map<String, String> queryParams, Map<String, String> postParams, JSONObject jsonBody) {
+	public static <T extends ETLTBean> RespuestaBean<T> llamada(T tipo, String recurso, MetodoHTTP metodo, 
+			Map<String, String> queryParams, Map<String, String> postParams, String jsonBody) {
 		RespuestaBean<T> res = null;
 		 
 		Client client = ClientBuilder.newClient().register(JacksonJaxbJsonProvider.class);
@@ -21,20 +30,20 @@ public class ClienteREST {
 		if(postParams != null && !postParams.isEmpty()) {
 			form = new Form();
 			for(Entry<String, String> entry: postParams.entrySet()) {
-				form.param(entry.key, entry.value);
+				form.param(entry.getKey(), entry.getValue());
 			}
 		}
 		//------------------------------
 		
-		//Request request = target.request(MediaType.APPLICATION_JSON_TYPE);
+		// TODO
 		switch(metodo) {
-			case GET: res = target.request(MediaType.APPLICATION_JSON_TYPE).get(RespuestaBean<T>.class);
+			case GET: res = target.request(MediaType.APPLICATION_JSON_TYPE).get(res.getClass());
 				break;
-			case POST: res = target.request(MediaType.APPLICATION_JSON_TYPE).post(RespuestaBean<T>.class);
+			case POST: res = target.request(MediaType.APPLICATION_JSON_TYPE).post(null, res.getClass());
 				break;
-			case PUT: res = target.request(MediaType.APPLICATION_JSON_TYPE).put(RespuestaBean<T>.class);
+			case PUT: res = target.request(MediaType.APPLICATION_JSON_TYPE).put(null, res.getClass());
 				break;
-			case DELETE: res = target.request(MediaType.APPLICATION_JSON_TYPE).delete(RespuestaBean<T>.class);
+			case DELETE: res = target.request(MediaType.APPLICATION_JSON_TYPE).delete(res.getClass());
 				break;
 			default: return null;
 		}

@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.turnos.datos.WebServUtils;
 import com.turnos.datos.handlers.TrabajadorHandler;
 import com.turnos.datos.handlers.TurnoTrabajadorDiaHandler;
 import com.turnos.datos.vo.ErrorBean;
@@ -33,7 +34,7 @@ public class TrabajadorServicio {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response listaTrabajadores (@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
+	public static Response listaTrabajadores (@PathParam(WebServUtils.P_PARAM_COD_RES) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<TrabajadorBean> listaTrabajadores = TrabajadorHandler.listTrabajadores(null, codTrab, errorBean);
 		RespuestaBean<TrabajadorBean> respuesta = null;
