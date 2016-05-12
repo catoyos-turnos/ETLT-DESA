@@ -107,6 +107,14 @@ public abstract class GenericHandler {
 	}
 	
 	protected static Hashtable<String, String[]> getInfoRangoDias(Connection conexion,
+			String codRes, java.sql.Date sqlFechaIni, java.sql.Date sqlFechaFin,
+			ErrorBean errorBean) {
+		int rango = (int) (sqlFechaFin.getTime()-sqlFechaIni.getTime())/(24*60*60*1000);
+		return getInfoRangoDias(conexion, codRes, sqlFechaIni, rango, errorBean);
+	}
+
+	
+	protected static Hashtable<String, String[]> getInfoRangoDias(Connection conexion,
 			String codRes, java.sql.Date sqldate, int rango,
 			ErrorBean errorBean) {
 		Connection nconexion = GenericHandler.aseguraConexion(conexion);
@@ -115,6 +123,8 @@ public abstract class GenericHandler {
 		PreparedStatement ps;
 		ResultSet rs;
 		Hashtable<String, String[]> infoDias = new Hashtable<String, String[]>(rango);
+		if(rango < 0)
+			return infoDias;
 		String[] auxInfoDia = null;
 		try {
 			ps = nconexion.prepareStatement(QUERY_GET_INFO_RANGO_DIAS);
