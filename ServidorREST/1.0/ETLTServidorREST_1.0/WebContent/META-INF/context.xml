@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 <Context>
+    
+	<Resource
+	    name="jdbc/turnos-PRE"
+	    auth="Container" 
+	    type="javax.sql.DataSource"
+		driverClassName="com.mysql.cj.jdbc.Driver" 
+		url="jdbc:mysql://raspberrypi:3306/turnos_desarrollo?serverTimezone=Europe/Madrid"
+		username="turnos" password="Turnos_turnos"
+		maxTotal="50" maxIdle="15" initialSize="5"
+		maxWaitMillis="10000"/>
+     
 	<Resource
 	    name="jdbc/turnos"
 	    auth="Container" 
 	    type="javax.sql.DataSource"
 		driverClassName="com.mysql.cj.jdbc.Driver" 
-		url="jdbc:mysql://raspberrypi:3306/turnos_desarrollo?serverTimezone=Europe/Madrid"
+		url="jdbc:mysql://raspberrypi:3306/turnos_DESA?serverTimezone=Europe/Madrid"
 		username="turnos" password="Turnos_turnos"
 		maxTotal="50" maxIdle="15" initialSize="5"
 		maxWaitMillis="10000"/>

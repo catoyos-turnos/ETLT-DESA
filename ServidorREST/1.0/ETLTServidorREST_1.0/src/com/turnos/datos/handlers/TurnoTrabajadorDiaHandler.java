@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
 
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.ServicioBean;
@@ -32,20 +34,20 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 			+ "ORDER BY se.hora_pres, se.hora_ret, tr.codigo";
 			
 	private static final String QUERY_GET_TURNO_TRABAJADOR_DIA = 
-			"SELECT tr.codigo as codTrab, tr.nombre as nomTrab, tr.apellidos as apeTrab, tu.codigo as codTurno, tu.tipo as tipoTurno, "
-					+ "se.id_servicio as idServ, se.hora_pres as horaPresServ, se.hora_ret as horaRetServ, se.tiempo_toma as tiempoToma, se.tiempo_deje as tiempoDeje, "
-					+ "se.margen_antes as margenAntes, se.margen_despues as margenDespues, se.descripcion as descServ "
-				+ "FROM residencia res "
-					+ "JOIN trabajador tr ON res.id_residencia=tr.id_residencia "
-					+ "JOIN turno_trabajador tt ON tr.id_trabajador=tt.id_trabajador "
-					+ "JOIN turno tu ON tt.id_turno=tu.id_turno "
-					+ "JOIN servicio se ON tt.id_turno=se.id_turno "
-					+ "JOIN servicio_tipodia sd ON se.id_servicio=sd.id_servicio "
-				+ "WHERE res.codigo=? AND tr.codigo=? AND tt.fecha=? "
-					+ "AND (FIND_IN_SET(?, sd.dia) OR sd.dia='TODOS') "
-					+ "AND (sd.festivo=? OR sd.festivo='CUALQUIERA') "
-					+ "AND (sd.vispera_festivo=? OR sd.vispera_festivo='CUALQUIERA') "
-				+ "ORDER BY se.hora_pres, se.hora_ret, tr.codigo";
+		"SELECT tr.codigo as codTrab, tr.nombre as nomTrab, tr.apellidos as apeTrab, tu.codigo as codTurno, tu.tipo as tipoTurno, "
+			+ "se.id_servicio as idServ, se.hora_pres as horaPresServ, se.hora_ret as horaRetServ, se.tiempo_toma as tiempoToma, se.tiempo_deje as tiempoDeje, "
+			+ "se.margen_antes as margenAntes, se.margen_despues as margenDespues, se.descripcion as descServ "
+		+ "FROM residencia res "
+			+ "JOIN trabajador tr ON res.id_residencia=tr.id_residencia "
+			+ "JOIN turno_trabajador tt ON tr.id_trabajador=tt.id_trabajador "
+			+ "JOIN turno tu ON tt.id_turno=tu.id_turno "
+			+ "JOIN servicio se ON tt.id_turno=se.id_turno "
+			+ "JOIN servicio_tipodia sd ON se.id_servicio=sd.id_servicio "
+		+ "WHERE res.codigo=? AND tr.codigo=? AND tt.fecha=? "
+			+ "AND (FIND_IN_SET(?, sd.dia) OR sd.dia='TODOS') "
+			+ "AND (sd.festivo=? OR sd.festivo='CUALQUIERA') "
+			+ "AND (sd.vispera_festivo=? OR sd.vispera_festivo='CUALQUIERA') "
+		+ "ORDER BY se.hora_pres, se.hora_ret, tr.codigo";
 	
 
 	//00xx
@@ -106,13 +108,7 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} finally {
-				if (cierraConexion && nconexion != null){
-					try {
-						nconexion.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
+				GenericHandler.terminaOperacion(nconexion, cierraConexion);
 			}
 		}
 		return listaTurnos;
@@ -127,9 +123,7 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 		
 		TurnoTrabajadorDiaBean ttd = null;
 		java.sql.Date sqlFecha = javaDateToSQLDate(fecha);
-		String[] infoDia = GenericHandler.getInfoDia(nconexion, codRes, sqldate, errorBean);
-		PreparedStatement ps;
-		ResultSet rs;
+		String[] infoDia = GenericHandler.getInfoDia(nconexion, codRes, sqlFecha, errorBean);
 		if(infoDia != null && infoDia.length == 3) {
 			try {
 				ttd = recuperaTurnoTrabajadorDia(nconexion, codRes, codTrab, sqlFecha, infoDia, errorBean);
@@ -137,13 +131,7 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 				ttd = null;
 				e.printStackTrace();
 			} finally {
-				if (cierraConexion && nconexion != null){
-					try {
-						nconexion.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
+				GenericHandler.terminaOperacion(nconexion, cierraConexion);
 			}
 		}
 		return ttd;
@@ -156,44 +144,49 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 		Connection nconexion = GenericHandler.aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		
-		ArrayList<TurnoTrabajadorDiaBean> listaTtd= null;
+		ArrayList<TurnoTrabajadorDiaBean> listaTtd = new ArrayList<TurnoTrabajadorDiaBean>();
+		TurnoTrabajadorDiaBean ttd;
+		if (fecha_ini.getTime() > fecha_fin.getTime()) {
+			Date fecha_aux = fecha_ini;
+			fecha_ini = fecha_fin;
+			fecha_fin = fecha_aux;
+		}
 		java.sql.Date sqlFechaIni = javaDateToSQLDate(fecha_ini);
 		java.sql.Date sqlFechaFin = javaDateToSQLDate(fecha_fin);
 		String datestr;
-		
-		Hashtable<String, String[]> infoDiaTabla = GenericHandler.getInfoRangoDias(nconexion, codRes,
-			sqlFechaIni, sqlFechaFin, errorBean);
-		PreparedStatement ps;
-		ResultSet rs;
-		while() {
-			if(infoDia != null && infoDia.length == 3) {
-				try {
-		datestr = sdfIn.format(sdfIn.parse(row.split(":")[0]));
-					TurnoTrabajadorDiaBean ttd = recuperaTurnoTrabajadorDia(
-						nconexion, codRes, codTrab, sqlFecha, infoDia, errorBean);
+		Hashtable<String, String[]> infoDiaTabla = GenericHandler.getInfoRangoDias(nconexion, codRes, sqlFechaIni, sqlFechaFin, errorBean);
+		String[] infoDia;
+		Calendar c = Calendar.getInstance();
+		c.setTime(fecha_ini);
+
+		try {
+			while (c.before(fecha_fin)) {
+				datestr = sdfIn.format(c.getTime());
+				infoDia = infoDiaTabla.get(datestr);
+				if (infoDia != null && infoDia.length == 3) {
+					ttd = recuperaTurnoTrabajadorDia(nconexion, codRes,
+							codTrab, javaDateToSQLDate(c.getTime()), infoDia,
+							errorBean);
 					listaTtd.add(ttd);
-				} catch (SQLException e) {
-					ttd = null;
-					e.printStackTrace();
-				} finally {
-					if (cierraConexion && nconexion != null){
-						try {
-							nconexion.close();
-						} catch (SQLException e) {
-							e.printStackTrace();
-						}
-					}
 				}
+				c.roll(Calendar.DATE, true);
 			}
+		} catch (SQLException e) {
+			listaTtd = null;
+			e.printStackTrace();
+		} finally {
+			GenericHandler.terminaOperacion(nconexion, cierraConexion);
 		}
 		
-		return ttd;
+		return listaTtd;
 	}
 	
-	private static ArrayList<TurnoTrabajadorDiaBean> recuperaTurnoTrabajadorDia(Connection conexion,
+	private static TurnoTrabajadorDiaBean recuperaTurnoTrabajadorDia(Connection nconexion,
 			String codRes, String codTrab, java.sql.Date sqlFecha, String[] infoDia, ErrorBean errorBean)
 			throws SQLException{
-		ps = nconexion.prepareStatement(QUERY_LISTA_TURNO_TRABAJADOR_DIA);
+		PreparedStatement ps;
+		ResultSet rs;
+		ps = nconexion.prepareStatement(QUERY_GET_TURNO_TRABAJADOR_DIA);
 		ps.setString(1, codRes);
 		ps.setString(2, codTrab);
 		ps.setDate(3, sqlFecha);
@@ -201,7 +194,8 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 		ps.setString(5, infoDia[1]);
 		ps.setString(6, infoDia[2]);
 		rs = ps.executeQuery();
-			
+
+		TurnoTrabajadorDiaBean ttd = new TurnoTrabajadorDiaBean();
 		TurnoBean turno;
 		ServicioBean serv;
 		TrabajadorBean trab;
@@ -231,7 +225,7 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 			trab.setApellidos(rs.getString("apeTrab"));
 			ttd.setTrabajador(trab);
 			
-			ttd.setFecha(fecha);
+			ttd.setFecha(sqlFecha);
 		}
 		return ttd;
 	}
