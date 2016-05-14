@@ -2,8 +2,9 @@
 <!DOCTYPE xml>
 <Context>
     
-	<Resource
-	    name="jdbc/turnos-PRE"
+    <!-- 
+    <Resource
+	    name="jdbc/turnos-DEPRECADO"
 	    auth="Container" 
 	    type="javax.sql.DataSource"
 		driverClassName="com.mysql.cj.jdbc.Driver" 
@@ -11,13 +12,14 @@
 		username="turnos" password="Turnos_turnos"
 		maxTotal="50" maxIdle="15" initialSize="5"
 		maxWaitMillis="10000"/>
+     -->
      
 	<Resource
 	    name="jdbc/turnos"
 	    auth="Container" 
 	    type="javax.sql.DataSource"
 		driverClassName="com.mysql.cj.jdbc.Driver" 
-		url="jdbc:mysql://raspberrypi:3306/turnos_DESA?serverTimezone=Europe/Madrid"
+		url="jdbc:mysql://raspberrypi:3306/turnos_DESA?serverTimezone=Europe/Madrid&amp;useSSL=false"
 		username="turnos" password="Turnos_turnos"
 		maxTotal="50" maxIdle="15" initialSize="5"
 		maxWaitMillis="10000"/>

@@ -1,4 +1,4 @@
-package com.turnos.restservice;
+package com.turnos.restservice.servicios;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.WebServUtils;
+import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.handlers.FestivoHandler;
 import com.turnos.datos.handlers.ResidenciaHandler;
 import com.turnos.datos.handlers.ResidenciaHandler.TipoBusqueda;
@@ -62,10 +63,10 @@ public class ResidenciaServicio {
 			listaResidencias = ResidenciaHandler
 					.listResidencias(null, TipoBusqueda.PAIS, busqueda, includeGeo, eb);
 		} else {
-			eb.setHttpCode(Status.BAD_REQUEST);
-			eb.updateErrorCode("48700000");
-			eb.updateMsg("debe incluir parametros de busqueda: " + WebServUtils.Q_PARAM_COD_PAIS + ", "
-					+ WebServUtils.Q_PARAM_COD_PROV + ", o " + WebServUtils.Q_PARAM_COD_MUNI);
+			int[] loc = {70,0,0};
+			String msg = "debe incluir parametros de busqueda: "
+					 + WebServUtils.Q_PARAM_COD_PAIS + ", " + WebServUtils.Q_PARAM_COD_PROV + ", o " + WebServUtils.Q_PARAM_COD_MUNI;
+			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s45", loc, msg, null);
 		}
 
 		if(listaResidencias == null) {
@@ -197,10 +198,10 @@ public class ResidenciaServicio {
 			}
 			
 		} catch (Exception e) {
-			eb.setHttpCode(Status.BAD_REQUEST);
-			eb.updateErrorCode("48700500");
-			eb.updateMsg("momentos ("+time_ini+","+time_fin+") no parseable, o algo");
-			eb.updateMsg(e.getMessage());
+			int[] loc = {70,5,0};
+			String msg = "momentos (%s, %s) no parseables, o algo [["+e.getMessage()+"]]";
+			String[] params = {String.valueOf(time_ini), String.valueOf(time_fin)};
+			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s48", loc, msg, params);
 		}
 
 		listaFestivos = FestivoHandler.getFestivosResidencia(null, codRes, fecha_ini, fecha_fin, limit, false, eb);
@@ -233,10 +234,10 @@ public class ResidenciaServicio {
 				fecha = Calendar.getInstance().getTime();
 			}
 		} catch (Exception e) {
-			eb.setHttpCode(Status.BAD_REQUEST);
-			eb.updateErrorCode("48700600");
-			eb.updateMsg("momento ("+time+") no parseable, o algo");
-			eb.updateMsg(e.getMessage());
+			int[] loc = {70,6,0};
+			String msg = "momento (%s) no parseable, o algo [["+e.getMessage()+"]]";
+			String[] params = {String.valueOf(time)};
+			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s48", loc, msg, params);
 		}
 		
 		if(fecha != null) {
@@ -271,10 +272,10 @@ public class ResidenciaServicio {
 				fecha = Calendar.getInstance().getTime();
 			}
 		} catch (Exception e) {
-			eb.setHttpCode(Status.BAD_REQUEST);
-			eb.updateErrorCode("48700700");
-			eb.updateMsg("momento ("+time+") no parseable, o algo");
-			eb.updateMsg(e.getMessage());
+			int[] loc = {70,7,0};
+			String msg = "momento (%s) no parseable, o algo [["+e.getMessage()+"]]";
+			String[] params = {String.valueOf(time)};
+			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s48", loc, msg, params);
 		}
 		
 		if(fecha != null) {

@@ -1,4 +1,4 @@
-package com.turnos.restservice;
+package com.turnos.restservice.servicios;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.WebServUtils;
+import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.handlers.TrabajadorHandler;
 import com.turnos.datos.handlers.TurnoTrabajadorDiaHandler;
 import com.turnos.datos.vo.ErrorBean;
@@ -148,10 +149,10 @@ public class TrabajadorServicio {
 				fecha = Calendar.getInstance().getTime();
 			}
 		} catch (Exception e) {
-			eb.setHttpCode(Status.BAD_REQUEST);
-			eb.updateErrorCode("48610500");
-			eb.updateMsg("momento ("+time+") no parseable, o algo");
-			eb.updateMsg(e.getMessage());
+			int[] loc = {61,5,0};
+			String msg = "momento (%s) no parseable, o algo [["+e.getMessage()+"]]";
+			String[] params = {String.valueOf(time)};
+			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s48", loc, msg, params);
 		}
 
 		TurnoTrabajadorDiaBean turno = TurnoTrabajadorDiaHandler.getTurnoTrabajadorDia(null, codRes, codTrab, fecha, eb);
@@ -189,10 +190,10 @@ public class TrabajadorServicio {
 				fecha_ini = Calendar.getInstance().getTime();
 			}
 		} catch (Exception e) {
-			eb.setHttpCode(Status.BAD_REQUEST);
-			eb.updateErrorCode("48610600");
-			eb.updateMsg("momentos ("+time_ini+","+time_fin+") no parseable, o algo");
-			eb.updateMsg(e.getMessage());
+			int[] loc = {61,6,0};
+			String msg = "momentos (%s, %s) no parseable, o algo [["+e.getMessage()+"]]";
+			String[] params = {String.valueOf(time_ini), String.valueOf(time_fin)};
+			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s48", loc, msg, params);
 		}
 		
 		ArrayList<TurnoTrabajadorDiaBean> listaTurnos = TurnoTrabajadorDiaHandler.getTurnosTrabajadorRango(null, codRes, codTrab, fecha_ini, fecha_fin, eb);

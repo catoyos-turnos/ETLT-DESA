@@ -1,4 +1,7 @@
-package com.turnos.restservice;
+package com.turnos.restservice.servicios;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,19 +23,24 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.WebServUtils;
+import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.handlers.FestivoHandler;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.FestivoBean;
 import com.turnos.datos.vo.FestivoBean.TipoFiesta;
 import com.turnos.datos.vo.RespuestaBean;
 
+@Api(value = "Dia Festivo")
+@Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_FEST_PATH)
 public class DiaFestivoServicio {
 
 	// ---------------------GET-----------------------------------------------
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Lista dias festivos segun parametros",
+	    response = FestivoBean.class,
+	    responseContainer = "List")
 	@Valid
 	public static Response listaDiasFestivos(
 			@QueryParam(WebServUtils.Q_PARAM_COD_PAIS)
@@ -76,10 +84,10 @@ public class DiaFestivoServicio {
 			}
 			
 		} catch (Exception e) {
-			eb.setHttpCode(Status.BAD_REQUEST);
-			eb.updateErrorCode("48800000");
-			eb.updateMsg("momentos ("+time_ini+","+time_fin+") no parseable, o algo");
-			eb.updateMsg(e.getMessage());
+			int[] loc = {80,0,0};
+			String msg = "momentos (%s, %s) no parseables, o algo [["+e.getMessage()+"]]";
+			String[] params = {String.valueOf(time_ini), String.valueOf(time_fin)};
+			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s48", loc, msg, params);
 		}
 
 		ArrayList<FestivoBean> listaFestivos = null;
@@ -90,11 +98,10 @@ public class DiaFestivoServicio {
 		} else if (!"".equals(codPais)) {
 			listaFestivos = FestivoHandler.getFestivosPais(null, codPais, tipo, fecha_ini, fecha_fin, limit, completo, incGeo, eb);
 		} else {
-			eb.setHttpCode(Status.BAD_REQUEST);
-			eb.updateErrorCode("48800001");
-			eb.updateMsg("debe incluir parametros de busqueda: " + WebServUtils.Q_PARAM_COD_PAIS + ", "
-					+ WebServUtils.Q_PARAM_COD_PROV + ", o " + WebServUtils.Q_PARAM_COD_MUNI);
-		
+			int[] loc = {80,0,1};
+			String msg = "debe incluir parametros de busqueda: "
+					 + WebServUtils.Q_PARAM_COD_PAIS + ", " + WebServUtils.Q_PARAM_COD_PROV + ", o " + WebServUtils.Q_PARAM_COD_MUNI;
+			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s45", loc, msg, null);
 		}
 		
 		if(listaFestivos == null) {
@@ -107,8 +114,9 @@ public class DiaFestivoServicio {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.COD_FEST_PATH)
+	@ApiOperation(value = "Devuelve día festivo por ID",
+    	response = FestivoBean.class)
 	@Valid
 	public static Response getDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
@@ -129,8 +137,9 @@ public class DiaFestivoServicio {
 	// ---------------------POST----------------------------------------------
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Inserta nuevo día festivo",
+		response = FestivoBean.class )
 	@Valid
 	public static Response nuevoDiaFestivo(FestivoBean festRaw) {
 		ErrorBean eb = new ErrorBean();
@@ -151,9 +160,11 @@ public class DiaFestivoServicio {
 	// ---------------------PUT-----------------------------------------------
 
 	@PUT
-	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.COD_FEST_PATH)
+	@ApiOperation(value = "Modifica día festivo existente",
+		notes = "Campos modificables: fiesta, notas, tipo, municipioCod, provinciaCod, paisCod",
+		response = FestivoBean.class)
 	@Valid
 	public static Response modDiaFestivo(FestivoBean festRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
@@ -175,8 +186,8 @@ public class DiaFestivoServicio {
 	// ---------------------DELETE--------------------------------------------
 
 	@DELETE
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.COD_FEST_PATH)
+	@ApiOperation(value = "Elimina día festivo existente")
 	@Valid
 	public static Response borraDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
 		ErrorBean eb = new ErrorBean();

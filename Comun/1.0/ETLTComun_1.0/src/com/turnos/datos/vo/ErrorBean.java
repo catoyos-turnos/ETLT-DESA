@@ -69,7 +69,7 @@ public class ErrorBean {
 		if(this.msg == null || "".equals(this.msg)) {
 			this.msg = msg;
 		} else {
-			this.msg += "| -> |" + msg;
+			this.msg += "\n-->\n" + msg;
 		}
 	}
 

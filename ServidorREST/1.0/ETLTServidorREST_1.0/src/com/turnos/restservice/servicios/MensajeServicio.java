@@ -1,4 +1,4 @@
-package com.turnos.restservice;
+package com.turnos.restservice.servicios;
 
 import java.util.ArrayList;
 

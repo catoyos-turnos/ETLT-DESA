@@ -1,4 +1,4 @@
-package com.turnos.restservice;
+package com.turnos.restservice.servicios;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.WebServUtils;
+import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.handlers.VacacionesHandler;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.RespuestaBean;
@@ -57,10 +58,10 @@ public class VacacionesServicio {
 			}
 			
 		} catch (Exception e) {
-			errorBean.setHttpCode(Status.BAD_REQUEST);
-			errorBean.updateErrorCode("48760000");
-			errorBean.updateMsg("momentos ("+time_ini+","+time_fin+") no parseable, o algo");
-			errorBean.updateMsg(e.getMessage());
+			int[] loc = {76,0,0};
+			String msg = "momentos (%s, %s) no parseable, o algo [["+e.getMessage()+"]]";
+			String[] params = {String.valueOf(time_ini), String.valueOf(time_fin)};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "s48", loc, msg, params);
 		}
 		ArrayList<VacacionesBean> listaVacaciones = VacacionesHandler.listVacaciones(null, codRes, codTrab, fecha_ini, fecha_fin, errorBean);
 		
