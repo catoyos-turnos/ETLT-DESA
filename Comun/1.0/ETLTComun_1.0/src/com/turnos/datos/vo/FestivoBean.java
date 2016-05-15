@@ -1,5 +1,7 @@
 package com.turnos.datos.vo;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -60,12 +62,14 @@ public class FestivoBean extends ETLTBean {
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
-
+	
+	@ApiModelProperty(allowableValues = "NACIONAL, AUTONOMICA, LOCAL")
 	public String getTipo() {
 		if (tipo == null) return null;
 		return tipo.name();
 	}
-
+	
+	@ApiModelProperty(allowableValues = "NACIONAL, AUTONOMICA, LOCAL")
 	public void setTipo(String tipo) {
 		this.tipo = TipoFiesta.safeValueOf(tipo);
 	}
@@ -117,5 +121,5 @@ public class FestivoBean extends ETLTBean {
 	public void setPaisNombre(String paisNombre) {
 		this.paisNombre = paisNombre;
 	}
-
+        
 }

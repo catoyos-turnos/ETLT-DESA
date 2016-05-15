@@ -2,6 +2,7 @@ package com.turnos.restservice.servicios;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,24 +44,32 @@ public class DiaFestivoServicio {
 	    responseContainer = "List")
 	@Valid
 	public static Response listaDiasFestivos(
-			@QueryParam(WebServUtils.Q_PARAM_COD_PAIS)
-			@DefaultValue("") String codPais,
-			@QueryParam(WebServUtils.Q_PARAM_COD_PROV)
-			@DefaultValue("") String codProvincia,
-			@QueryParam(WebServUtils.Q_PARAM_COD_MUNI)
-			@DefaultValue("") String codMunicipio,
-			@QueryParam(WebServUtils.Q_PARAM_TIPO_FIESTA)
-			String tipoStr,
-			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
-			@DefaultValue("-1") int time_ini,
-			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
-			@DefaultValue("-1") int time_fin,
-			@QueryParam(WebServUtils.Q_PARAM_LIMITE)
-			@DefaultValue("-1") int limit,
-			@QueryParam(WebServUtils.Q_PARAM_COMPLETO)
-			@DefaultValue("false") boolean completo,
-			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
-			@DefaultValue("false") boolean incGeo) {
+			@ApiParam(value = "", required = false) 
+			@QueryParam(WebServUtils.Q_PARAM_COD_PAIS) @DefaultValue("") String codPais,
+			
+			@ApiParam(value = "", required = false) 
+			@QueryParam(WebServUtils.Q_PARAM_COD_PROV) @DefaultValue("") String codProvincia,
+			
+			@ApiParam(value = "", required = false) 
+			@QueryParam(WebServUtils.Q_PARAM_COD_MUNI) @DefaultValue("") String codMunicipio,
+			
+			@ApiParam(value = "", required = false) 
+			@QueryParam(WebServUtils.Q_PARAM_TIPO_FIESTA) String tipoStr,
+			
+			@ApiParam(value = "", required = false) 
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI) @DefaultValue("-1") int time_ini,
+			
+			@ApiParam(value = "", required = false) 
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN) @DefaultValue("-1") int time_fin,
+			
+			@ApiParam(value = "", required = false) 
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limit,
+			
+			@ApiParam(value = "", required = false) 
+			@QueryParam(WebServUtils.Q_PARAM_COMPLETO) @DefaultValue("false") boolean completo,
+			
+			@ApiParam(value = "", required = false) 
+			@QueryParam(WebServUtils.Q_PARAM_INC_GEO) @DefaultValue("false") boolean incGeo) {
 		
 		ErrorBean eb = new ErrorBean();
 		TipoFiesta tipo = TipoFiesta.safeValueOf(tipoStr);
