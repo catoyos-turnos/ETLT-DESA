@@ -24,13 +24,24 @@ import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.TurnoBean;
 import com.turnos.datos.vo.TurnoBean.TipoTurno;
 
+@Api(value = "Turno")
+@Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH + WebServUtils.PREF_TURNO_PATH)
 public class TurnoServicio {
+	private UsuarioBean usuarioLog;
+	
+	@Context
+	private TurnoServicio(HttpServletRequest request) {
+		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
+		if(usrObj != null && usrObj  instanceof UsuarioBean) {
+			this.usuarioLog = (UsuarioBean) usrObj;
+		}
+	}
+
 	
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response listaTurnos (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+	public Response listaTurnos (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@QueryParam(WebServUtils.Q_PARAM_TIPO_TURNO) String tipoStr,
 			@QueryParam(WebServUtils.Q_PARAM_INC_SERVS) @DefaultValue("false") boolean includeServs) {
 		ErrorBean errorBean = new ErrorBean();
@@ -55,9 +66,8 @@ public class TurnoServicio {
 	
 	@GET
 	@Path(WebServUtils.COD_TURNO_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getTurno (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+	public Response getTurno (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
 			@QueryParam(WebServUtils.Q_PARAM_INC_SERVS) @DefaultValue("false") boolean includeServs) {
 		ErrorBean errorBean = new ErrorBean();
@@ -75,9 +85,8 @@ public class TurnoServicio {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response nuevoTurno(TurnoBean turnoRaw, 
+	public Response nuevoTurno(TurnoBean turnoRaw, 
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean aut = TurnoHandler.autenticar(null);
@@ -97,9 +106,8 @@ public class TurnoServicio {
 	@PUT
 	@Path(WebServUtils.COD_TURNO_PATH)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response modTurno(TurnoBean turnoRaw,
+	public Response modTurno(TurnoBean turnoRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
@@ -119,9 +127,8 @@ public class TurnoServicio {
 	
 	@DELETE
 	@Path(WebServUtils.COD_TURNO_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response borraTurno(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+	public Response borraTurno(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean aut = TurnoHandler.autenticar(null);

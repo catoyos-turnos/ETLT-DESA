@@ -51,8 +51,43 @@ public abstract class GenericHandler {
 		return nuevaConexion ? AccesoBD.getConexion() : conexion;
 	}
 
-	public static boolean autenticar(Connection conexion) {
-		return true;
+	public static boolean autenticar(UsuarioBean usuarioLog, HTTPMethod metodo) {
+	
+	}
+
+	public static boolean autenticar(UsuarioBean usuarioLog, HTTPMethod metodo) {
+		if(usuarioLog.isActivado()) {
+			NivelUsuario nivel = NivelUsuario.safeValueOf(usuarioLog.getNivel());
+			if(nivel == null)
+				return false;
+			else switch(nivel) {
+				case USUARIO: 
+					switch(metodo) {
+						case GET: 
+							return true;
+							break;
+						
+						case POST:
+						case PUT:						
+						case DELETE:
+						default:
+							return false;
+					}
+					break;
+						
+				case ADMIN:
+				case SUPERADMIN:
+					return true;
+					break;
+				
+				case BANEADO:
+				default:
+					return false;
+			}
+		} else
+			return false;
+		
+		return false;
 	}
 	
 	protected static void terminaOperacion(Connection nconexion, boolean cierraConexion) {

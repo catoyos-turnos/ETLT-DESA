@@ -21,16 +21,27 @@ import com.turnos.datos.vo.PaisBean;
 import com.turnos.datos.vo.ProvinciaBean;
 import com.turnos.datos.vo.RespuestaBean;
 
+@Api(value = "Geografía")
+@Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_GEO_PATH)
 public class GeoServicio {
+	private UsuarioBean usuarioLog;
+	
+	@Context
+	private GeoServicio(HttpServletRequest request) {
+		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
+		if(usrObj != null && usrObj  instanceof UsuarioBean) {
+			this.usuarioLog = (UsuarioBean) usrObj;
+		}
+	}
 
+	
 	// ---------------------GET-----------------------------------------------
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.PREF_PAIS_PATH)
 	@Valid
-	public static Response listaPaises() {
+	public Response listaPaises() {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<PaisBean> listaPaises = GeoHandler.listPaises(null, errorBean);
 		RespuestaBean<PaisBean> respuesta = null;
@@ -45,10 +56,9 @@ public class GeoServicio {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH)
 	@Valid
-	public static Response getPais(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais) {
+	public Response getPais(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais) {
 		ErrorBean errorBean = new ErrorBean();
 		PaisBean pais = GeoHandler.getPais(null, codPais, errorBean);
 		RespuestaBean<PaisBean> respuesta = null;
@@ -63,11 +73,10 @@ public class GeoServicio {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH
 			+ WebServUtils.PREF_PROV_PATH)
 	@Valid
-	public static Response listaProvincias(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais) {
+	public Response listaProvincias(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais) {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<ProvinciaBean> listaProvincias = GeoHandler.listProvincias(null, codPais, errorBean);
 		RespuestaBean<ProvinciaBean> respuesta = null;
@@ -82,11 +91,10 @@ public class GeoServicio {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH
 			+ WebServUtils.PREF_PROV_PATH + WebServUtils.COD_PROV_PATH)
 	@Valid
-	public static Response getProvincia(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
+	public Response getProvincia(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia) {
 		ErrorBean errorBean = new ErrorBean();
 		ProvinciaBean provincia = GeoHandler.getProvincia(null, codProvincia, errorBean);
@@ -102,12 +110,11 @@ public class GeoServicio {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH
 			+ WebServUtils.PREF_PROV_PATH + WebServUtils.COD_PROV_PATH
 			+ WebServUtils.PREF_MUNI_PATH)
 	@Valid
-	public static Response listaMunicipios(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
+	public Response listaMunicipios(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia) {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<MunicipioBean> listaMunicipios = GeoHandler.listMunicipios(null, codProvincia, errorBean);
@@ -123,12 +130,11 @@ public class GeoServicio {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH
 			+ WebServUtils.PREF_PROV_PATH + WebServUtils.COD_PROV_PATH
 			+ WebServUtils.PREF_MUNI_PATH + WebServUtils.COD_MUNI_PATH)
 	@Valid
-	public static Response getMunicipio(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
+	public Response getMunicipio(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
 			@PathParam(WebServUtils.P_PARAM_COD_MUNI) String codMunicipio) {
 		ErrorBean errorBean = new ErrorBean();
@@ -148,11 +154,10 @@ public class GeoServicio {
 	// -------------festivos--------------------------------------------------
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH
 			+ WebServUtils.PREF_FEST_PATH)
 	@Valid
-	public static Response getFestivosPais(
+	public Response getFestivosPais(
 			@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
 			@DefaultValue("-1") int time_ini,
@@ -166,12 +171,11 @@ public class GeoServicio {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH
 			+ WebServUtils.PREF_PROV_PATH + WebServUtils.COD_PROV_PATH
 			+ WebServUtils.PREF_FEST_PATH)
 	@Valid
-	public static Response getFestivosProvincia(
+	public Response getFestivosProvincia(
 			@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
@@ -188,13 +192,12 @@ public class GeoServicio {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH
 			+ WebServUtils.PREF_PROV_PATH + WebServUtils.COD_PROV_PATH
 			+ WebServUtils.PREF_MUNI_PATH + WebServUtils.COD_MUNI_PATH
 			+ WebServUtils.PREF_FEST_PATH)
 	@Valid
-	public static Response getFestivosMunicipio(
+	public Response getFestivosMunicipio(
 			@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
 			@PathParam(WebServUtils.P_PARAM_COD_MUNI) String codMunicipio,
@@ -214,11 +217,10 @@ public class GeoServicio {
 	// -------------residencias-----------------------------------------------
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH
 			+ WebServUtils.PREF_RES_PATH)
 	@Valid
-	public static Response getResidenciasPais(
+	public Response getResidenciasPais(
 			@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo) {
@@ -226,12 +228,11 @@ public class GeoServicio {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH
 			+ WebServUtils.PREF_PROV_PATH + WebServUtils.COD_PROV_PATH
 			+ WebServUtils.PREF_RES_PATH)
 	@Valid
-	public static Response getResidenciasProvincia(
+	public Response getResidenciasProvincia(
 			@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
@@ -240,13 +241,12 @@ public class GeoServicio {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH
 			+ WebServUtils.PREF_PROV_PATH + WebServUtils.COD_PROV_PATH
 			+ WebServUtils.PREF_MUNI_PATH + WebServUtils.COD_MUNI_PATH
 			+ WebServUtils.PREF_RES_PATH)
 	@Valid
-	public static Response getResidenciasMunicipio(
+	public Response getResidenciasMunicipio(
 			@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
 			@PathParam(WebServUtils.P_PARAM_COD_MUNI) String codMunicipio,

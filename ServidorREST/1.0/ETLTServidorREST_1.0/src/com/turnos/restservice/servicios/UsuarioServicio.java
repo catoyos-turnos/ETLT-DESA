@@ -19,22 +19,25 @@ import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.UsuarioBean;
 
+@Api(value = "Usuario")
+@Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_USER_PATH)
 public class UsuarioServicio {
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Valid
-	public static Response listaUsuarios () {
-		//TODO Listar trabajadores de una residencia filtrar por xxx
-		return Response.status(Status.NOT_IMPLEMENTED).build();
+	private UsuarioBean usuarioLog;
+	
+	@Context
+	private UsuarioServicio(HttpServletRequest request) {
+		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
+		if(usrObj != null && usrObj  instanceof UsuarioBean) {
+			this.usuarioLog = (UsuarioBean) usrObj;
+		}
 	}
+
 	
 	@GET
 	@Path(WebServUtils.COD_USER_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
+	public Response getUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
 		ErrorBean errorBean = new ErrorBean();
 		UsuarioBean usuario = UsuarioHandler.getUsuario(null, codUser, errorBean);
 		RespuestaBean<UsuarioBean> respuesta = null;
@@ -50,9 +53,8 @@ public class UsuarioServicio {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response nuevoUsuario(UsuarioBean userRaw) {
+	public Response nuevoUsuario(UsuarioBean userRaw) {
 		ErrorBean errorBean = new ErrorBean();
 		UsuarioBean usuario = UsuarioHandler.insertUsuario(null, userRaw, errorBean);
 		RespuestaBean<UsuarioBean> respuesta = null;
@@ -70,9 +72,8 @@ public class UsuarioServicio {
 	@PUT
 	@Path(WebServUtils.COD_USER_PATH)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response modUsuario(UsuarioBean userRaw,
+	public Response modUsuario(UsuarioBean userRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
 		ErrorBean errorBean = new ErrorBean();
 		UsuarioBean usuario = UsuarioHandler.updateUsuario(null, codUser, userRaw, errorBean);
@@ -88,27 +89,41 @@ public class UsuarioServicio {
 		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
 	}
 	
-	@DELETE
-	@Path(WebServUtils.COD_USER_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
+	@PUT
+	@Path(WebServUtils.COD_USER_PATH+WebServUtils.PREF_USER_NIVEL_PATH)
 	@Valid
-	public static Response borraUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
-		/*
+	public Response cambiaNivelUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser
+			@QueryParam(Q_PARAM_USER_NIVEL) String nivelStr) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean borrado = UsuarioHandler.deleteUsuario(null, codUser, errorBean);
-		RespuestaBean<UsuarioBean> respuesta;
+		/* TODO */
+		/*
+		UsuarioBean usuario = UsuarioHandler.updateUsuario(null, codUser, userRaw, errorBean);
+		RespuestaBean<UsuarioBean> respuesta = null;
 		
-		if(borrado) {
-			respuesta = new RespuestaBean<UsuarioBean>();
-			respuesta.setHtmlStatus(Status.ACCEPTED);
-		} else {
+		if(usuario == null) {
 			respuesta = new RespuestaBean<UsuarioBean>(errorBean);
+		} else {
+			respuesta = new RespuestaBean<UsuarioBean>(usuario);
+			respuesta.setHtmlStatus(Status.ACCEPTED);
 		}
-
 		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
-	*/
-		//TODO Listar trabajadores de una residencia filtrar por xxx
+		*/
 		return Response.status(Status.NOT_IMPLEMENTED).build();
 	}
+	
+	/*
+	@GET
+	@Valid
+	public Response listaUsuarios () {
+		return Response.status(Status.NOT_IMPLEMENTED).build();
+	}
+	
+	@DELETE
+	@Path(WebServUtils.COD_USER_PATH)
+	@Valid
+	public Response borraUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
+		return Response.status(Status.NOT_IMPLEMENTED).build();
+	}
+	*/
 
 }

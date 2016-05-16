@@ -22,13 +22,24 @@ import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.MensajeBean;
 import com.turnos.datos.vo.RespuestaBean;
 
+@Api(value = "Mensaje")
+@Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_USER_PATH + WebServUtils.COD_USER_PATH + WebServUtils.PREF_MENSAJE_PATH)
 public class MensajeServicio {
+	private UsuarioBean usuarioLog;
+	
+	@Context
+	private MensajeServicio(HttpServletRequest request) {
+		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
+		if(usrObj != null && usrObj  instanceof UsuarioBean) {
+			this.usuarioLog = (UsuarioBean) usrObj;
+		}
+	}
+
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response listaMensajes(
+	public Response listaMensajes(
 			@PathParam(WebServUtils.P_PARAM_COD_USER) long codUser, // (usuario a buscar)
 			@QueryParam(WebServUtils.Q_PARAM_ROL_EN_MSG) @DefaultValue("DESTINATARIO") String rolStr, // (rol de usuario a buscar: REMITENTE/DESTINATARIO)
 			@QueryParam(WebServUtils.Q_PARAM_INC_MSG_ORIGINAL) @DefaultValue("false") boolean original, // (incluye mensaje original en respuestas)
@@ -57,9 +68,8 @@ public class MensajeServicio {
 
 	@GET
 	@Path(WebServUtils.COD_MENSAJE_PATH + WebServUtils.PREF_MSG_RESPUESTA_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response listaRespuestas(
+	public Response listaRespuestas(
 			@PathParam(WebServUtils.P_PARAM_COD_USER) long codUser, // (usuario a buscar)
 			@PathParam(WebServUtils.P_PARAM_COD_MENSAJE) long codMensaje, // (mensaje original)
 			@QueryParam(WebServUtils.Q_PARAM_INC_MSG_ORIGINAL) @DefaultValue("false") boolean original, // (incluye mensaje original en respuestas)
@@ -85,9 +95,8 @@ public class MensajeServicio {
 
 	@GET
 	@Path(WebServUtils.COD_MENSAJE_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getMensaje(
+	public Response getMensaje(
 			@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser,
 			@PathParam(WebServUtils.P_PARAM_COD_MENSAJE) int codMensaje,
 			@QueryParam(WebServUtils.Q_PARAM_PROF_RESPUESTAS) @DefaultValue("1") int profRespuestas,
@@ -108,9 +117,8 @@ public class MensajeServicio {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response nuevoMensaje(MensajeBean privadoRaw,
+	public Response nuevoMensaje(MensajeBean privadoRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
 		ErrorBean errorBean = new ErrorBean();
 		RespuestaBean<MensajeBean> respuesta = null;

@@ -25,8 +25,8 @@ public class UsuarioBean extends ETLTBean {
 	private TrabajadorBean trabajador;
 	private String codRes; 
 	private ResidenciaBean residencia;
-	private NivelUsuario nivel;
-	private boolean activado;
+	private NivelUsuario nivel = NivelUsuario.USUARIO;
+	private boolean activado = false;
 	
 
 	public long getIdUsuario() {

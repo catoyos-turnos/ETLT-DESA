@@ -21,15 +21,26 @@ import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.ServicioBean;
 
+@Api(value = "Turno")
+@Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH
 		+ WebServUtils.PREF_TURNO_PATH + WebServUtils.COD_TURNO_PATH
 		+ WebServUtils.PREF_SERV_PATH)
 public class ServicioServicio {
+	private UsuarioBean usuarioLog;
+	
+	@Context
+	private ServicioServicio(HttpServletRequest request) {
+		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
+		if(usrObj != null && usrObj  instanceof UsuarioBean) {
+			this.usuarioLog = (UsuarioBean) usrObj;
+		}
+	}
+
 	
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response listaServicios (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+	public Response listaServicios (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<ServicioBean> listaServicios = ServicioHandler.listServicios(null, codRes, codTurno, errorBean);
@@ -46,9 +57,8 @@ public class ServicioServicio {
 	
 	@GET
 	@Path(WebServUtils.COD_SERV_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getServicio (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+	public Response getServicio (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
 		ErrorBean errorBean = new ErrorBean();
@@ -66,9 +76,8 @@ public class ServicioServicio {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response nuevoServicio(ServicioBean servicioRaw,
+	public Response nuevoServicio(ServicioBean servicioRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
@@ -89,9 +98,8 @@ public class ServicioServicio {
 	@PUT
 	@Path(WebServUtils.COD_SERV_PATH)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response modServicio(ServicioBean servicioRaw,
+	public Response modServicio(ServicioBean servicioRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
@@ -112,9 +120,8 @@ public class ServicioServicio {
 	
 	@DELETE
 	@Path(WebServUtils.COD_SERV_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response borraServicio(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+	public Response borraServicio(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
 		ErrorBean errorBean = new ErrorBean();

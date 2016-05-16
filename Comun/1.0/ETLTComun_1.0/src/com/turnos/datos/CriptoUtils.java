@@ -22,6 +22,15 @@ public class CriptoUtils {
 	public static final String	TRANSFORMATION = "AES/ECB/PKCS5Padding";
 //	public static final String	PROVIDER = "BC";
 
+	public static String generaRandomHexString(int n) {
+		Random r = new Random();
+		StringBuffer sb = new StringBuffer();
+		while(sb.length() < n){
+			sb.append(Integer.toHexString(r.nextInt()));
+		}
+		return sb.toString().substring(0, n);
+	}
+
 	public static String encripta(String str, String key)
 			throws UnsupportedEncodingException, NoSuchAlgorithmException,
 			NoSuchProviderException, NoSuchPaddingException,

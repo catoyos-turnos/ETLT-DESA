@@ -19,7 +19,7 @@ public class ServicioBean extends ETLTBean {
 	private int margen_antes;
 	private int margen_despues;
 	private String descripcion;
-	private ArrayList<ServicioTipoDia> tiposDia;
+	private ArrayList<ServicioTipoDiaBean> tiposDia;
 
 
 	public void setId_servicio(long id_servicio) {

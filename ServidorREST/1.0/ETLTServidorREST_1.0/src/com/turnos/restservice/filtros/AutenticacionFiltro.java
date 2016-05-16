@@ -28,32 +28,38 @@ import com.turnos.datos.vo.UsuarioBean;
 public class AutenticacionFiltro implements ContainerRequestFilter {
 	public static final long MARGEN_LOGIN = 300000; // 5min.
 	public static final long MARGEN_SESION = 10000000; // ~2h 45min.
-	public static final String REQUEST_PARAM_USUARIO = "USUARIO"; 
+	public static final String REQUEST_PARAM_USUARIO = "USUARIO";
+	public static final String REQUEST_PARAM_APP_SECRET = "APP_SECRET";
+	public static final String REQUEST_PARAM_SERVIDOR_KEY = "SERVIDOR_KEY";
 	
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
-		System.out.println("hola buenas");
+		//System.out.println("hola buenas");
 		UsuarioBean usuario = null;
 		ErrorBean errorBean = new ErrorBean();
 		List<String> publicKeyL = requestContext.getHeaders().get("publicKey");
 		List<String> tokenSesionL = requestContext.getHeaders().get("tokenSesion");
 		List<String> tokenLoginL = requestContext.getHeaders().get("tokenLogin");
+		/*
 		List<String> userL = requestContext.getHeaders().get("user"); //TODO DEBUG BORRAR
 		List<String> passL = requestContext.getHeaders().get("pass"); //TODO DEBUG BORRAR
+		*/
 		List<String> necesitaAutenticarL = requestContext.getHeaders().get("necesitaAutenticar");
 		List<String> saltaAutenticacionL = requestContext.getHeaders().get("saltaAutenticacion");
+		String publicKey = null;
+		String tokenSesion = null;
+		String tokenLogin = null;
+		String secretKey = null;
+		String servidorKey = null;
+		/*
+		String user = null;
+		String pass = null;
+		*/
 		boolean necesitaAutenticar = 
 				(necesitaAutenticarL==null || !necesitaAutenticarL.isEmpty()) ? false : Boolean.parseBoolean(necesitaAutenticarL.get(0));
 		boolean saltaAutenticacion = 
 				(saltaAutenticacionL==null || !saltaAutenticacionL.isEmpty()) ? false : Boolean.parseBoolean(saltaAutenticacionL.get(0));
 		if(!saltaAutenticacion) {
-			String publicKey = null;
-			String tokenSesion = null;
-			String tokenLogin = null;
-			String secretKey = null;
-			String servidorKey = null;
-			String user = null;
-			String pass = null;
 			long ahora = System.currentTimeMillis();
 	
 			if (publicKeyL != null && !publicKeyL.isEmpty()) {
@@ -64,49 +70,65 @@ public class AutenticacionFiltro implements ContainerRequestFilter {
 				if (tokenSesionL != null && !tokenSesionL.isEmpty()) {
 					tokenSesion = tokenSesionL.get(0);
 				}
+				/*
 				if(userL != null && !userL.isEmpty() && passL != null && !passL.isEmpty()) {
 					user = userL.get(0);
 					pass = passL.get(0);
 				}
-				if (tokenSesion != null || tokenLogin != null || (user != null && pass != null)) {
+				*/
+				if (tokenSesion != null || tokenLogin != null
+					/*|| (user != null && pass != null)*/
+					) {
 					String[] keys = AutenticacionHandler.getAuthKeys(null, publicKey, errorBean);
 					if (keys != null && keys.length >= 2) {
 						secretKey = keys[0];
 						servidorKey = keys[1];
-
+						/*
 						if(user != null && pass != null) {
 							tokenLogin = crearTokenLogin(user, pass, secretKey); //TODO DEBUG BORRAR
-						} else if (tokenLogin != null) {
+						} else
+						*/
+						if (tokenLogin != null) {
 							usuario = usuarioDesdeLogin(tokenLogin, secretKey, servidorKey, ahora, errorBean);
+							/*
 							if(usuario != null) {
 								String nTokenSes = crearTokenSesion(usuario, secretKey, servidorKey); //TODO DEBUG BORRAR
 								System.out.println("nTokenSes: " + nTokenSes);
 							}
+							*/
 						} else if (tokenSesion != null) {
 							usuario = usuarioDesdeSesion(tokenSesion, secretKey, servidorKey, ahora, errorBean);
 						}
 					}
 				}
 			}
-			System.out.println(usuario);
-			System.out.println(publicKey + ", " +tokenSesion + ", "+tokenLogin + ", "+secretKey + ", "+servidorKey + ", "+ahora + ", "+necesitaAutenticar + ", "+saltaAutenticacion);
+			//System.out.println(publicKey + ", " +tokenSesion + ", "+tokenLogin + ", "+secretKey + ", "+servidorKey + ", "+ahora + ", "+necesitaAutenticar + ", "+saltaAutenticacion);
 			
-			if (necesitaAutenticar && usuario==null) {
+			if (!saltaAutenticacion && necesitaAutenticar && usuario==null) {
 				if (errorBean==null || errorBean.getHttpCode()==Status.OK) {
 					errorBean = ErrorBeanFabrica.generaUNAUTHORIZEDErrorBean(errorBean, "x000001", "necesita usuario autenticado", null);
 				}
+				requestContext.setProperty(REQUEST_PARAM_USUARIO, null);
 				requestContext.abortWith(Response.status(errorBean.getHttpCode()).entity(errorBean).build());
 			} else {
 				requestContext.setProperty(REQUEST_PARAM_USUARIO, usuario);
+				if((PREF_AUTH_PATH+PREF_LOGIN_PATH).equalsIgnoreCase(request.getPath()) {
+					requestContext.setProperty(REQUEST_PARAM_APP_SECRET, secretKey);
+					requestContext.setProperty(REQUEST_PARAM_SERVIDOR_KEY, servidorKey);					
+				}
 			}
 		}
 	}
-
+	
+/*
+ * TODO pasar a ClienteAPI
+ */
+/*
 	private String crearTokenLogin(String user, String pass, String secretKey) {
 		 //TODO DEBUG BORRAR
 		String[] fields = new String[4];
 
-		fields[0] = "00ab99cd"; //sal (TODO RANDOMIZAR)
+		fields[0] =  CipherUtils.generaRandomHexString(8); //sal (TODO RANDOMIZAR)
 		fields[1] = "" + System.currentTimeMillis();
 		fields[2] = user.trim();
 		fields[3] = pass.trim();
@@ -125,7 +147,12 @@ public class AutenticacionFiltro implements ContainerRequestFilter {
 		System.out.println("tokenLogin: " + tokenLogin);
 		return tokenLogin;
 	}
+*/
 
+/*
+ * trasladado a AutenticacionServicio
+ */
+/*
 	private String crearTokenSesion(UsuarioBean res, String secretKey, String servidorKey) {
 		//TODO DEBUG BORRAR
 		String[] fieldsB = new String[4];
@@ -135,7 +162,7 @@ public class AutenticacionFiltro implements ContainerRequestFilter {
 		fieldsB[3] = "" + res.isActivado();
 		String desncrB = String.join(":", fieldsB);
 		String[] fields = new String[3];
-		fields[0] = "012AZ987"; //sal (TODO RANDOMIZAR)
+		fields[0] =  CipherUtils.generaRandomHexString(8); //sal (TODO RANDOMIZAR)
 		fields[1] = "" + System.currentTimeMillis();
 		try {
 			fields[2] = CriptoUtils.encripta(desncrB, secretKey);
@@ -161,12 +188,12 @@ public class AutenticacionFiltro implements ContainerRequestFilter {
 		}
 		return null;
 	}
+*/
 
 	private static UsuarioBean usuarioDesdeLogin(String tokenLogin,
 		String secretKey, String servidorKey, long ahora, ErrorBean errorBean) {
 	
 		String desncr = null;
-
 		try {
 			System.out.println(tokenLogin);
 			desncr = CriptoUtils.desencripta(tokenLogin, secretKey);

@@ -16,8 +16,8 @@ public class WebServUtils {
 	public static final String P_PARAM_COD_TRAB  = "codTrab";
 	
 	public static final String PREF_VACS_PATH = "/vacs";
-	public static final String COD_VACS_PATH  = "/{vacsServ: [0-9]{1,11}}";
-	public static final String P_PARAM_COD_VACS  = "vacsServ";
+	public static final String COD_VACS_PATH  = "/{codVacs: [0-9]{1,11}}";
+	public static final String P_PARAM_COD_VACS  = "codVacs";
 	
 	public static final String PREF_TURNO_PATH = "/turno";
 	public static final String COD_TURNO_PATH  = "/{codTurno: [A-Z0-9_]{3,32}}";

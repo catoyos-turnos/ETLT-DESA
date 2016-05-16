@@ -26,15 +26,27 @@ import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.VacacionesBean;
 
+@Api(value = "Trabajador")
+@Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH
 		+ WebServUtils.PREF_TRAB_PATH + WebServUtils.COD_TRAB_PATH
 		+ WebServUtils.PREF_VACS_PATH)
 public class VacacionesServicio {
+	private UsuarioBean usuarioLog;
+	
+	@Context
+	private VacacionesServicio(HttpServletRequest request) {
+		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
+		if(usrObj != null && usrObj  instanceof UsuarioBean) {
+			this.usuarioLog = (UsuarioBean) usrObj;
+		}
+	}
+
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response listaVacaciones (
+	public Response listaVacaciones (
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
@@ -78,7 +90,7 @@ public class VacacionesServicio {
 	@Path(WebServUtils.COD_VACS_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getVacaciones (
+	public Response getVacaciones (
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
 			@PathParam(WebServUtils.P_PARAM_COD_VACS) String codVacs) {
@@ -99,7 +111,7 @@ public class VacacionesServicio {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response nuevoVacaciones(VacacionesBean vacsRaw,
+	public Response nuevoVacaciones(VacacionesBean vacsRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
@@ -121,7 +133,7 @@ public class VacacionesServicio {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response modVacaciones(VacacionesBean vacsRaw,
+	public Response modVacaciones(VacacionesBean vacsRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
 			@PathParam(WebServUtils.P_PARAM_COD_VACS) String codVacs) {
@@ -143,7 +155,7 @@ public class VacacionesServicio {
 	@Path(WebServUtils.COD_VACS_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response borraVacaciones(
+	public Response borraVacaciones(
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
 			@PathParam(WebServUtils.P_PARAM_COD_VACS) String codVacs) {

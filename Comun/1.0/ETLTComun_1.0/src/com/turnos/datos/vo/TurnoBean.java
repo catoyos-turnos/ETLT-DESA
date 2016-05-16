@@ -19,6 +19,7 @@ public class TurnoBean extends ETLTBean {
 	private String codTurno;
 	private String codResidencia;
 	private TipoTurno tipo;
+	private List<ServicioBean> servicios;
 
 	public String getCodTurno() {
 		return codTurno;
@@ -43,6 +44,15 @@ public class TurnoBean extends ETLTBean {
 
 	public void setTipo(String tipo) {
 		this.tipo = TipoTurno.safeValueOf(tipo);
+	}
+
+
+	public List<ServicioBean> getServicios() {
+		return servicios;
+	}
+
+	public void setServicios(List<ServicioBean> servicios) {
+		this.servicios = servicios;
 	}
 
 }

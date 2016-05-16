@@ -35,6 +35,16 @@ import com.turnos.datos.vo.RespuestaBean;
 @Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_FEST_PATH)
 public class DiaFestivoServicio {
+	private UsuarioBean usuarioLog;
+	
+	@Context
+	private DiaFestivoServicio(HttpServletRequest request) {
+		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
+		if(usrObj != null && usrObj  instanceof UsuarioBean) {
+			this.usuarioLog = (UsuarioBean) usrObj;
+		}
+	}
+
 
 	// ---------------------GET-----------------------------------------------
 
@@ -43,7 +53,7 @@ public class DiaFestivoServicio {
 	    response = FestivoBean.class,
 	    responseContainer = "List")
 	@Valid
-	public static Response listaDiasFestivos(
+	public Response listaDiasFestivos(
 			@ApiParam(value = "", required = false) 
 			@QueryParam(WebServUtils.Q_PARAM_COD_PAIS) @DefaultValue("") String codPais,
 			
@@ -124,10 +134,10 @@ public class DiaFestivoServicio {
 
 	@GET
 	@Path(WebServUtils.COD_FEST_PATH)
-	@ApiOperation(value = "Devuelve día festivo por ID",
+	@ApiOperation(value = "Devuelve dï¿½a festivo por ID",
     	response = FestivoBean.class)
 	@Valid
-	public static Response getDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest,
+	public Response getDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo) {
 		ErrorBean eb = new ErrorBean();
@@ -147,10 +157,10 @@ public class DiaFestivoServicio {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Inserta nuevo día festivo",
+	@ApiOperation(value = "Inserta nuevo dï¿½a festivo",
 		response = FestivoBean.class )
 	@Valid
-	public static Response nuevoDiaFestivo(FestivoBean festRaw) {
+	public Response nuevoDiaFestivo(FestivoBean festRaw) {
 		ErrorBean eb = new ErrorBean();
 		boolean aut = FestivoHandler.autenticar(null);
 		FestivoBean festivo = FestivoHandler.insertFestivo(null, festRaw, aut, eb);
@@ -171,11 +181,11 @@ public class DiaFestivoServicio {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path(WebServUtils.COD_FEST_PATH)
-	@ApiOperation(value = "Modifica día festivo existente",
+	@ApiOperation(value = "Modifica dï¿½a festivo existente",
 		notes = "Campos modificables: fiesta, notas, tipo, municipioCod, provinciaCod, paisCod",
 		response = FestivoBean.class)
 	@Valid
-	public static Response modDiaFestivo(FestivoBean festRaw,
+	public Response modDiaFestivo(FestivoBean festRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
 		ErrorBean eb = new ErrorBean();
 		boolean aut = FestivoHandler.autenticar(null);
@@ -196,9 +206,9 @@ public class DiaFestivoServicio {
 
 	@DELETE
 	@Path(WebServUtils.COD_FEST_PATH)
-	@ApiOperation(value = "Elimina día festivo existente")
+	@ApiOperation(value = "Elimina dï¿½a festivo existente")
 	@Valid
-	public static Response borraDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
+	public Response borraDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
 		ErrorBean eb = new ErrorBean();
 		boolean aut = FestivoHandler.autenticar(null);
 		boolean borrado = FestivoHandler.deleteFestivo(null, codFest, aut, eb);

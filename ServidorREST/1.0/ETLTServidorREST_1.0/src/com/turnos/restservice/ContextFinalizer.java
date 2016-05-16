@@ -34,8 +34,7 @@ public class ContextFinalizer implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-		// TODO Auto-generated method stub
-
+		// TODO Auto-generated method stub 
 	}
 
 }

@@ -52,7 +52,6 @@ public class AutenticacionHandler extends GenericHandler {
 	}
 
 	public static UsuarioBean getUsuarioPorUserPass(Connection conexion, String user, String pass, ErrorBean errorBean) {
-		System.out.println(pass);
 		return UsuarioHandler.getUsuario(conexion, user, pass, errorBean);
 	}
 }

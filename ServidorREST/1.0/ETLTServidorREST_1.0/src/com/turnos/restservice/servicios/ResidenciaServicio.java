@@ -33,15 +33,26 @@ import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 import com.turnos.datos.vo.VacacionesBean;
 
+@Api(value = "Residencia")
+@Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_RES_PATH)
 public class ResidenciaServicio {
+	private UsuarioBean usuarioLog;
+	
+	@Context
+	private ResidenciaServicio(HttpServletRequest request) {
+		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
+		if(usrObj != null && usrObj  instanceof UsuarioBean) {
+			this.usuarioLog = (UsuarioBean) usrObj;
+		}
+	}
+
 	
 	// ---------------------GET-----------------------------------------------
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response listaResidencias (
+	public Response listaResidencias (
 			@QueryParam(WebServUtils.Q_PARAM_COD_PAIS) @DefaultValue("") String pais,
 			@QueryParam(WebServUtils.Q_PARAM_COD_PROV) @DefaultValue("") String provincia,
 			@QueryParam(WebServUtils.Q_PARAM_COD_MUNI) @DefaultValue("") String municipio,
@@ -80,9 +91,8 @@ public class ResidenciaServicio {
 	
 	@GET
 	@Path(WebServUtils.COD_RES_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getResidencia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
+	public Response getResidencia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
 		ResidenciaBean residencia = ResidenciaHandler.getResidencia(null, codRes, true, eb);
 		RespuestaBean<ResidenciaBean> respuesta;
@@ -100,9 +110,8 @@ public class ResidenciaServicio {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response nuevaResidencia(ResidenciaBean resRaw) {
+	public Response nuevaResidencia(ResidenciaBean resRaw) {
 		ErrorBean eb = new ErrorBean();
 		boolean aut = ResidenciaHandler.autenticar(null);
 		ResidenciaBean residencia = ResidenciaHandler.insertResidencia(null, resRaw, aut, eb);
@@ -123,9 +132,8 @@ public class ResidenciaServicio {
 	@PUT
 	@Path(WebServUtils.COD_RES_PATH)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response modResidencia(ResidenciaBean resRaw,
+	public Response modResidencia(ResidenciaBean resRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
 		boolean aut = ResidenciaHandler.autenticar(null);
@@ -146,9 +154,8 @@ public class ResidenciaServicio {
 
 	@DELETE
 	@Path(WebServUtils.COD_RES_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response borraResidencia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
+	public Response borraResidencia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
 		boolean aut = ResidenciaHandler.autenticar(null);
 		boolean borrado = ResidenciaHandler.deleteResidencia(null, codRes, aut, eb);
@@ -168,9 +175,8 @@ public class ResidenciaServicio {
 
 	@GET
 	@Path(WebServUtils.COD_RES_PATH + WebServUtils.PREF_FEST_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getDiasFestivos(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+	public Response getDiasFestivos(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
 			@DefaultValue("-1") int time_ini,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
@@ -217,9 +223,8 @@ public class ResidenciaServicio {
 	
 	@GET
 	@Path(WebServUtils.COD_RES_PATH + WebServUtils.PREF_VACS_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getVacacionesDia(
+	public Response getVacacionesDia(
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@QueryParam(WebServUtils.Q_PARAM_FECHA)
 			@DefaultValue("-1") int time) {
@@ -255,9 +260,8 @@ public class ResidenciaServicio {
 	
 	@GET
 	@Path(WebServUtils.COD_RES_PATH + WebServUtils.PREF_HORARIO_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getHorarioCompletoDia(
+	public Response getHorarioCompletoDia(
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@QueryParam(WebServUtils.Q_PARAM_FECHA)
 			@DefaultValue("-1") int time) {

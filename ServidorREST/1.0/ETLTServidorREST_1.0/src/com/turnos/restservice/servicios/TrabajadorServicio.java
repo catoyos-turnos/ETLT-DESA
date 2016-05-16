@@ -28,14 +28,25 @@ import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.TrabajadorBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 
+@Api(value = "Trabajador")
+@Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH
 		+ WebServUtils.PREF_TRAB_PATH)
 public class TrabajadorServicio {
+	private UsuarioBean usuarioLog;
+	
+	@Context
+	private TrabajadorServicio(HttpServletRequest request) {
+		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
+		if(usrObj != null && usrObj  instanceof UsuarioBean) {
+			this.usuarioLog = (UsuarioBean) usrObj;
+		}
+	}
+
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response listaTrabajadores (@PathParam(WebServUtils.P_PARAM_COD_RES) String codTrab) {
+	public Response listaTrabajadores (@PathParam(WebServUtils.P_PARAM_COD_RES) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<TrabajadorBean> listaTrabajadores = TrabajadorHandler.listTrabajadores(null, codTrab, errorBean);
 		RespuestaBean<TrabajadorBean> respuesta = null;
@@ -51,9 +62,8 @@ public class TrabajadorServicio {
 	
 	@GET
 	@Path(WebServUtils.COD_TRAB_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response getTrabajador (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+	public Response getTrabajador (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
 		TrabajadorBean trabajador = TrabajadorHandler.getTrabajador(null, codRes, codTrab, errorBean);
@@ -70,9 +80,8 @@ public class TrabajadorServicio {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response nuevoTrabajador(TrabajadorBean trabRaw,
+	public Response nuevoTrabajador(TrabajadorBean trabRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean errorBean = new ErrorBean();
 		TrabajadorBean trabajador = TrabajadorHandler.insertTrabajador(null, codRes, trabRaw, errorBean);
@@ -91,9 +100,8 @@ public class TrabajadorServicio {
 	@PUT
 	@Path(WebServUtils.COD_TRAB_PATH)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response modTrabajador(TrabajadorBean trabRaw,
+	public Response modTrabajador(TrabajadorBean trabRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
@@ -112,9 +120,8 @@ public class TrabajadorServicio {
 	
 	@DELETE
 	@Path(WebServUtils.COD_TRAB_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
-	public static Response borraTrabajador (@PathParam("codRes") String codRes,
+	public Response borraTrabajador (@PathParam("codRes") String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean borrado = TrabajadorHandler.deleteTrabajador(null, codRes, codTrab, errorBean);
@@ -133,7 +140,6 @@ public class TrabajadorServicio {
 	
 	@GET
 	@Path(WebServUtils.COD_TRAB_PATH + WebServUtils.PREF_DIA_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public Response getHorarioTrabajadorDia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
@@ -167,7 +173,6 @@ public class TrabajadorServicio {
 
 	@GET
 	@Path(WebServUtils.COD_TRAB_PATH + WebServUtils.PREF_HORARIO_PATH)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Valid
 	public Response getHorarioTrabajadorRango(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,

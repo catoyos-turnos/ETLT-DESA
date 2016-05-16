@@ -15,7 +15,9 @@ public class MensajeBean extends ETLTBean {
 	private UsuarioBean remitente;
 	private UsuarioBean destinatario;
 	private long idMsgOriginal = -1;
+	private long idMsgOriginal = -1;
 	private MensajeBean msgOriginal;
+	private int numRespuestas = -1;
 	private List<MensajeBean> respuestas;
 	private Date hora;
 	private String texto;
