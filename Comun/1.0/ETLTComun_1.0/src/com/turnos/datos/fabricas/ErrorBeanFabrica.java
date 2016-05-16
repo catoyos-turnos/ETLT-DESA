@@ -216,6 +216,7 @@ public class ErrorBeanFabrica {
 			msg = String.format(msg, (Object[]) params);
 		}
 
+		if (httpCode==null)httpCode=Status.OK;
 		base.setHttpCode(httpCode);
 		base.updateErrorCode(errorCode);
 		base.updateMsg(msg);

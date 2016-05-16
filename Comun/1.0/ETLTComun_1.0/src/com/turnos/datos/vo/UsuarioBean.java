@@ -1,5 +1,7 @@
 package com.turnos.datos.vo;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -7,13 +9,25 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "usuario")
 @JsonRootName(value = "usuario")
 public class UsuarioBean extends ETLTBean {
+
+	public enum NivelUsuario {
+		USUARIO,ADMIN,SUPERADMIN,BANEADO;
+		public static NivelUsuario safeValueOf(String arg) {
+			try{return valueOf(arg);}
+			catch(Exception e){return null;}
+		}
+	};
+	
 	private long idUsuario = -1;
 	private String user;
+	private String nombre;
 	private String codTrab;
 	private TrabajadorBean trabajador;
 	private String codRes; 
 	private ResidenciaBean residencia;
+	private NivelUsuario nivel;
 	private boolean activado;
+	
 
 	public long getIdUsuario() {
 		return idUsuario;
@@ -29,6 +43,14 @@ public class UsuarioBean extends ETLTBean {
 
 	public void setUser(String user) {
 		this.user = user;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	public String getCodTrab() {
@@ -61,6 +83,17 @@ public class UsuarioBean extends ETLTBean {
 
 	public void setResidencia(ResidenciaBean residencia) {
 		this.residencia = residencia;
+	}
+	
+	@ApiModelProperty(allowableValues = "USUARIO,ADMIN,SUPERADMIN,BANEADO")
+	public String getNivel() {
+		if (nivel == null) return null;
+		return nivel.name();
+	}
+	
+	@ApiModelProperty(allowableValues = "USUARIO,ADMIN,SUPERADMIN,BANEADO")
+	public void setNivel(String nivel) {
+		this.nivel = NivelUsuario.safeValueOf(nivel);
 	}
 
 	public boolean isActivado() {

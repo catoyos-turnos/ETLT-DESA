@@ -5,6 +5,8 @@ import java.util.Date;
 
 public class WebServUtils {
 
+	public static final String PREF_AUTH_PATH = "/auth";
+	
 	public static final String PREF_RES_PATH = "/res";
 	public static final String COD_RES_PATH  = "/{codRes: [A-Z0-9_]{3,32}}";
 	public static final String P_PARAM_COD_RES  = "codRes";
