@@ -14,8 +14,11 @@ public class FestivoBean extends ETLTBean {
 	public enum TipoFiesta {
 		NACIONAL, AUTONOMICA, LOCAL;
 		public static TipoFiesta safeValueOf(String arg) {
-			try{return valueOf(arg);}
-			catch(Exception e){return null;}
+			try {
+				return valueOf(arg);
+			} catch (Exception e) {
+				return null;
+			}
 		}
 	};
 
@@ -62,13 +65,14 @@ public class FestivoBean extends ETLTBean {
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
-	
+
 	@ApiModelProperty(allowableValues = "NACIONAL, AUTONOMICA, LOCAL")
 	public String getTipo() {
-		if (tipo == null) return null;
+		if (tipo == null)
+			return null;
 		return tipo.name();
 	}
-	
+
 	@ApiModelProperty(allowableValues = "NACIONAL, AUTONOMICA, LOCAL")
 	public void setTipo(String tipo) {
 		this.tipo = TipoFiesta.safeValueOf(tipo);
@@ -121,5 +125,5 @@ public class FestivoBean extends ETLTBean {
 	public void setPaisNombre(String paisNombre) {
 		this.paisNombre = paisNombre;
 	}
-        
+
 }

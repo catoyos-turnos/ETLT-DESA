@@ -1,5 +1,7 @@
 package com.turnos.restservice.servicios;
 
+import io.swagger.annotations.Api;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,6 +17,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -31,22 +35,21 @@ import com.turnos.datos.vo.FestivoBean;
 import com.turnos.datos.vo.ResidenciaBean;
 import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
+import com.turnos.datos.vo.UsuarioBean;
 import com.turnos.datos.vo.VacacionesBean;
 
 @Api(value = "Residencia")
 @Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_RES_PATH)
-public class ResidenciaServicio {
-	private UsuarioBean usuarioLog;
+public class ResidenciaServicio extends GenericServicio{
 	
-	@Context
-	private ResidenciaServicio(HttpServletRequest request) {
-		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
-		if(usrObj != null && usrObj  instanceof UsuarioBean) {
-			this.usuarioLog = (UsuarioBean) usrObj;
-		}
+	protected ResidenciaServicio(UsuarioBean usuarioLog) {
+		super(usuarioLog);
 	}
-
+	
+	protected ResidenciaServicio(@Context ContainerRequestContext request) {
+		super(request);
+	}
 	
 	// ---------------------GET-----------------------------------------------
 
@@ -57,6 +60,7 @@ public class ResidenciaServicio {
 			@QueryParam(WebServUtils.Q_PARAM_COD_PROV) @DefaultValue("") String provincia,
 			@QueryParam(WebServUtils.Q_PARAM_COD_MUNI) @DefaultValue("") String municipio,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO) @DefaultValue("false") boolean includeGeo) {
+		
 		ErrorBean eb = new ErrorBean();
 		ArrayList<ResidenciaBean> listaResidencias = null;
 		RespuestaBean<ResidenciaBean> respuesta;
@@ -113,7 +117,7 @@ public class ResidenciaServicio {
 	@Valid
 	public Response nuevaResidencia(ResidenciaBean resRaw) {
 		ErrorBean eb = new ErrorBean();
-		boolean aut = ResidenciaHandler.autenticar(null);
+		boolean aut = ResidenciaHandler.autenticar(null, null);
 		ResidenciaBean residencia = ResidenciaHandler.insertResidencia(null, resRaw, aut, eb);
 		RespuestaBean<ResidenciaBean> respuesta;
 		
@@ -136,7 +140,7 @@ public class ResidenciaServicio {
 	public Response modResidencia(ResidenciaBean resRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
-		boolean aut = ResidenciaHandler.autenticar(null);
+		boolean aut = ResidenciaHandler.autenticar(null, null);
 		ResidenciaBean residencia = ResidenciaHandler.updateResidencia(null, codRes, resRaw, aut, eb);
 		RespuestaBean<ResidenciaBean> respuesta;
 		
@@ -157,7 +161,7 @@ public class ResidenciaServicio {
 	@Valid
 	public Response borraResidencia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
-		boolean aut = ResidenciaHandler.autenticar(null);
+		boolean aut = ResidenciaHandler.autenticar(null, null);
 		boolean borrado = ResidenciaHandler.deleteResidencia(null, codRes, aut, eb);
 		RespuestaBean<ResidenciaBean> respuesta;
 		

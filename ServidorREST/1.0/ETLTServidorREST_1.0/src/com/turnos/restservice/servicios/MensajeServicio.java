@@ -1,5 +1,7 @@
 package com.turnos.restservice.servicios;
 
+import io.swagger.annotations.Api;
+
 import java.util.ArrayList;
 
 import javax.validation.Valid;
@@ -11,6 +13,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -21,22 +25,23 @@ import com.turnos.datos.handlers.MensajeHandler.RolUsuario;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.MensajeBean;
 import com.turnos.datos.vo.RespuestaBean;
+import com.turnos.datos.vo.UsuarioBean;
 
 @Api(value = "Mensaje")
 @Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_USER_PATH + WebServUtils.COD_USER_PATH + WebServUtils.PREF_MENSAJE_PATH)
-public class MensajeServicio {
-	private UsuarioBean usuarioLog;
+public class MensajeServicio extends GenericServicio{
 	
-	@Context
-	private MensajeServicio(HttpServletRequest request) {
-		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
-		if(usrObj != null && usrObj  instanceof UsuarioBean) {
-			this.usuarioLog = (UsuarioBean) usrObj;
-		}
+	protected MensajeServicio(UsuarioBean usuarioLog) {
+		super(usuarioLog);
 	}
-
-
+	
+	protected MensajeServicio(@Context ContainerRequestContext request) {
+		super(request);
+	}
+	
+	// ---------------------GET-----------------------------------------------
+	
 	@GET
 	@Valid
 	public Response listaMensajes(
@@ -49,7 +54,7 @@ public class MensajeServicio {
 			@QueryParam(WebServUtils.Q_PARAM_PROF_RESPUESTAS) @DefaultValue("0") int profRespuestas // (niveles de respuesta a devolver)
 			) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean aut = MensajeHandler.autenticar(null);
+		boolean aut = MensajeHandler.autenticar(null, null);
 		RolUsuario rol = RolUsuario.safeValueOf(rolStr);
 		if(rol == null) {
 			rol = RolUsuario.DESTINATARIO;
@@ -79,7 +84,7 @@ public class MensajeServicio {
 			@QueryParam(WebServUtils.Q_PARAM_PROF_RESPUESTAS) @DefaultValue("0") int profRespuestas // (niveles de respuesta a devolver)
 			) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean aut = MensajeHandler.autenticar(null);
+		boolean aut = MensajeHandler.autenticar(null, null);
 		
 		RespuestaBean<MensajeBean> respuesta;
 		ArrayList<MensajeBean> listaMensajes = MensajeHandler.listRespuestasMensaje(null, codMensaje, profRespuestas, limite, offset, aut, errorBean);
@@ -103,7 +108,7 @@ public class MensajeServicio {
 			@QueryParam(WebServUtils.Q_PARAM_INC_MSG_ORIGINAL) @DefaultValue("false") boolean original) {
 		ErrorBean errorBean = new ErrorBean();
 		RespuestaBean<MensajeBean> respuesta = null;
-		boolean aut = MensajeHandler.autenticar(null);
+		boolean aut = MensajeHandler.autenticar(null, null);
 		MensajeBean privado = MensajeHandler.getMensaje(null, codMensaje, profRespuestas, original, aut, errorBean);
 		
 		if (privado == null) {
@@ -122,7 +127,7 @@ public class MensajeServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
 		ErrorBean errorBean = new ErrorBean();
 		RespuestaBean<MensajeBean> respuesta = null;
-		boolean aut = MensajeHandler.autenticar(null);
+		boolean aut = MensajeHandler.autenticar(null, null);
 		MensajeBean privado = MensajeHandler.insertMensaje(null, privadoRaw, aut, errorBean);
 
 		if(privado == null) {

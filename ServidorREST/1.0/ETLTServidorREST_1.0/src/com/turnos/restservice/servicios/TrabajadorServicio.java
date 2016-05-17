@@ -1,5 +1,7 @@
 package com.turnos.restservice.servicios;
 
+import io.swagger.annotations.Api;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,6 +17,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -27,22 +31,21 @@ import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.TrabajadorBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
+import com.turnos.datos.vo.UsuarioBean;
 
 @Api(value = "Trabajador")
 @Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH
 		+ WebServUtils.PREF_TRAB_PATH)
-public class TrabajadorServicio {
-	private UsuarioBean usuarioLog;
+public class TrabajadorServicio extends GenericServicio{
 	
-	@Context
-	private TrabajadorServicio(HttpServletRequest request) {
-		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
-		if(usrObj != null && usrObj  instanceof UsuarioBean) {
-			this.usuarioLog = (UsuarioBean) usrObj;
-		}
+	protected TrabajadorServicio(UsuarioBean usuarioLog) {
+		super(usuarioLog);
 	}
-
+	
+	protected TrabajadorServicio(@Context ContainerRequestContext request) {
+		super(request);
+	}
 
 	@GET
 	@Valid

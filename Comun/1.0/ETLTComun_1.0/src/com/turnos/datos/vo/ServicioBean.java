@@ -102,11 +102,11 @@ public class ServicioBean extends ETLTBean {
 		this.descripcion = descripcion;
 	}
 
-	public ArrayList<ServicioTipoDia> getTiposDia() {
+	public ArrayList<ServicioTipoDiaBean> getTiposDia() {
 		return tiposDia;
 	}
 
-	public void setTiposDia(ArrayList<ServicioTipoDia> tiposDia) {
+	public void setTiposDia(ArrayList<ServicioTipoDiaBean> tiposDia) {
 		this.tiposDia = tiposDia;
 	}
 

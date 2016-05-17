@@ -2,15 +2,16 @@ package com.turnos.restservice.servicios;
 
 import io.swagger.annotations.Api;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.turnos.datos.CriptoUtils;
 import com.turnos.datos.WebServUtils;
 import com.turnos.datos.vo.UsuarioBean;
 import com.turnos.restservice.filtros.AutenticacionFiltro;
@@ -18,54 +19,45 @@ import com.turnos.restservice.filtros.AutenticacionFiltro;
 @Api(value = "Autenticacion")
 @Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_AUTH_PATH)
-public class AutenticacionServicio {
-	private UsuarioBean usuarioLog;
+public class AutenticacionServicio extends GenericServicio{
 	private String secretKey;
 	private String servidorKey;
 	
-	@Context
-	private AutenticacionServicio(HttpServletRequest request) {
-		if(request!=null) {
-			Object usrObj = request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
-			if(usrObj != null && usrObj  instanceof UsuarioBean) {
-				this.usuarioLog = (UsuarioBean) usrObj;
-			}
-			
-			Object secretKObj = request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_APP_SECRET);
-			this.secretKey = (String) secretKObj;
-			
-			Object servKObj = request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_SERVIDOR_KEY);
-			this.servidorKey = (String) servKObj;
-		}
-		
+	protected AutenticacionServicio(UsuarioBean usuarioLog, String secretKey, String servidorKey) {
+		super(usuarioLog);
+		this.secretKey = secretKey;
+		this.servidorKey = servidorKey;
 	}
+	
+	protected AutenticacionServicio(@Context ContainerRequestContext request) {
+		super(request);
+		Object secretKObj = request.getProperty(AutenticacionFiltro.REQUEST_PARAM_APP_SECRET);
+		this.secretKey = secretKObj == null ? null : (String) secretKObj;
+		Object servKObj = request.getProperty(AutenticacionFiltro.REQUEST_PARAM_SERVIDOR_KEY);
+		this.servidorKey = servKObj == null ? null : (String) servKObj;
+
+		System.out.println(secretKObj + "///" +  servKObj);
+		System.out.println(secretKey + "///" +  servidorKey);
+	}
+
+	// ---------------------GET-----------------------------------------------
 	
 	@GET
 	@Path(WebServUtils.PREF_LOGIN_PATH)
 	public Response login() {
-		UsuarioBean usuario = null;
-		String secretKey = null;
-		String servidorKey = null;
-		if(request!=null) {
-			Object usrObj =
-					request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
-			if(usrObj != null && usrObj  instanceof UsuarioBean) {
-				usuario = (UsuarioBean) usrObj;
-			}
-			
-			Object secretKObj =
-					request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_APP_SECRET);
-			secretKey = (String)secretKObj;
-			
-			Object servKObj =
-					request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_SERVIDOR_KEY);
-			servidorKey = (String)servKObj;
+
+		if(usuarioLog == null) {
+			System.out.println("usuarioLog == null");
 		} else {
-			// TODO error
+			System.out.println(usuarioLog.getIdUsuario()
+					+","+usuarioLog.getUser()+","+usuarioLog.getNombre()
+					+","+usuarioLog.getNivel()+","+usuarioLog.isActivado());
 		}
+		
+		
 		String tokenSesion = null;
-		if(usuario!=null && secretKey!=null && servidorKey!=null) {
-			tokenSesion = generaTokenSesion(usuario, secretKey, servidorKey);
+		if(usuarioLog!=null && secretKey!=null && servidorKey!=null) {
+			tokenSesion = generaTokenSesion(usuarioLog, secretKey, servidorKey);
 		}
 		
 		if(tokenSesion == null) {
@@ -83,7 +75,7 @@ public class AutenticacionServicio {
 		fieldsB[3] = "" + res.isActivado();
 		String desncrB = String.join(":", fieldsB);
 		String[] fields = new String[3];
-		fields[0] = CipherUtils.generaRandomHexString(8); //sal
+		fields[0] = CriptoUtils.generaRandomHexString(8); //sal
 		fields[1] = "" + System.currentTimeMillis();
 		try {
 			fields[2] = CriptoUtils.encripta(desncrB, secretKey);
@@ -93,19 +85,13 @@ public class AutenticacionServicio {
 				tokenSesion = CriptoUtils.encripta(desncrA, servidorKey);
 				// System.out.println("tokenSesion: " + tokenSesion);
 				return tokenSesion;
-			} catch (InvalidKeyException | UnsupportedEncodingException
-					| NoSuchAlgorithmException | NoSuchProviderException
-					| NoSuchPaddingException | ShortBufferException
-					| IllegalBlockSizeException | BadPaddingException e) {
+			} catch (Exception e) {
 			// TODO error
 				e.printStackTrace();
 			}
-		} catch (InvalidKeyException | UnsupportedEncodingException
-				| NoSuchAlgorithmException | NoSuchProviderException
-				| NoSuchPaddingException | ShortBufferException
-				| IllegalBlockSizeException | BadPaddingException e1) {
+		} catch (Exception e) {
 			// TODO error
-			e1.printStackTrace();
+			e.printStackTrace();
 		}
 		return null;
 	}

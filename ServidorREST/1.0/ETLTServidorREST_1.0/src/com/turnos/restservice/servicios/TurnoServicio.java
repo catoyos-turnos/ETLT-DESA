@@ -1,5 +1,7 @@
 package com.turnos.restservice.servicios;
 
+import io.swagger.annotations.Api;
+
 import java.util.ArrayList;
 
 import javax.validation.Valid;
@@ -13,6 +15,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -23,22 +27,23 @@ import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.TurnoBean;
 import com.turnos.datos.vo.TurnoBean.TipoTurno;
+import com.turnos.datos.vo.UsuarioBean;
 
 @Api(value = "Turno")
 @Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH + WebServUtils.PREF_TURNO_PATH)
-public class TurnoServicio {
-	private UsuarioBean usuarioLog;
+public class TurnoServicio extends GenericServicio{
 	
-	@Context
-	private TurnoServicio(HttpServletRequest request) {
-		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
-		if(usrObj != null && usrObj  instanceof UsuarioBean) {
-			this.usuarioLog = (UsuarioBean) usrObj;
-		}
+	protected TurnoServicio(UsuarioBean usuarioLog) {
+		super(usuarioLog);
 	}
-
 	
+	protected TurnoServicio(@Context ContainerRequestContext request) {
+		super(request);
+	}
+	
+	// ---------------------GET-----------------------------------------------
+
 	@GET
 	@Valid
 	public Response listaTurnos (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
@@ -89,7 +94,7 @@ public class TurnoServicio {
 	public Response nuevoTurno(TurnoBean turnoRaw, 
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean aut = TurnoHandler.autenticar(null);
+		boolean aut = TurnoHandler.autenticar(null, null); //TODO
 		TurnoBean turno = TurnoHandler.insertTurno(null, codRes, turnoRaw, aut, errorBean);
 		RespuestaBean<TurnoBean> respuesta = null;
 
@@ -111,7 +116,7 @@ public class TurnoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean aut = TurnoHandler.autenticar(null);
+		boolean aut = TurnoHandler.autenticar(null, null); //TODO
 		TurnoBean turno = TurnoHandler.updateTurno(null, codRes, codTurno, turnoRaw, aut, errorBean);
 		RespuestaBean<TurnoBean> respuesta = null;
 		
@@ -131,7 +136,7 @@ public class TurnoServicio {
 	public Response borraTurno(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean aut = TurnoHandler.autenticar(null);
+		boolean aut = TurnoHandler.autenticar(null, null); //TODO
 		boolean borrado = TurnoHandler.deleteTurno(null, codRes, codTurno, aut, errorBean);
 		RespuestaBean<TurnoBean> respuesta = null;
 		

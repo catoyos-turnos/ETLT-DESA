@@ -10,10 +10,13 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.regex.Pattern;
 
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.AccesoBD;
 import com.turnos.datos.vo.ErrorBean;
+import com.turnos.datos.vo.UsuarioBean;
+import com.turnos.datos.vo.UsuarioBean.NivelUsuario;
 //69xxxx
 public abstract class GenericHandler {
 	private static final String QUERY_GET_INFO_DIA = "SELECT get_info_residencia_dia(?, ?) AS infodia";
@@ -51,43 +54,42 @@ public abstract class GenericHandler {
 		return nuevaConexion ? AccesoBD.getConexion() : conexion;
 	}
 
-	public static boolean autenticar(UsuarioBean usuarioLog, HTTPMethod metodo) {
-	
+	public static boolean autenticar(UsuarioBean usuarioLog, HttpMethod metodo, String codTrabRelevante, String codResRelevante) {
+		//TODO
+		return true;
 	}
 
-	public static boolean autenticar(UsuarioBean usuarioLog, HTTPMethod metodo) {
+	public static boolean autenticar(UsuarioBean usuarioLog, HttpMethod metodo) {
 		if(usuarioLog.isActivado()) {
 			NivelUsuario nivel = NivelUsuario.safeValueOf(usuarioLog.getNivel());
-			if(nivel == null)
-				return false;
-			else switch(nivel) {
-				case USUARIO: 
-					switch(metodo) {
-						case GET: 
-							return true;
-							break;
-						
-						case POST:
-						case PUT:						
-						case DELETE:
-						default:
-							return false;
+			if (nivel == null) return false;
+			else
+				switch (nivel) {
+				case USUARIO:
+					switch (metodo.value()) {
+					case HttpMethod.GET:
+					case HttpMethod.HEAD:
+					case HttpMethod.OPTIONS:
+						return true;
+	
+					case HttpMethod.POST:
+					case HttpMethod.PUT:
+					case HttpMethod.DELETE:
+					default:
+						return false;
 					}
-					break;
-						
+	
 				case ADMIN:
 				case SUPERADMIN:
 					return true;
-					break;
-				
+	
 				case BANEADO:
 				default:
 					return false;
-			}
-		} else
-			return false;
+				}
+			
+		} else return false;
 		
-		return false;
 	}
 	
 	protected static void terminaOperacion(Connection nconexion, boolean cierraConexion) {

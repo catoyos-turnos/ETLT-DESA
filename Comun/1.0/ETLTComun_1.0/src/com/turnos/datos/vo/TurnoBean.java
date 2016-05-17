@@ -1,5 +1,9 @@
 package com.turnos.datos.vo;
 
+import io.swagger.annotations.ApiModelProperty;
+
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -37,11 +41,13 @@ public class TurnoBean extends ETLTBean {
 		this.codResidencia = codResidencia;
 	}
 
+	@ApiModelProperty(allowableValues = "ORDINARIO,RESERVA,DESCANSO")
 	public String getTipo() {
 		if (tipo == null) return null;
 		return tipo.name();
 	}
 
+	@ApiModelProperty(allowableValues = "ORDINARIO,RESERVA,DESCANSO")
 	public void setTipo(String tipo) {
 		this.tipo = TipoTurno.safeValueOf(tipo);
 	}

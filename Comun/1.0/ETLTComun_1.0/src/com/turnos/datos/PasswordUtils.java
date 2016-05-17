@@ -22,7 +22,7 @@ public class PasswordUtils {
 			throws Exception {
 		String[] saltPass = guardada.split("\\$");
 		if (saltPass.length != 2) {
-			throw new IllegalStateException( "La contraseña guardada no tiene la forma 'salt%hash'");
+			throw new IllegalStateException( "La contraseña guardada no tiene la forma 'salt$hash'");
 		}
 		String hashOfInput = hash(pass, Base64.getDecoder().decode(saltPass[0]));
 		return hashOfInput.equals(saltPass[1]);

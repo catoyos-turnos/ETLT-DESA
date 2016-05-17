@@ -11,11 +11,12 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "mensaje")
 @JsonRootName(value = "mensaje")
 public class MensajeBean extends ETLTBean {
-	private long idMensaje = -1;
+	private long id_mensaje = -1;
+	private long id_remitente;
 	private UsuarioBean remitente;
+	private long id_destinatario;
 	private UsuarioBean destinatario;
-	private long idMsgOriginal = -1;
-	private long idMsgOriginal = -1;
+	private long id_msg_original = -1;
 	private MensajeBean msgOriginal;
 	private int numRespuestas = -1;
 	private List<MensajeBean> respuestas;
@@ -23,12 +24,20 @@ public class MensajeBean extends ETLTBean {
 	private String texto;
 	private boolean leido;
 
-	public long getIdMensaje() {
-		return idMensaje;
+	public long getId_mensaje() {
+		return id_mensaje;
 	}
 
-	public void setIdMensaje(long idMensaje) {
-		this.idMensaje = idMensaje;
+	public void setId_mensaje(long id_mensaje) {
+		this.id_mensaje = id_mensaje;
+	}
+	
+	public long getId_remitente() {
+		return id_remitente;
+	}
+
+	public void setId_remitente(long id_remitente) {
+		this.id_remitente = id_remitente;
 	}
 
 	public UsuarioBean getRemitente() {
@@ -39,6 +48,14 @@ public class MensajeBean extends ETLTBean {
 		this.remitente = remitente;
 	}
 
+	public long getId_destinatario() {
+		return id_destinatario;
+	}
+
+	public void setId_destinatario(long id_destinatario) {
+		this.id_destinatario = id_destinatario;
+	}
+
 	public UsuarioBean getDestinatario() {
 		return destinatario;
 	}
@@ -47,12 +64,12 @@ public class MensajeBean extends ETLTBean {
 		this.destinatario = destinatario;
 	}
 
-	public long getIdMsgOriginal() {
-		return idMsgOriginal;
+	public long getId_msg_original() {
+		return id_msg_original;
 	}
 
-	public void setIdMsgOriginal(long idMsgOriginal) {
-		this.idMsgOriginal = idMsgOriginal;
+	public void setIdMsgOriginal(long id_msg_original) {
+		this.id_msg_original = id_msg_original;
 	}
 
 	public MensajeBean getMsgOriginal() {
@@ -61,6 +78,14 @@ public class MensajeBean extends ETLTBean {
 
 	public void setMsgOriginal(MensajeBean msgOriginal) {
 		this.msgOriginal = msgOriginal;
+	}
+
+	public int getNumRespuestas() {
+		return numRespuestas;
+	}
+
+	public void setNumRespuestas(int numRespuestas) {
+		this.numRespuestas = numRespuestas;
 	}
 
 	public List<MensajeBean> getRespuestas() {

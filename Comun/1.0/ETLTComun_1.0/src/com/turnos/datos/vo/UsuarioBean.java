@@ -11,23 +11,25 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 public class UsuarioBean extends ETLTBean {
 
 	public enum NivelUsuario {
-		USUARIO,ADMIN,SUPERADMIN,BANEADO;
+		USUARIO, ADMIN, SUPERADMIN, BANEADO;
 		public static NivelUsuario safeValueOf(String arg) {
-			try{return valueOf(arg);}
-			catch(Exception e){return null;}
+			try {
+				return valueOf(arg);
+			} catch (Exception e) {
+				return null;
+			}
 		}
 	};
-	
+
 	private long idUsuario = -1;
 	private String user;
 	private String nombre;
 	private String codTrab;
 	private TrabajadorBean trabajador;
-	private String codRes; 
+	private String codRes;
 	private ResidenciaBean residencia;
 	private NivelUsuario nivel = NivelUsuario.USUARIO;
 	private boolean activado = false;
-	
 
 	public long getIdUsuario() {
 		return idUsuario;
@@ -84,13 +86,14 @@ public class UsuarioBean extends ETLTBean {
 	public void setResidencia(ResidenciaBean residencia) {
 		this.residencia = residencia;
 	}
-	
+
 	@ApiModelProperty(allowableValues = "USUARIO,ADMIN,SUPERADMIN,BANEADO")
 	public String getNivel() {
-		if (nivel == null) return null;
+		if (nivel == null)
+			return null;
 		return nivel.name();
 	}
-	
+
 	@ApiModelProperty(allowableValues = "USUARIO,ADMIN,SUPERADMIN,BANEADO")
 	public void setNivel(String nivel) {
 		this.nivel = NivelUsuario.safeValueOf(nivel);

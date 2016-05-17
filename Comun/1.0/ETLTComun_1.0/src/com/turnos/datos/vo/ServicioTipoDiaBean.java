@@ -6,15 +6,18 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 
 @XmlRootElement(name = "serv_tipo_dia")
 @JsonRootName(value = "serv_tipo_dia")
-public class ServicioTipoDia extends ETLTBean {
+public class ServicioTipoDiaBean extends ETLTBean {
 	public enum SelectorTipoDia {
 		SI, NO, CUALQUIERA;
 		public static SelectorTipoDia safeValueOf(String arg) {
-			try { return valueOf(arg); }
-			catch (Exception e) { return null; }
+			try {
+				return valueOf(arg);
+			} catch (Exception e) {
+				return null;
+			}
 		}
 	};
-	
+
 	private String dia;
 	private SelectorTipoDia festivo;
 	private SelectorTipoDia vispera;

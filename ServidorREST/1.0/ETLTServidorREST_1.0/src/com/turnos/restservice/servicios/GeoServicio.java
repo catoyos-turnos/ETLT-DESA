@@ -1,5 +1,7 @@
 package com.turnos.restservice.servicios;
 
+import io.swagger.annotations.Api;
+
 import java.util.ArrayList;
 
 import javax.validation.Valid;
@@ -9,6 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -20,22 +24,21 @@ import com.turnos.datos.vo.MunicipioBean;
 import com.turnos.datos.vo.PaisBean;
 import com.turnos.datos.vo.ProvinciaBean;
 import com.turnos.datos.vo.RespuestaBean;
+import com.turnos.datos.vo.UsuarioBean;
 
-@Api(value = "GeografÃ­a")
+@Api(value = "Geografía")
 @Produces(MediaType.APPLICATION_JSON)
 @Path(WebServUtils.PREF_GEO_PATH)
-public class GeoServicio {
-	private UsuarioBean usuarioLog;
+public class GeoServicio extends GenericServicio{
 	
-	@Context
-	private GeoServicio(HttpServletRequest request) {
-		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
-		if(usrObj != null && usrObj  instanceof UsuarioBean) {
-			this.usuarioLog = (UsuarioBean) usrObj;
-		}
+	protected GeoServicio(UsuarioBean usuarioLog) {
+		super(usuarioLog);
+	}
+	
+	protected GeoServicio(@Context ContainerRequestContext request) {
+		super(request);
 	}
 
-	
 	// ---------------------GET-----------------------------------------------
 
 	@GET
@@ -167,7 +170,7 @@ public class GeoServicio {
 			@DefaultValue("-1") int limit,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo) {
-		return DiaFestivoServicio.listaDiasFestivos(codPais, "", "", TipoFiesta.NACIONAL.name(), time_ini, time_fin, limit, true, incGeo);
+		return (new DiaFestivoServicio(usuarioLog)).listaDiasFestivos(codPais, "", "", TipoFiesta.NACIONAL.name(), time_ini, time_fin, limit, true, incGeo);
 	}
 
 	@GET
@@ -188,7 +191,7 @@ public class GeoServicio {
 			@DefaultValue("false") boolean completo,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo) {
-		return DiaFestivoServicio.listaDiasFestivos(codPais, codProvincia, "", TipoFiesta.AUTONOMICA.name(), time_ini, time_fin, limit, completo, incGeo);
+		return (new DiaFestivoServicio(usuarioLog)).listaDiasFestivos(codPais, codProvincia, "", TipoFiesta.AUTONOMICA.name(), time_ini, time_fin, limit, completo, incGeo);
 	}
 
 	@GET
@@ -211,7 +214,7 @@ public class GeoServicio {
 			@DefaultValue("false") boolean completo,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo) {
-		return DiaFestivoServicio.listaDiasFestivos(codPais, codProvincia, codMunicipio, TipoFiesta.LOCAL.name(), time_ini, time_fin, limit, completo, incGeo);
+		return (new DiaFestivoServicio(usuarioLog)).listaDiasFestivos(codPais, codProvincia, codMunicipio, TipoFiesta.LOCAL.name(), time_ini, time_fin, limit, completo, incGeo);
 	}
 	
 	// -------------residencias-----------------------------------------------
@@ -224,7 +227,7 @@ public class GeoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo) {
-		return ResidenciaServicio.listaResidencias(codPais, null, null, incGeo);
+		return (new ResidenciaServicio(usuarioLog)).listaResidencias(codPais, null, null, incGeo);
 	}
 
 	@GET
@@ -237,7 +240,7 @@ public class GeoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo) {
-		return ResidenciaServicio.listaResidencias(codPais, codProvincia, null, incGeo);
+		return (new ResidenciaServicio(usuarioLog)).listaResidencias(codPais, codProvincia, null, incGeo);
 	}
 
 	@GET
@@ -252,7 +255,7 @@ public class GeoServicio {
 			@PathParam(WebServUtils.P_PARAM_COD_MUNI) String codMunicipio,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo) {
-		return ResidenciaServicio.listaResidencias(codPais, codProvincia, codMunicipio, incGeo);
+		return (new ResidenciaServicio(usuarioLog)).listaResidencias(codPais, codProvincia, codMunicipio, incGeo);
 	}
 
 }

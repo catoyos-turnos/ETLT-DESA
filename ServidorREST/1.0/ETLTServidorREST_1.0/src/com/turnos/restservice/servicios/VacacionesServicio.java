@@ -1,5 +1,7 @@
 package com.turnos.restservice.servicios;
 
+import io.swagger.annotations.Api;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,6 +17,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -24,6 +28,7 @@ import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.handlers.VacacionesHandler;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.RespuestaBean;
+import com.turnos.datos.vo.UsuarioBean;
 import com.turnos.datos.vo.VacacionesBean;
 
 @Api(value = "Trabajador")
@@ -31,17 +36,17 @@ import com.turnos.datos.vo.VacacionesBean;
 @Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH
 		+ WebServUtils.PREF_TRAB_PATH + WebServUtils.COD_TRAB_PATH
 		+ WebServUtils.PREF_VACS_PATH)
-public class VacacionesServicio {
-	private UsuarioBean usuarioLog;
+public class VacacionesServicio extends GenericServicio{
 	
-	@Context
-	private VacacionesServicio(HttpServletRequest request) {
-		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
-		if(usrObj != null && usrObj  instanceof UsuarioBean) {
-			this.usuarioLog = (UsuarioBean) usrObj;
-		}
+	protected VacacionesServicio(UsuarioBean usuarioLog) {
+		super(usuarioLog);
 	}
-
+	
+	protected VacacionesServicio(@Context ContainerRequestContext request) {
+		super(request);
+	}
+	
+	// ---------------------GET-----------------------------------------------
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

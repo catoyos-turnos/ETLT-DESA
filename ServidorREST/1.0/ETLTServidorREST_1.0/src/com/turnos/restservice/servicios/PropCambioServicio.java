@@ -1,19 +1,31 @@
 package com.turnos.restservice.servicios;
 
+import io.swagger.annotations.Api;
+
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+
+import com.turnos.datos.WebServUtils;
+import com.turnos.datos.vo.UsuarioBean;
+
 @Api(value = "Propuesta de cambio")
 @Produces(MediaType.APPLICATION_JSON)
-@Path(WebServUtils.PREF_PROP_CAMBIO_PATH
-public class PropCambioServicio {
-	private UsuarioBean usuarioLog;
+@Path(WebServUtils.PREF_PROP_CAMBIO_PATH)
+public class PropCambioServicio extends GenericServicio{
 	
-	@Context
-	private PropCambioServicio(HttpServletRequest request) {
-		Object usrObj = request==null?null:request.getAttribute(AutenticacionFiltro.REQUEST_PARAM_USUARIO);
-		if(usrObj != null && usrObj  instanceof UsuarioBean) {
-			this.usuarioLog = (UsuarioBean) usrObj;
-		}
+	protected PropCambioServicio(UsuarioBean usuarioLog) {
+		super(usuarioLog);
 	}
-
+	
+	protected PropCambioServicio(@Context ContainerRequestContext request) {
+		super(request);
+	}
+	
+	// ---------------------GET-----------------------------------------------
+/*
 	@GET
 	@Valid
 	public Response listaPropCambios();
@@ -39,5 +51,5 @@ public class PropCambioServicio {
 	@Path(WebServUtils.COD_CAMBIO_PATH)
 	@Valid
 	public Response borraPropCambio(@PathParam(WebServUtils.P_PARAM_COD_PROP_CAMBIO) String codCambio);
-
+*/
 }

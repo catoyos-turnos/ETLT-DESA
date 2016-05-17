@@ -121,7 +121,7 @@ public class MensajeHandler extends GenericHandler {
 			Hashtable<String, UsuarioBean> tablaUsers = new Hashtable<String, UsuarioBean>();
 			while (rs.next()) {
 				msg = new MensajeBean();
-				msg.setIdMensaje(rs.getLong("idMensaje"));
+				msg.setId_mensaje(rs.getLong("idMensaje"));
 				msg.setHora(sqlDateToJavaDate(rs.getDate("hora")));
 				msg.setIdMsgOriginal(rs.getLong("idMsgOriginal"));
 				msg.setLeido(rs.getBoolean("leido"));
@@ -151,12 +151,12 @@ public class MensajeHandler extends GenericHandler {
 
 				if (profRespuestas > 0) {
 					respuestas = MensajeHandler.listRespuestasMensaje(
-							nconexion, msg.getIdMensaje(), profRespuestas - 1, 0, 0, aut, errorBean);
+							nconexion, msg.getId_mensaje(), profRespuestas - 1, 0, 0, aut, errorBean);
 					msg.setRespuestas(respuestas);
 				}
 				
 				if (original) {
-					msg.setMsgOriginal(getMensaje(nconexion, msg.getIdMsgOriginal(), 0, false, aut, errorBean));
+					msg.setMsgOriginal(getMensaje(nconexion, msg.getId_msg_original(), 0, false, aut, errorBean));
 				}
 				
 				listaMsgs.add(msg);
@@ -216,7 +216,7 @@ public class MensajeHandler extends GenericHandler {
 			Hashtable<String, UsuarioBean> tablaUsers = new Hashtable<String, UsuarioBean>();
 			while (rs.next()) {
 				msg = new MensajeBean();
-				msg.setIdMensaje(rs.getLong("idMensaje"));
+				msg.setId_mensaje(rs.getLong("idMensaje"));
 				msg.setHora(sqlDateToJavaDate(rs.getDate("hora")));
 				msg.setIdMsgOriginal(rs.getLong("idMsgOriginal"));
 				msg.setLeido(rs.getBoolean("leido"));
@@ -246,7 +246,7 @@ public class MensajeHandler extends GenericHandler {
 
 				if (profRespuestas > 0) {
 					respuestas = MensajeHandler.listRespuestasMensaje(
-							nconexion, msg.getIdMensaje(), profRespuestas - 1, 0, 0, aut, errorBean);
+							nconexion, msg.getId_mensaje(), profRespuestas - 1, 0, 0, aut, errorBean);
 					msg.setRespuestas(respuestas);
 				}
 				
@@ -286,7 +286,7 @@ public class MensajeHandler extends GenericHandler {
 
 				if (rs.next()) {
 					msg = new MensajeBean();
-					msg.setIdMensaje(rs.getLong("idMensaje"));
+					msg.setId_mensaje(rs.getLong("idMensaje"));
 					msg.setHora(sqlDateToJavaDate(rs.getDate("hora")));
 					msg.setIdMsgOriginal(rs.getLong("idMsgOriginal"));
 					msg.setLeido(rs.getBoolean("leido"));
@@ -348,7 +348,7 @@ public class MensajeHandler extends GenericHandler {
 			try {
 				PreparedStatement ps;
 
-				if (privadoRaw.getIdMsgOriginal() == -1) {
+				if (privadoRaw.getId_msg_original() == -1) {
 					ps = nconexion.prepareStatement(UPDATE_INSERT_NUEVO_MENSAJE, Statement.RETURN_GENERATED_KEYS);
 					ps.setLong(1, privadoRaw.getRemitente().getIdUsuario());
 					ps.setLong(2, privadoRaw.getDestinatario().getIdUsuario());
@@ -359,7 +359,7 @@ public class MensajeHandler extends GenericHandler {
 					ps.setLong(1, privadoRaw.getRemitente().getIdUsuario());
 					ps.setDate(2, javaDateToSQLDate(privadoRaw.getHora()));
 					ps.setString(3, privadoRaw.getTexto());
-					ps.setLong(4, privadoRaw.getIdMsgOriginal());
+					ps.setLong(4, privadoRaw.getId_msg_original());
 				}
 				int c = ps.executeUpdate();
 				if (c > 0 && ps.getGeneratedKeys().next()) {
