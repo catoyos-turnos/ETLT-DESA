@@ -74,16 +74,17 @@ public class DiaFestivoServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN) @DefaultValue("-1") int time_fin,
 			
 			@ApiParam(value = "", required = false) 
-			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limit,
-			
-			@ApiParam(value = "", required = false) 
 			@QueryParam(WebServUtils.Q_PARAM_COMPLETO) @DefaultValue("false") boolean completo,
 			
 			@ApiParam(value = "", required = false) 
-			@QueryParam(WebServUtils.Q_PARAM_INC_GEO) @DefaultValue("false") boolean incGeo) {
-		
+			@QueryParam(WebServUtils.Q_PARAM_INC_GEO) @DefaultValue("false") boolean incGeo,
+			
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
+			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {
 		ErrorBean eb = new ErrorBean();
 		TipoFiesta tipo = TipoFiesta.safeValueOf(tipoStr);
+		int[] limiteOffset = calculaLimiteOffsetCorrectos(limite, offset, 20);
+		limite = limiteOffset[0]; offset = limiteOffset[1];
 		RespuestaBean<FestivoBean> respuesta = null;
 		
 		Date fecha_ini = null;
@@ -98,10 +99,6 @@ public class DiaFestivoServicio extends GenericServicio{
 			if(fecha_ini == null && fecha_fin == null) {
 				fecha_ini = Calendar.getInstance().getTime();
 			}
-
-			if (limit < 0 || limit > 20) {
-				limit = 20;
-			}
 			
 		} catch (Exception e) {
 			int[] loc = {80,0,0};
@@ -112,11 +109,11 @@ public class DiaFestivoServicio extends GenericServicio{
 
 		ArrayList<FestivoBean> listaFestivos = null;
 		if (!"".equals(codMunicipio)) {
-			listaFestivos = FestivoHandler.getFestivosMunicipio(null, codMunicipio, tipo, fecha_ini, fecha_fin, limit, completo, incGeo, eb);
+			listaFestivos = FestivoHandler.getFestivosMunicipio(null, codMunicipio, tipo, fecha_ini, fecha_fin, completo, incGeo, limite, offset, usuarioLog, eb);
 		} else if (!"".equals(codProvincia)) {
-			listaFestivos = FestivoHandler.getFestivosProvincia(null, codProvincia, tipo, fecha_ini, fecha_fin, limit, completo, incGeo, eb);
+			listaFestivos = FestivoHandler.getFestivosProvincia(null, codProvincia, tipo, fecha_ini, fecha_fin, completo, incGeo, limite, offset, usuarioLog, eb);
 		} else if (!"".equals(codPais)) {
-			listaFestivos = FestivoHandler.getFestivosPais(null, codPais, tipo, fecha_ini, fecha_fin, limit, completo, incGeo, eb);
+			listaFestivos = FestivoHandler.getFestivosPais(null, codPais, tipo, fecha_ini, fecha_fin, completo, incGeo, limite, offset, usuarioLog, eb);
 		} else {
 			int[] loc = {80,0,1};
 			String msg = "debe incluir parametros de busqueda: "
@@ -142,7 +139,7 @@ public class DiaFestivoServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo) {
 		ErrorBean eb = new ErrorBean();
-		FestivoBean festivo = FestivoHandler.getFestivo(null, codFest, incGeo, eb);
+		FestivoBean festivo = FestivoHandler.getFestivo(null, codFest, incGeo, usuarioLog, eb);
 		RespuestaBean<FestivoBean> respuesta;
 
 		if(festivo == null) {
@@ -164,7 +161,7 @@ public class DiaFestivoServicio extends GenericServicio{
 	public Response nuevoDiaFestivo(FestivoBean festRaw) {
 		ErrorBean eb = new ErrorBean();
 		boolean aut = FestivoHandler.autenticar(null, null);
-		FestivoBean festivo = FestivoHandler.insertFestivo(null, festRaw, aut, eb);
+		FestivoBean festivo = FestivoHandler.insertFestivo(null, festRaw, usuarioLog, eb);
 		RespuestaBean<FestivoBean> respuesta;
 
 		if(festivo == null) {
@@ -190,7 +187,7 @@ public class DiaFestivoServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
 		ErrorBean eb = new ErrorBean();
 		boolean aut = FestivoHandler.autenticar(null, null);
-		FestivoBean festivo = FestivoHandler.updateFestivo(null, codFest, festRaw, aut, eb);
+		FestivoBean festivo = FestivoHandler.updateFestivo(null, codFest, festRaw, usuarioLog, eb);
 		RespuestaBean<FestivoBean> respuesta;
 
 		if(festivo == null) {
@@ -212,7 +209,7 @@ public class DiaFestivoServicio extends GenericServicio{
 	public Response borraDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
 		ErrorBean eb = new ErrorBean();
 		boolean aut = FestivoHandler.autenticar(null, null);
-		boolean borrado = FestivoHandler.deleteFestivo(null, codFest, aut, eb);
+		boolean borrado = FestivoHandler.deleteFestivo(null, codFest, usuarioLog, eb);
 		RespuestaBean<FestivoBean> respuesta;
 
 		if(borrado) {

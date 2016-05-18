@@ -110,7 +110,7 @@ public class ErrorBeanFabrica {
 	public static String generaErrorCode(String prefijo, int[] localizadores) {
 		String errorCode = prefijo==null?"":prefijo;
 		for (int i = 0; i < localizadores.length; i++) {
-			errorCode += String.format("%05d", localizadores[i]);
+			errorCode += String.format("%02d", localizadores[i]);
 		}
 		return errorCode;
 	}

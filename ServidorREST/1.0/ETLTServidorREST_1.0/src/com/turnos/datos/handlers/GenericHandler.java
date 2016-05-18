@@ -54,19 +54,82 @@ public abstract class GenericHandler {
 		return nuevaConexion ? AccesoBD.getConexion() : conexion;
 	}
 
-	public static boolean autenticar(UsuarioBean usuarioLog, HttpMethod metodo, String codTrabRelevante, String codResRelevante) {
-		//TODO
-		return true;
+	public static boolean autenticar(UsuarioBean usuarioLog, String metodo, String codTrabRelevante, String codResRelevante) {
+		if (codResRelevante==null) {
+			return autenticar(usuarioLog, metodo);
+		}
+		
+		if(usuarioLog != null && usuarioLog.getIdUsuario() != -1 && usuarioLog.isActivado()) {
+			if(usuarioLog.getCodRes() == null || usuarioLog.getCodTrab() == null) {
+				UsuarioBean aux = UsuarioHandler.getUsuario(null, usuarioLog.getIdUsuario(), usuarioLog, new ErrorBean());
+				if(aux == null) {
+					usuarioLog.setIdUsuario(-1);
+				} else {
+					usuarioLog.setCodRes(aux.getCodRes());
+					usuarioLog.setCodTrab(aux.getCodTrab());
+				}
+			}
+
+			boolean resRel = (codResRelevante.equals(usuarioLog.getCodRes())) ? true : false;
+			boolean trabRel = resRel;
+			trabRel &= (codTrabRelevante == null || codTrabRelevante.equals(usuarioLog.getCodTrab())) ? true : false;
+			
+			NivelUsuario nivel = NivelUsuario.safeValueOf(usuarioLog.getNivel());
+			if (nivel == null) return false;
+			else {
+				switch (nivel) {
+				case USUARIO:
+					switch (metodo) {
+					case HttpMethod.GET:
+					case HttpMethod.HEAD:
+					case HttpMethod.OPTIONS:
+						if (resRel) {
+							return true;
+						} else {
+							return false;
+						}
+	
+					case HttpMethod.POST:
+					case HttpMethod.PUT:
+					case HttpMethod.DELETE:
+						if (trabRel) {
+							return true;
+						} else {
+							return false;
+						}
+						
+					default:
+						return false;
+					}
+	
+				case ADMIN:
+					if (resRel) {
+						return true;
+					} else {
+						return false;
+					}
+					
+				case SUPERADMIN:
+					return true;
+	
+				case BANEADO:
+				default:
+					return false;
+				}
+			}
+		}
+		
+		return false;
 	}
 
-	public static boolean autenticar(UsuarioBean usuarioLog, HttpMethod metodo) {
-		if(usuarioLog.isActivado()) {
+	public static boolean autenticar(UsuarioBean usuarioLog, String metodo) {
+		if(usuarioLog!=null && usuarioLog.getIdUsuario()!=-1 && usuarioLog.isActivado()) {
 			NivelUsuario nivel = NivelUsuario.safeValueOf(usuarioLog.getNivel());
 			if (nivel == null) return false;
 			else
 				switch (nivel) {
 				case USUARIO:
-					switch (metodo.value()) {
+					switch (metodo) {
 					case HttpMethod.GET:
 					case HttpMethod.HEAD:
 					case HttpMethod.OPTIONS:

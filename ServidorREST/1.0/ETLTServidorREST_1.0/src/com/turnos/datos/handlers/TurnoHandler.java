@@ -9,8 +9,9 @@ import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.TurnoBean;
 import com.turnos.datos.vo.TurnoBean.TipoTurno;
 
-//73xxxx
 public class TurnoHandler extends GenericHandler {
+
+	private static final int LOC_H = 73;
 	
 	private static final String QUERY_LISTA_TURNOS_RES =
 			"SELECT turno.codigo as codTurno, res.codigo as codRes, turno.tipo as tipo "
@@ -36,10 +37,10 @@ public class TurnoHandler extends GenericHandler {
 				+ "JOIN residencia res ON turno.id_residencia=res.id_residencia "
 			+ "WHERE turno.codigo=? AND res.codigo=?";
 
-	
-	// 00xx
+
 	public static boolean existeTurno(Connection conexion, String codRes,
 			String codTurno, ErrorBean errorBean) {
+		int LOC_M = 1;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -55,9 +56,9 @@ public class TurnoHandler extends GenericHandler {
 		return false;
 	}
 
-	// 01xx
 	public static ArrayList<TurnoBean> listTodosTurnos(Connection conexion,
 			String codRes, boolean includeServs, ErrorBean errorBean) {
+		int LOC_M = 2;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -70,10 +71,10 @@ public class TurnoHandler extends GenericHandler {
 		return listaTurnos;
 	}
 
-	// 02xx
 	public static ArrayList<TurnoBean> listTurnosTipo(Connection conexion,
 			String codRes, TipoTurno tipo, boolean includeServs,
 			ErrorBean errorBean) {
+		int LOC_M = 3;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -86,9 +87,9 @@ public class TurnoHandler extends GenericHandler {
 		return listaTurnos;
 	}
 
-	// 03xx
 	public static TurnoBean getTurno(Connection conexion, String codRes,
 			String codTurno, boolean includeServs, ErrorBean errorBean) {
+		int LOC_M = 4;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -103,9 +104,9 @@ public class TurnoHandler extends GenericHandler {
 		return turno;
 	}
 
-	// 04xx
 	public static TurnoBean insertTurno(Connection conexion, String codRes,
 			TurnoBean turnoRaw, boolean aut, ErrorBean errorBean) {
+		int LOC_M = 5;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		if (!aut) {
@@ -124,9 +125,9 @@ public class TurnoHandler extends GenericHandler {
 		return turno;
 	}
 
-	// 05xx
 	public static TurnoBean updateTurno(Connection conexion, String codRes,
 			String codTurno, TurnoBean turnoRaw, boolean aut, ErrorBean errorBean) {
+		int LOC_M = 6;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		if (!aut) {
@@ -145,9 +146,9 @@ public class TurnoHandler extends GenericHandler {
 		return turno;
 	}
 
-	// 06xx
 	public static boolean deleteTurno(Connection conexion, String codRes,
 			String codTurno, boolean aut, ErrorBean errorBean) {
+		int LOC_M = 7;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		if (!aut) {

@@ -80,7 +80,7 @@ public class VacacionesServicio extends GenericServicio{
 			String[] params = {String.valueOf(time_ini), String.valueOf(time_fin)};
 			ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "s48", loc, msg, params);
 		}
-		ArrayList<VacacionesBean> listaVacaciones = VacacionesHandler.listVacaciones(null, codRes, codTrab, fecha_ini, fecha_fin, errorBean);
+		ArrayList<VacacionesBean> listaVacaciones = VacacionesHandler.listVacaciones(null, codRes, codTrab, fecha_ini, fecha_fin, usuarioLog, errorBean);
 		
 		if(listaVacaciones == null) {
 			respuesta = new RespuestaBean<VacacionesBean>(errorBean);
@@ -101,7 +101,7 @@ public class VacacionesServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_VACS) String codVacs) {
 		ErrorBean errorBean = new ErrorBean();
 		RespuestaBean<VacacionesBean> respuesta = null;
-		VacacionesBean vacaciones = VacacionesHandler.getVacaciones(null, codVacs, errorBean);
+		VacacionesBean vacaciones = VacacionesHandler.getVacaciones(null, codVacs, usuarioLog, errorBean);
 
 		if(vacaciones == null) {
 			respuesta = new RespuestaBean<VacacionesBean>(errorBean);

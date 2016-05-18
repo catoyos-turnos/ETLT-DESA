@@ -13,8 +13,10 @@ import com.turnos.datos.vo.MunicipioBean;
 import com.turnos.datos.vo.PaisBean;
 import com.turnos.datos.vo.ProvinciaBean;
 
-//60xxxx
 public class GeoHandler extends GenericHandler {
+
+	private static final int LOC_H = 60;
+	
 	private static final String QUERY_GET_MUNICIPIO =
 			"SELECT muni.id_municipio as municipioCod, muni.nombre as municipioNombre, "
 				+ "prov.id_provincia as provinciaCod, prov.provincia as provinciaNombre, "
@@ -54,9 +56,9 @@ public class GeoHandler extends GenericHandler {
 	private static final String QUERY_GET_PAISES =
 			"SELECT pais.cod_pais as paisCod, pais.pais as paisNombre, pais.tz_estandar as tz "
 			+ "FROM geo_pais pais";
-	
-	//01xx
-	public static ArrayList<PaisBean> listPaises(Connection conexion, ErrorBean errorBean) {
+
+	public static ArrayList<PaisBean> listPaises(Connection conexion, int limite, int offset, ErrorBean errorBean) {
+		int LOC_M = 1;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -85,9 +87,9 @@ public class GeoHandler extends GenericHandler {
 		}
 		return listaPaises;
 	}
-	
-	//02xx
+
 	public static PaisBean getPais(Connection conexion, String codPais, ErrorBean errorBean) {
+		int LOC_M = 2;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -124,9 +126,9 @@ public class GeoHandler extends GenericHandler {
 		}
 		return pais;
 	}
-	
-	//03xx
-	public static ArrayList<ProvinciaBean> listProvincias(Connection conexion, String codPais, ErrorBean errorBean) {
+
+	public static ArrayList<ProvinciaBean> listProvincias(Connection conexion, String codPais, int limite, int offset, ErrorBean errorBean) {
+		int LOC_M = 3;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -158,9 +160,9 @@ public class GeoHandler extends GenericHandler {
 		}
 		return listaProvs;
 	}
-	
-	//04xx
+
 	public static ProvinciaBean getProvincia(Connection conexion, String codProvincia, ErrorBean errorBean) {
+		int LOC_M = 4;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -199,9 +201,9 @@ public class GeoHandler extends GenericHandler {
 		}
 		return prov;
 	}
-	
-	//05xx
-	public static ArrayList<MunicipioBean> listMunicipios(Connection conexion, String codProv, ErrorBean errorBean) {
+
+	public static ArrayList<MunicipioBean> listMunicipios(Connection conexion, String codProv, int limite, int offset, ErrorBean errorBean) {
+		int LOC_M = 5;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -235,9 +237,9 @@ public class GeoHandler extends GenericHandler {
 		}
 		return listaMunicipios;
 	}
-	
-	//06xx
+
 	public static MunicipioBean getMunicipio(Connection conexion, String codMunicipio, ErrorBean errorBean) {
+		int LOC_M = 6;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 

@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -46,9 +48,14 @@ public class ServicioServicio extends GenericServicio{
 	@GET
 	@Valid
 	public Response listaServicios (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
-			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
+			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
+			
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
+			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {		
 		ErrorBean errorBean = new ErrorBean();
-		ArrayList<ServicioBean> listaServicios = ServicioHandler.listServicios(null, codRes, codTurno, errorBean);
+		int[] limiteOffset = calculaLimiteOffsetCorrectos(limite, offset);
+		limite = limiteOffset[0]; offset = limiteOffset[1];
+		ArrayList<ServicioBean> listaServicios = ServicioHandler.listServicios(null, codRes, codTurno, limite, offset, usuarioLog, errorBean);
 		RespuestaBean<ServicioBean> respuesta = null;
 
 		if (listaServicios == null) {
@@ -67,7 +74,7 @@ public class ServicioServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
 		ErrorBean errorBean = new ErrorBean();
-		ServicioBean servicio = ServicioHandler.getServicio(null, codServ, errorBean);
+		ServicioBean servicio = ServicioHandler.getServicio(null, codServ, usuarioLog, errorBean);
 		RespuestaBean<ServicioBean> respuesta = null;
 
 		if(servicio == null) {
@@ -87,7 +94,7 @@ public class ServicioServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean aut = ServicioHandler.autenticar(null, null); //TODO
-		ServicioBean servicio = ServicioHandler.insertServicio(null, servicioRaw, aut, errorBean);
+		ServicioBean servicio = ServicioHandler.insertServicio(null, codRes, servicioRaw, usuarioLog, errorBean);
 		RespuestaBean<ServicioBean> respuesta = null;
 
 		if(servicio == null) {
@@ -110,7 +117,7 @@ public class ServicioServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean aut = ServicioHandler.autenticar(null, null); //TODO
-		ServicioBean servicio = ServicioHandler.updateServicio(null, codServ, servicioRaw, aut, errorBean);
+		ServicioBean servicio = ServicioHandler.updateServicio(null, codRes, codServ, servicioRaw, usuarioLog, errorBean);
 		RespuestaBean<ServicioBean> respuesta = null;
 		
 		if(servicio == null) {
@@ -131,7 +138,7 @@ public class ServicioServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean aut = ServicioHandler.autenticar(null, null); //TODO
-		boolean borrado = ServicioHandler.deleteServicio(null, codServ, aut, errorBean);
+		boolean borrado = ServicioHandler.deleteServicio(null, codRes, codServ, usuarioLog, errorBean);
 		RespuestaBean<ServicioBean> respuesta = null;
 
 		if(borrado) {

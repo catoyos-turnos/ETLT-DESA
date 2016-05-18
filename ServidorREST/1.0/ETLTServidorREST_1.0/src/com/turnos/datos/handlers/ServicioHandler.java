@@ -3,13 +3,17 @@ package com.turnos.datos.handlers;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.Response.Status;
 
+import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.ServicioBean;
+import com.turnos.datos.vo.UsuarioBean;
 
-//74xxxx
 public class ServicioHandler extends GenericHandler {
+
+	private static final int LOC_H = 74;
 	
 	private static final String QUERY_LISTA_TIPODIA_SERVICIO_TURNO_COD =
 			"SELECT s_td.id_servicio as id_servicio, s_td.id_turno as id_turno, "
@@ -66,9 +70,9 @@ public class ServicioHandler extends GenericHandler {
 	private static final String UPDATE_UPDATE_SERVICIO = "UPDATE servicio SET %s WHERE id_servicio=?";
 
 	private static final String UPDATE_DELETE_SERVICIO = "DELETE FROM servicio WHERE id_servicio=?";
-	
-	//00xx
-	public static boolean existeServicio(Connection conexion, int codServ, ErrorBean errorBean) {
+
+	public static boolean existeServicio(Connection conexion, int codServ, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 1;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		
@@ -83,9 +87,10 @@ public class ServicioHandler extends GenericHandler {
 		}
 		return false;
 	}
-	
-	//01xx
-	public static ArrayList<ServicioBean> listServicios(Connection conexion, String codRes, String codTurno, ErrorBean errorBean) {
+
+	public static ArrayList<ServicioBean> listServicios(Connection conexion, String codRes, String codTurno,
+			int limite, int offset, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 2;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -97,10 +102,12 @@ public class ServicioHandler extends GenericHandler {
 		}
 		return listaServs;
 	}
-	
-	//02xx
-	public static ServicioBean getServicio(Connection conexion, int codServ, ErrorBean errorBean) {Connection nconexion = aseguraConexion(conexion);
+
+	public static ServicioBean getServicio(Connection conexion, int codServ, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 3;
+		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
+		
 	
 		ServicioBean serv = null;
 		if (codServ >= 0) {
@@ -112,15 +119,16 @@ public class ServicioHandler extends GenericHandler {
 		}
 		return serv;
 	}
-	
-	//03xx
-	public static ServicioBean insertServicio(Connection conexion, ServicioBean servRaw, boolean aut, ErrorBean errorBean) {
+
+	public static ServicioBean insertServicio(Connection conexion, String codRes, ServicioBean servRaw, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 4;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		if(!aut) {
-			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57740300");
-			errorBean.updateMsg("Sin autenticar");
+		boolean auth = autenticar(usuarioLog, HttpMethod.POST, null, codRes);
+		if(!auth) {
+			int[] loc = {LOC_H,LOC_M,0};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
+			terminaOperacion(nconexion, cierraConexion);
 			return null;
 		}
 		
@@ -132,15 +140,16 @@ public class ServicioHandler extends GenericHandler {
 		}
 		return serv;
 	}
-	
-	//04xx
-	public static ServicioBean updateServicio(Connection conexion, int codServ, ServicioBean servRaw, boolean aut, ErrorBean errorBean) {
+
+	public static ServicioBean updateServicio(Connection conexion, String codRes, int codServ, ServicioBean servRaw, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 5;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		if(!aut) {
-			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57740400");
-			errorBean.updateMsg("Sin autenticar");
+		boolean auth = autenticar(usuarioLog, HttpMethod.PUT, null, codRes);
+		if(!auth) {
+			int[] loc = {LOC_H,LOC_M,0};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
+			terminaOperacion(nconexion, cierraConexion);
 			return null;
 		}
 		
@@ -152,15 +161,16 @@ public class ServicioHandler extends GenericHandler {
 		}
 		return serv;
 	}
-	
-	//05xx
-	public static boolean deleteServicio(Connection conexion, int codServ, boolean aut, ErrorBean errorBean) {
+
+	public static boolean deleteServicio(Connection conexion, String codRes, int codServ, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 6;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		if(!aut) {
-			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57740500");
-			errorBean.updateMsg("Sin autenticar");
+		boolean auth = autenticar(usuarioLog, HttpMethod.DELETE, null, codRes);
+		if(!auth) {
+			int[] loc = {LOC_H,LOC_M,0};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
+			terminaOperacion(nconexion, cierraConexion);
 			return false;
 		}
 		

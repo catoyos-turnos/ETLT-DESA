@@ -1,7 +1,9 @@
 package com.turnos.datos.handlers;
 
-//92xxxx
 public class ComentarioPropCambioHandler extends GenericHandler{
+
+	private static final int LOC_H = 92;
+	
 	private static final String QUERY_LISTA_COMENTARIOS_PROP =
 		"SELECT com.id_comentario_pc, com.id_prop_cambio, "
 		+ "com.id_usuario, GET_NOMBRE_USUARIO(com.id_usuario) "

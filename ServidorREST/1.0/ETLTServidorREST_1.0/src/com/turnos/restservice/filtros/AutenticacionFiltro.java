@@ -1,17 +1,8 @@
 package com.turnos.restservice.filtros;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.util.Collection;
 import java.util.List;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.ShortBufferException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;
@@ -26,6 +17,8 @@ import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.handlers.AutenticacionHandler;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.UsuarioBean;
+
+
 @PreMatching
 @Provider
 public class AutenticacionFiltro implements ContainerRequestFilter {
@@ -157,10 +150,7 @@ public class AutenticacionFiltro implements ContainerRequestFilter {
 		try {
 			System.out.println(tokenLogin);
 			desncr = CriptoUtils.desencripta(tokenLogin, secretKey);
-		} catch (InvalidKeyException | UnsupportedEncodingException
-				| NoSuchAlgorithmException | NoSuchProviderException
-				| NoSuchPaddingException | ShortBufferException
-				| IllegalBlockSizeException | BadPaddingException e) {
+		} catch (Exception e) {
 			// TODO ERROR
 			e.printStackTrace(); // TODO borrar
 		}
@@ -207,10 +197,7 @@ public class AutenticacionFiltro implements ContainerRequestFilter {
 		try {
 			System.out.println(tokenSesion);
 			desncrA = CriptoUtils.desencripta(tokenSesion, servidorKey);
-		} catch (InvalidKeyException | UnsupportedEncodingException
-				| NoSuchAlgorithmException | NoSuchProviderException
-				| NoSuchPaddingException | ShortBufferException
-				| IllegalBlockSizeException | BadPaddingException e) {
+		} catch (Exception e) {
 			// TODO ERROR
 			e.printStackTrace(); // TODO borrar
 		}
@@ -235,10 +222,7 @@ public class AutenticacionFiltro implements ContainerRequestFilter {
 					System.out.println(fields[2]);
 					desncrB = CriptoUtils.desencripta(fields[2].trim(),
 							secretKey).trim();
-				} catch (InvalidKeyException | UnsupportedEncodingException
-						| NoSuchAlgorithmException | NoSuchProviderException
-						| NoSuchPaddingException | ShortBufferException
-						| IllegalBlockSizeException | BadPaddingException e) {
+				} catch (Exception e) {
 					// TODO ERROR
 					e.printStackTrace(); // TODO borrar
 				}

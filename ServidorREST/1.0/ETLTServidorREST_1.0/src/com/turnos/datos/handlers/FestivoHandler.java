@@ -8,14 +8,19 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.Response.Status;
 
+import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.FestivoBean;
 import com.turnos.datos.vo.FestivoBean.TipoFiesta;
+import com.turnos.datos.vo.UsuarioBean;
 
-//80xxxx
 public class FestivoHandler extends GenericHandler {
+	
+	private static final int LOC_H = 80;
+	
 	private static final String QUERY_ES_FESTIVO_EN_MUNI =
 		"SELECT count(*) as festivo "
 		+ "FROM dia_festivo fest, geo_municipio muni "
@@ -147,8 +152,9 @@ public class FestivoHandler extends GenericHandler {
 		return rang;
 	}
 
-	//00xx
-	public static boolean esFestivo(Connection conexion, String codMunicipio, Date fecha, ErrorBean errorBean) {
+	public static boolean esFestivo(Connection conexion, String codMunicipio, Date fecha, 
+			UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 1;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		
@@ -176,9 +182,10 @@ public class FestivoHandler extends GenericHandler {
 		}
 	}
 
-	//01xx
 	public static ArrayList<FestivoBean> getFestivosMunicipio(Connection conexion, String codMunicipio, TipoFiesta tipo,
-			Date fecha_ini, Date fecha_fin, int limit, boolean completo, boolean includeGeo, ErrorBean errorBean) {
+			Date fecha_ini, Date fecha_fin, boolean completo, boolean includeGeo, 
+			int limite, int offset, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 2;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -199,20 +206,20 @@ public class FestivoHandler extends GenericHandler {
 			switch (codpar) {
 			default:
 			case 0:
-				ps.setInt(2, limit);
+				ps.setInt(2, limite);
 				break;
 			case 1:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
-				ps.setInt(3, limit);
+				ps.setInt(3, limite);
 				break;
 			case 2:
 				ps.setDate(2, javaDateToSQLDate(fecha_fin));
-				ps.setInt(3, limit);
+				ps.setInt(3, limite);
 				break;
 			case 3:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
 				ps.setDate(3, javaDateToSQLDate(fecha_fin));
-				ps.setInt(4, limit);
+				ps.setInt(4, limite);
 				break;
 			}
 
@@ -247,9 +254,10 @@ public class FestivoHandler extends GenericHandler {
 		return listaFests;
 	}
 
-	//02xx
 	public static ArrayList<FestivoBean> getFestivosProvincia(Connection conexion, String codProvincia, TipoFiesta tipo,
-			Date fecha_ini, Date fecha_fin, int limit, boolean completo, boolean includeGeo, ErrorBean errorBean) {
+			Date fecha_ini, Date fecha_fin, boolean completo, boolean includeGeo, 
+			int limite, int offset, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 3;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -270,20 +278,20 @@ public class FestivoHandler extends GenericHandler {
 			switch (codpar) {
 			default:
 			case 0:
-				ps.setInt(2, limit);
+				ps.setInt(2, limite);
 				break;
 			case 1:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
-				ps.setInt(3, limit);
+				ps.setInt(3, limite);
 				break;
 			case 2:
 				ps.setDate(2, javaDateToSQLDate(fecha_fin));
-				ps.setInt(3, limit);
+				ps.setInt(3, limite);
 				break;
 			case 3:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
 				ps.setDate(3, javaDateToSQLDate(fecha_fin));
-				ps.setInt(4, limit);
+				ps.setInt(4, limite);
 				break;
 			}
 
@@ -316,10 +324,11 @@ public class FestivoHandler extends GenericHandler {
 		return listaFests;
 	}
 
-	//03xx
 	public static ArrayList<FestivoBean> getFestivosPais(Connection conexion, 
 			String codPais, TipoFiesta tipo, Date fecha_ini, Date fecha_fin,
-			int limit, boolean completo, boolean includeGeo, ErrorBean errorBean) {
+			boolean completo, boolean includeGeo, 
+			int limite, int offset, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 4;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -337,20 +346,20 @@ public class FestivoHandler extends GenericHandler {
 			switch (codpar) {
 			default:
 			case 0:
-				ps.setInt(2, limit);
+				ps.setInt(2, limite);
 				break;
 			case 1:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
-				ps.setInt(3, limit);
+				ps.setInt(3, limite);
 				break;
 			case 2:
 				ps.setDate(2, javaDateToSQLDate(fecha_fin));
-				ps.setInt(3, limit);
+				ps.setInt(3, limite);
 				break;
 			case 3:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
 				ps.setDate(3, javaDateToSQLDate(fecha_fin));
-				ps.setInt(4, limit);
+				ps.setInt(4, limite);
 				break;
 			}
 
@@ -380,11 +389,11 @@ public class FestivoHandler extends GenericHandler {
 		}
 		return listaFests;
 	}
-	
-	//04xx
+
 	public static ArrayList<FestivoBean> getFestivosResidencia(Connection conexion,
-			String codigo, Date fecha_ini, Date fecha_fin, int limit, boolean includeGeo, 
-			ErrorBean errorBean) {
+			String codigo, Date fecha_ini, Date fecha_fin,
+			int limite, int offset, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 5;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -402,20 +411,20 @@ public class FestivoHandler extends GenericHandler {
 			switch (codpar) {
 			default:
 			case 0:
-				ps.setInt(2, limit);
+				ps.setInt(2, limite);
 				break;
 			case 1:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
-				ps.setInt(3, limit);
+				ps.setInt(3, limite);
 				break;
 			case 2:
 				ps.setDate(2, javaDateToSQLDate(fecha_fin));
-				ps.setInt(3, limit);
+				ps.setInt(3, limite);
 				break;
 			case 3:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
 				ps.setDate(3, javaDateToSQLDate(fecha_fin));
-				ps.setInt(4, limit);
+				ps.setInt(4, limite);
 				break;
 			}
 
@@ -428,14 +437,10 @@ public class FestivoHandler extends GenericHandler {
 				fest.setNotas(rs.getString("notas"));
 				fest.setFecha(rs.getDate("fecha"));
 				fest.setTipo(rs.getString("tipo"));
-				if (includeGeo) {
-					fest.setMunicipioCod(rs.getString("municipioCod"));
-					fest.setMunicipioNombre(rs.getString("municipioNombre"));
-					fest.setProvinciaCod(rs.getString("provinciaCod"));
-					fest.setProvinciaNombre(rs.getString("provinciaNombre"));
-					fest.setPaisCod(rs.getString("paisCod"));
-					fest.setPaisNombre(rs.getString("paisNombre"));
-				}
+				fest.setMunicipioCod(rs.getString("municipioCod"));
+				fest.setProvinciaCod(rs.getString("provinciaCod"));
+				fest.setPaisCod(rs.getString("paisCod"));
+				
 				listaFests.add(fest);
 			}
 
@@ -450,8 +455,9 @@ public class FestivoHandler extends GenericHandler {
 		return listaFests;
 	}
 
-	//05xx
-	public static FestivoBean getFestivo(Connection conexion, int codFest, boolean includeGeo, ErrorBean errorBean) {
+	public static FestivoBean getFestivo(Connection conexion, int codFest, boolean includeGeo, 
+			UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 6;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
@@ -504,15 +510,16 @@ public class FestivoHandler extends GenericHandler {
 		return fest;
 	}
 
-	//06xx
-	public static FestivoBean insertFestivo(Connection conexion, FestivoBean festRaw, boolean aut,
-			ErrorBean errorBean) {
+	public static FestivoBean insertFestivo(Connection conexion, FestivoBean festRaw, 
+			UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 7;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		if(!aut) {
-			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57800600");
-			errorBean.updateMsg("Sin autenticar");
+		boolean auth = autenticar(usuarioLog, HttpMethod.POST);
+		if(!auth) {
+			int[] loc = {LOC_H,LOC_M,0};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
+			terminaOperacion(nconexion, cierraConexion);
 			return null;
 		}
 		
@@ -531,7 +538,7 @@ public class FestivoHandler extends GenericHandler {
 				int c = ps.executeUpdate();
 				if (c > 0 && ps.getGeneratedKeys().next()) {
 					int codigo = ps.getGeneratedKeys().getInt(1);
-					fest = FestivoHandler.getFestivo(nconexion, codigo, false, errorBean);
+					fest = FestivoHandler.getFestivo(nconexion, codigo, false, usuarioLog, errorBean);
 					if(fest == null) {
 						errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
 						errorBean.updateErrorCode("69800603");
@@ -555,16 +562,16 @@ public class FestivoHandler extends GenericHandler {
 		return fest;
 	}
 
-
-	//07xx
 	public static FestivoBean updateFestivo(Connection conexion, int codFest,
-			FestivoBean festRaw, boolean aut, ErrorBean errorBean) {
+			FestivoBean festRaw, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 8;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		if(!aut) {
-			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57800700");
-			errorBean.updateMsg("Sin autenticar");
+		boolean auth = autenticar(usuarioLog, HttpMethod.PUT);
+		if(!auth) {
+			int[] loc = {LOC_H,LOC_M,0};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
+			terminaOperacion(nconexion, cierraConexion);
 			return null;
 		}
 		
@@ -616,7 +623,7 @@ public class FestivoHandler extends GenericHandler {
 				errorBean.setHttpCode(Status.BAD_REQUEST);
 				errorBean.updateErrorCode("69800701");
 				errorBean.updateMsg("Sin parametros para cambiar");
-			} else if (FestivoHandler.getFestivo(nconexion, codFest, false, errorBean) != null) {
+			} else {
 				try {
 					PreparedStatement ps = nconexion.prepareStatement(String.format(UPDATE_UPDATE_FESTIVO, upd));
 					for (int i = 0; i < params; i++) {
@@ -629,12 +636,16 @@ public class FestivoHandler extends GenericHandler {
 					
 					int c = ps.executeUpdate();
 					if (c > 0) {
-						fest = FestivoHandler.getFestivo(nconexion, codFest, false, errorBean);
+						fest = FestivoHandler.getFestivo(nconexion, codFest, false, usuarioLog, errorBean);
 						if(fest == null) {
 							errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
 							errorBean.updateErrorCode("69800704");
 							errorBean.updateMsg("???");
 						}
+					} else {
+						errorBean.setHttpCode(Status.BAD_REQUEST);
+						errorBean.updateErrorCode("69800702");
+						errorBean.updateMsg("no encontrado festivo con codigo "+codFest);
 					}
 				} catch (SQLException e) {
 					errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
@@ -644,10 +655,6 @@ public class FestivoHandler extends GenericHandler {
 				} finally {
 					terminaOperacion(nconexion, cierraConexion);
 				}
-			} else {
-				errorBean.setHttpCode(Status.BAD_REQUEST);
-				errorBean.updateErrorCode("69800702");
-				errorBean.updateMsg("no encontrado festivo con codigo "+codFest);
 			}
 		} else {
 			errorBean.setHttpCode(Status.BAD_REQUEST);
@@ -658,20 +665,20 @@ public class FestivoHandler extends GenericHandler {
 		return fest;
 	}
 
-
-	//08xx
-	public static boolean deleteFestivo(Connection conexion, int codFest, boolean aut,
-			ErrorBean errorBean) {
+	public static boolean deleteFestivo(Connection conexion, int codFest,
+			UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 9;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		if(!aut) {
-			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57800800");
-			errorBean.updateMsg("Sin autenticar");
+		boolean auth = autenticar(usuarioLog, HttpMethod.DELETE);
+		if(!auth) {
+			int[] loc = {LOC_H,LOC_M,0};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
+			terminaOperacion(nconexion, cierraConexion);
 			return false;
 		}
 		
-		if (FestivoHandler.getFestivo(nconexion, codFest, false, errorBean) != null) {
+		if (FestivoHandler.getFestivo(nconexion, codFest, false, usuarioLog, errorBean) != null) {
 			try {
 				PreparedStatement ps = nconexion.prepareStatement(UPDATE_DELETE_FESTIVO);
 				ps.setInt(1, codFest);

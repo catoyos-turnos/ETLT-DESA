@@ -7,15 +7,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.Response.Status;
 
+import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.MunicipioBean;
 import com.turnos.datos.vo.ResidenciaBean;
+import com.turnos.datos.vo.UsuarioBean;
 
-//70xxxx
 public class ResidenciaHandler extends GenericHandler {
 
+	private static final int LOC_H = 70;
+	
 	public static enum TipoBusqueda{MUNICIPIO, PROVINCIA, PAIS};
 
 	private static final String QUERY_RESIDENCIA_EXISTS_COD =
@@ -59,10 +63,11 @@ public class ResidenciaHandler extends GenericHandler {
 	private static final String UPDATE_UPDATE_RESIDENCIA = "UPDATE residencia SET %s WHERE codigo=?";
 	private static final String UPDATE_DELETE_RESIDENCIA = "DELETE FROM residencia WHERE codigo=?";
 
-	//00xx
-	public static boolean existeResidencia(Connection conexion, String codigo, ErrorBean errorBean) {
+	public static boolean existeResidencia(Connection conexion, String codigo, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 1;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
+//		boolean auth = autenticar(usuarioLog, HttpMethod.GET);
 		
 		if(codigo == null || "".equals(codigo)) {
 			return false;
@@ -75,9 +80,8 @@ public class ResidenciaHandler extends GenericHandler {
 					return rs.getBoolean("existe");
 				}
 			} catch (SQLException e) {
-				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-				errorBean.updateErrorCode("69700000");
-				errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,1};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
 			} finally {
 				terminaOperacion(nconexion, cierraConexion);
@@ -87,10 +91,11 @@ public class ResidenciaHandler extends GenericHandler {
 		}
 	}
 
-	//01xx
-	public static ResidenciaBean getResidencia(Connection conexion, String codigo, boolean includeGeo, ErrorBean errorBean) {
+	public static ResidenciaBean getResidencia(Connection conexion, String codigo, boolean includeGeo, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 2;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
+//		boolean auth = autenticar(usuarioLog, HttpMethod.GET);
 
 		ResidenciaBean res = null;
 		if (codigo != null && !"".equals(codigo)) {
@@ -111,33 +116,31 @@ public class ResidenciaHandler extends GenericHandler {
 						res.setMunicipio(muni);
 					}
 				} else {
-					errorBean.setHttpCode(Status.NOT_FOUND);
-					errorBean.updateErrorCode("69700102");
-					errorBean.updateMsg("no encotrada residencia con codigo "+codigo);
+					int[] loc = {LOC_H,LOC_M,3};
+					ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h48", loc, "no encotrada residencia con codigo " + codigo);
 				}
 			} catch (SQLException e) {
-				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-				errorBean.updateErrorCode("69700101");
-				errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,2};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
 			} finally {
 				terminaOperacion(nconexion, cierraConexion);
 			}
 		} else {
-			errorBean.setHttpCode(Status.BAD_REQUEST);
-			errorBean.updateErrorCode("69700100");
-			errorBean.updateMsg("debe incluir codigo");
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "debe incluir codigo");
 		}
 		return res;
 	}
 
-	//02xx
 	public static ArrayList<ResidenciaBean> listResidencias(Connection conexion,
-			TipoBusqueda tipo, String[] busqueda, boolean includeGeo,
-			ErrorBean errorBean) {
+			TipoBusqueda tipo, String[] busqueda, boolean includeGeo, int limite, int offset,
+			UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 3;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-
+//		boolean auth = autenticar(usuarioLog, HttpMethod.GET);
+		
 		ArrayList<ResidenciaBean> listaRess = new ArrayList<ResidenciaBean>();
 		PreparedStatement ps = null;
 		ResultSet rs;
@@ -186,14 +189,13 @@ public class ResidenciaHandler extends GenericHandler {
 					listaRess.add(res);
 				}
 			} else {
-				errorBean.setHttpCode(Status.BAD_REQUEST);
-				errorBean.updateErrorCode("69700201");
+				int[] loc = {LOC_H,LOC_M,2};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "debe incluir codigo");
 				errorBean.updateMsg("'tipo' desconocido");
 			}
 		} catch (SQLException e) {
-			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-			errorBean.updateErrorCode("69700200");
-			errorBean.updateMsg(e.getMessage());
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 			e.printStackTrace();
 		} finally {
 			terminaOperacion(nconexion, cierraConexion);
@@ -202,29 +204,28 @@ public class ResidenciaHandler extends GenericHandler {
 		return listaRess;
 	}
 
-	//03xx
-	public static ResidenciaBean insertResidencia(Connection conexion, ResidenciaBean resRaw, boolean aut, ErrorBean errorBean) {
+	public static ResidenciaBean insertResidencia(Connection conexion, ResidenciaBean resRaw, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 4;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		if(!aut) {
-			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57700300");
-			errorBean.updateMsg("Sin autenticar");
+		boolean auth = autenticar(usuarioLog, HttpMethod.POST);
+		if(!auth) {
+			int[] loc = {LOC_H,LOC_M,0};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
+			terminaOperacion(nconexion, cierraConexion);
 			return null;
 		}
-		
-		
+
 		ResidenciaBean res = null;
 		if (resRaw != null) {
 			int i = 0;
 			String codigo;
 			do {
 				codigo = generaNuevoResCodigo(resRaw, i++);
-			} while (existeResidencia(nconexion, codigo, errorBean) && i < 10);
+			} while (existeResidencia(nconexion, codigo, usuarioLog, errorBean) && i < 10);
 			if(i >= 10) {
-				errorBean.setHttpCode(Status.BAD_REQUEST);
-				errorBean.updateErrorCode("69700302");
-				errorBean.updateMsg("nombre demasiado común, intenta otro nombre");
+				int[] loc = {LOC_H,LOC_M,2};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "nombre demasiado común, intenta otro nombre");
 				return null;
 			}
 
@@ -237,40 +238,37 @@ public class ResidenciaHandler extends GenericHandler {
 				ps.setString(5, resRaw.getMunicipioCod());
 				int c = ps.executeUpdate();
 				if (c > 0) {
-					res = getResidencia(nconexion, codigo, true, errorBean);
+					res = getResidencia(nconexion, codigo, true, usuarioLog, errorBean);
 					if(res == null) {
-						errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-						errorBean.updateErrorCode("69700304");
-						errorBean.updateMsg("no insertada (?)");
+						int[] loc = {LOC_H,LOC_M,4};
+						ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h96", loc, "no insertada (?)");
 					}
 				}
 			} catch (SQLException e) {
-				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-				errorBean.updateErrorCode("69700303");
-				errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,3};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
 			} finally {
 				terminaOperacion(nconexion, cierraConexion);
 			}
 		} else {
-			errorBean.setHttpCode(Status.BAD_REQUEST);
-			errorBean.updateErrorCode("69700301");
-			errorBean.updateMsg("debe incluir datos residencia");
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "debe incluir datos residencia");
 		}
 			
 		return res;
 	}
 
-	//04xx
 	public static ResidenciaBean updateResidencia(Connection conexion,
-			String codigo, ResidenciaBean resRaw, boolean aut,
-			ErrorBean errorBean) {
+			String codigo, ResidenciaBean resRaw, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 5;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		if(!aut) {
-			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57700400");
-			errorBean.updateMsg("Sin autenticar");
+		boolean auth = autenticar(usuarioLog, HttpMethod.PUT, null, codigo);
+		if(!auth) {
+			int[] loc = {LOC_H,LOC_M,0};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
+			terminaOperacion(nconexion, cierraConexion);
 			return null;
 		}
 		
@@ -298,13 +296,11 @@ public class ResidenciaHandler extends GenericHandler {
 				upd += "id_municipio=?";
 				strs[params++] = resRaw.getMunicipioCod();
 			}
-			
-			
+
 			if (params == 0) {
-				errorBean.setHttpCode(Status.BAD_REQUEST);
-				errorBean.updateErrorCode("69700401");
-				errorBean.updateMsg("Sin parametros para cambiar");
-			} else if (ResidenciaHandler.existeResidencia(nconexion, codigo, errorBean)) {
+				int[] loc = {LOC_H,LOC_M,2};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "Sin parametros para cambiar");
+			} else {
 				strs[params++] = codigo;
 				try {
 					PreparedStatement ps = nconexion.prepareStatement(String.format(UPDATE_UPDATE_RESIDENCIA, upd));
@@ -314,69 +310,62 @@ public class ResidenciaHandler extends GenericHandler {
 
 					int c = ps.executeUpdate();
 					if (c > 0) {
-						res = getResidencia(nconexion, codigo, true, errorBean);
+						res = getResidencia(nconexion, codigo, true, usuarioLog, errorBean);
 						if(res == null) {
-							errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-							errorBean.updateErrorCode("69700404");
-							errorBean.updateMsg("???");
+							int[] loc = {LOC_H,LOC_M,4};
+							ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h96", loc, "???");
 						}
+					} else {
+						int[] loc = {LOC_H,LOC_M,3};
+						ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h48", loc, "no encotrada residencia con codigo " + codigo);
 					}
 				} catch (SQLException e) {
-					errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-					errorBean.updateErrorCode("69700403");
-					errorBean.updateMsg(e.getMessage());
+					int[] loc = {LOC_H,LOC_M,2};
+					ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 					e.printStackTrace();
+					return null;
 				} finally {
 					terminaOperacion(nconexion, cierraConexion);
 				}
-			} else {
-				errorBean.setHttpCode(Status.BAD_REQUEST);
-				errorBean.updateErrorCode("69700402");
-				errorBean.updateMsg("no encontrada residencia con codigo "+codigo);
 			}
 		} else {
-			errorBean.setHttpCode(Status.BAD_REQUEST);
-			errorBean.updateErrorCode("69700401");
-			errorBean.updateMsg("debe incluir datos residencia");
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "debe incluir datos residencia");
 		}
 			
 		return res;
 	}
-	
-	//05xx
-	public static boolean deleteResidencia(Connection conexion, String codigo, boolean aut, ErrorBean errorBean) {
+
+	public static boolean deleteResidencia(Connection conexion, String codigo, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 6;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		if(!aut) {
-			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57700500");
-			errorBean.updateMsg("Sin autenticar");
+		boolean auth = autenticar(usuarioLog, HttpMethod.DELETE, null, codigo);
+		if(!auth) {
+			int[] loc = {LOC_H,LOC_M,0};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
+			terminaOperacion(nconexion, cierraConexion);
 			return false;
 		}
 		
-		if (ResidenciaHandler.existeResidencia(nconexion, codigo, errorBean)) {
-			try {
-				PreparedStatement ps = nconexion.prepareStatement(UPDATE_DELETE_RESIDENCIA);
-				ps.setString(1, codigo);
-
-				int c = ps.executeUpdate();
-				if (c > 0) {
-					return true;
-				}
-			} catch (SQLException e) {
-				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-				errorBean.updateErrorCode("69700502");
-				errorBean.updateMsg(e.getMessage());
-				e.printStackTrace();
-			} finally {
-				terminaOperacion(nconexion, cierraConexion);
+		try {
+			PreparedStatement ps = nconexion.prepareStatement(UPDATE_DELETE_RESIDENCIA);
+			ps.setString(1, codigo);
+			int c = ps.executeUpdate();
+			if (c > 0) {
+				return true;
+			} else {
+				int[] loc = {LOC_H,LOC_M,2};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h48", loc, "no encotrada residencia con codigo " + codigo);
 			}
-		} else {
-			errorBean.setHttpCode(Status.BAD_REQUEST);
-			errorBean.updateErrorCode("69700501");
-			errorBean.updateMsg("no encontrada residencia con codigo "+codigo);
+		} catch (SQLException e) {
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
+			e.printStackTrace();
+		} finally {
+			terminaOperacion(nconexion, cierraConexion);
 		}
-		
+
 		return false;
 	}
 	

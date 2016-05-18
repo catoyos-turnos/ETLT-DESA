@@ -44,9 +44,13 @@ public class GeoServicio extends GenericServicio{
 	@GET
 	@Path(WebServUtils.PREF_PAIS_PATH)
 	@Valid
-	public Response listaPaises() {
+	public Response listaPaises(
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
+			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {
 		ErrorBean errorBean = new ErrorBean();
-		ArrayList<PaisBean> listaPaises = GeoHandler.listPaises(null, errorBean);
+		int[] limiteOffset = calculaLimiteOffsetCorrectos(limite, offset);
+		limite = limiteOffset[0]; offset = limiteOffset[1];
+		ArrayList<PaisBean> listaPaises = GeoHandler.listPaises(null, limite, offset, errorBean);
 		RespuestaBean<PaisBean> respuesta = null;
 
 		if(listaPaises == null) {
@@ -79,9 +83,14 @@ public class GeoServicio extends GenericServicio{
 	@Path(WebServUtils.PREF_PAIS_PATH + WebServUtils.COD_PAIS_PATH
 			+ WebServUtils.PREF_PROV_PATH)
 	@Valid
-	public Response listaProvincias(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais) {
+	public Response listaProvincias(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
+			
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
+			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {
 		ErrorBean errorBean = new ErrorBean();
-		ArrayList<ProvinciaBean> listaProvincias = GeoHandler.listProvincias(null, codPais, errorBean);
+		int[] limiteOffset = calculaLimiteOffsetCorrectos(limite, offset);
+		limite = limiteOffset[0]; offset = limiteOffset[1];
+		ArrayList<ProvinciaBean> listaProvincias = GeoHandler.listProvincias(null, codPais, limite, offset, errorBean);
 		RespuestaBean<ProvinciaBean> respuesta = null;
 
 		if(listaProvincias == null) {
@@ -118,9 +127,14 @@ public class GeoServicio extends GenericServicio{
 			+ WebServUtils.PREF_MUNI_PATH)
 	@Valid
 	public Response listaMunicipios(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
-			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia) {
+			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
+			
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
+			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {
 		ErrorBean errorBean = new ErrorBean();
-		ArrayList<MunicipioBean> listaMunicipios = GeoHandler.listMunicipios(null, codProvincia, errorBean);
+		int[] limiteOffset = calculaLimiteOffsetCorrectos(limite, offset);
+		limite = limiteOffset[0]; offset = limiteOffset[1];
+		ArrayList<MunicipioBean> listaMunicipios = GeoHandler.listMunicipios(null, codProvincia, limite, offset, errorBean);
 		RespuestaBean<MunicipioBean> respuesta = null;
 
 		if(listaMunicipios == null) {
@@ -169,8 +183,11 @@ public class GeoServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_LIMITE)
 			@DefaultValue("-1") int limit,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
-			@DefaultValue("false") boolean incGeo) {
-		return (new DiaFestivoServicio(usuarioLog)).listaDiasFestivos(codPais, "", "", TipoFiesta.NACIONAL.name(), time_ini, time_fin, limit, true, incGeo);
+			@DefaultValue("false") boolean incGeo,
+			
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
+			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {
+		return (new DiaFestivoServicio(usuarioLog)).listaDiasFestivos(codPais, "", "", TipoFiesta.NACIONAL.name(), time_ini, time_fin, true, incGeo, limite, offset);
 	}
 
 	@GET
@@ -190,8 +207,11 @@ public class GeoServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_COMPLETO)
 			@DefaultValue("false") boolean completo,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
-			@DefaultValue("false") boolean incGeo) {
-		return (new DiaFestivoServicio(usuarioLog)).listaDiasFestivos(codPais, codProvincia, "", TipoFiesta.AUTONOMICA.name(), time_ini, time_fin, limit, completo, incGeo);
+			@DefaultValue("false") boolean incGeo,
+			
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
+			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {
+		return (new DiaFestivoServicio(usuarioLog)).listaDiasFestivos(codPais, codProvincia, "", TipoFiesta.AUTONOMICA.name(), time_ini, time_fin, completo, incGeo, limite, offset);
 	}
 
 	@GET
@@ -213,8 +233,11 @@ public class GeoServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_COMPLETO)
 			@DefaultValue("false") boolean completo,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
-			@DefaultValue("false") boolean incGeo) {
-		return (new DiaFestivoServicio(usuarioLog)).listaDiasFestivos(codPais, codProvincia, codMunicipio, TipoFiesta.LOCAL.name(), time_ini, time_fin, limit, completo, incGeo);
+			@DefaultValue("false") boolean incGeo,
+			
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
+			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {
+		return (new DiaFestivoServicio(usuarioLog)).listaDiasFestivos(codPais, codProvincia, codMunicipio, TipoFiesta.LOCAL.name(), time_ini, time_fin, completo, incGeo, limite, offset);
 	}
 	
 	// -------------residencias-----------------------------------------------
@@ -226,8 +249,11 @@ public class GeoServicio extends GenericServicio{
 	public Response getResidenciasPais(
 			@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
-			@DefaultValue("false") boolean incGeo) {
-		return (new ResidenciaServicio(usuarioLog)).listaResidencias(codPais, null, null, incGeo);
+			@DefaultValue("false") boolean incGeo,
+			
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
+			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {
+		return (new ResidenciaServicio(usuarioLog)).listaResidencias(codPais, null, null, incGeo, limite, offset);
 	}
 
 	@GET
@@ -239,8 +265,11 @@ public class GeoServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
-			@DefaultValue("false") boolean incGeo) {
-		return (new ResidenciaServicio(usuarioLog)).listaResidencias(codPais, codProvincia, null, incGeo);
+			@DefaultValue("false") boolean incGeo,
+			
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
+			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {
+		return (new ResidenciaServicio(usuarioLog)).listaResidencias(codPais, codProvincia, null, incGeo, limite, offset);
 	}
 
 	@GET
@@ -254,8 +283,11 @@ public class GeoServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
 			@PathParam(WebServUtils.P_PARAM_COD_MUNI) String codMunicipio,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
-			@DefaultValue("false") boolean incGeo) {
-		return (new ResidenciaServicio(usuarioLog)).listaResidencias(codPais, codProvincia, codMunicipio, incGeo);
+			@DefaultValue("false") boolean incGeo,
+			
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
+			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {
+		return (new ResidenciaServicio(usuarioLog)).listaResidencias(codPais, codProvincia, codMunicipio, incGeo, limite, offset);
 	}
 
 }

@@ -49,8 +49,13 @@ public class TrabajadorServicio extends GenericServicio{
 
 	@GET
 	@Valid
-	public Response listaTrabajadores (@PathParam(WebServUtils.P_PARAM_COD_RES) String codTrab) {
+	public Response listaTrabajadores (@PathParam(WebServUtils.P_PARAM_COD_RES) String codTrab,
+			
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
+			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {		
 		ErrorBean errorBean = new ErrorBean();
+		int[] limiteOffset = calculaLimiteOffsetCorrectos(limite, offset);
+		limite = limiteOffset[0]; offset = limiteOffset[1];
 		ArrayList<TrabajadorBean> listaTrabajadores = TrabajadorHandler.listTrabajadores(null, codTrab, errorBean);
 		RespuestaBean<TrabajadorBean> respuesta = null;
 		
@@ -204,7 +209,7 @@ public class TrabajadorServicio extends GenericServicio{
 			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s48", loc, msg, params);
 		}
 		
-		ArrayList<TurnoTrabajadorDiaBean> listaTurnos = TurnoTrabajadorDiaHandler.getTurnosTrabajadorRango(null, codRes, codTrab, fecha_ini, fecha_fin, eb);
+		ArrayList<TurnoTrabajadorDiaBean> listaTurnos = TurnoTrabajadorDiaHandler.getTurnosTrabajadorRango(null, codRes, codTrab, fecha_ini, fecha_fin, usuarioLog, eb);
 		if(listaTurnos == null) {
 			respuesta = new RespuestaBean<TurnoTrabajadorDiaBean>(eb);
 		} else {

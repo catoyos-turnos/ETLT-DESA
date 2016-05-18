@@ -99,6 +99,14 @@ public class UsuarioBean extends ETLTBean {
 		this.nivel = NivelUsuario.safeValueOf(nivel);
 	}
 
+	public boolean checkNivel(NivelUsuario nivel) {
+		return this.nivel == nivel;
+	}
+
+	public boolean checkNivel(String nivelStr) {
+		return this.nivel == NivelUsuario.safeValueOf(nivelStr);
+	}
+
 	public boolean isActivado() {
 		return activado;
 	}

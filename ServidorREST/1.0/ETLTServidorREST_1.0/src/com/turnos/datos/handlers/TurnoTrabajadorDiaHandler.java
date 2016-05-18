@@ -14,9 +14,12 @@ import com.turnos.datos.vo.ServicioBean;
 import com.turnos.datos.vo.TrabajadorBean;
 import com.turnos.datos.vo.TurnoBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
+import com.turnos.datos.vo.UsuarioBean;
 
-//75xxxx
 public class TurnoTrabajadorDiaHandler extends GenericHandler {
+
+	private static final int LOC_H = 75;
+	
 	private static final String QUERY_GET_LISTA_TURNOS = 
 			"SELECT tr.codigo as codTrab, tr.nombre as nomTrab, tr.apellidos as apeTrab, tu.codigo as codTurno, tu.tipo as tipoTurno, "
 				+ "se.id_servicio as idServ, se.hora_pres as horaPresServ, se.hora_ret as horaRetServ, se.tiempo_toma as tiempoToma, se.tiempo_deje as tiempoDeje, "
@@ -48,10 +51,11 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 			+ "AND (sd.festivo=? OR sd.festivo='CUALQUIERA') "
 			+ "AND (sd.vispera_festivo=? OR sd.vispera_festivo='CUALQUIERA') "
 		+ "ORDER BY se.hora_pres, se.hora_ret, tr.codigo";
-	
 
-	//00xx
-	public static ArrayList<TurnoTrabajadorDiaBean> getTodosTurnosDia(Connection conexion, String codRes, Date fecha, ErrorBean errorBean) {
+
+	public static ArrayList<TurnoTrabajadorDiaBean> getTodosTurnosDia(Connection conexion, String codRes, Date fecha,
+			int limite, int offset, UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 1;
 		Connection nconexion = GenericHandler.aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		
@@ -114,10 +118,9 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 		return listaTurnos;
 	}
 
-
-	//01xx
 	public static TurnoTrabajadorDiaBean getTurnoTrabajadorDia(Connection conexion,
 			String codRes, String codTrab, Date fecha, ErrorBean errorBean) {
+		int LOC_M = 2;
 		Connection nconexion = GenericHandler.aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		
@@ -137,10 +140,10 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 		return ttd;
 	}
 
-	//02xx
-	public static ArrayList<TurnoTrabajadorDiaBean> getTurnosTrabajadorRango(
-			Connection conexion, String codRes, String codTrab, Date fecha_ini,
-			Date fecha_fin, ErrorBean errorBean) {
+	public static ArrayList<TurnoTrabajadorDiaBean> getTurnosTrabajadorRango(Connection conexion,
+			String codRes, String codTrab, Date fecha_ini, Date fecha_fin,
+			UsuarioBean usuarioLog, ErrorBean errorBean) {
+		int LOC_M = 3;
 		Connection nconexion = GenericHandler.aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		
@@ -184,6 +187,7 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 	private static TurnoTrabajadorDiaBean recuperaTurnoTrabajadorDia(Connection nconexion,
 			String codRes, String codTrab, java.sql.Date sqlFecha, String[] infoDia, ErrorBean errorBean)
 			throws SQLException{
+		int LOC_M = 4;
 		PreparedStatement ps;
 		ResultSet rs;
 		ps = nconexion.prepareStatement(QUERY_GET_TURNO_TRABAJADOR_DIA);

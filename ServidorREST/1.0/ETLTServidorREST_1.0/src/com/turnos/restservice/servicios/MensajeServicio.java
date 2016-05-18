@@ -60,7 +60,7 @@ public class MensajeServicio extends GenericServicio{
 			rol = RolUsuario.DESTINATARIO;
 		}
 		RespuestaBean<MensajeBean> respuesta;
-		ArrayList<MensajeBean> listaMensajes = MensajeHandler.listMensajesUser(null, codUser, rol, incLeidos, profRespuestas, original, limite, offset, aut, errorBean);
+		ArrayList<MensajeBean> listaMensajes = MensajeHandler.listMensajesUser(null, codUser, rol, incLeidos, profRespuestas, original, limite, offset, usuarioLog, errorBean);
 		
 		if(listaMensajes == null) {
 			respuesta = new RespuestaBean<MensajeBean>(listaMensajes);
@@ -87,7 +87,7 @@ public class MensajeServicio extends GenericServicio{
 		boolean aut = MensajeHandler.autenticar(null, null);
 		
 		RespuestaBean<MensajeBean> respuesta;
-		ArrayList<MensajeBean> listaMensajes = MensajeHandler.listRespuestasMensaje(null, codMensaje, profRespuestas, limite, offset, aut, errorBean);
+		ArrayList<MensajeBean> listaMensajes = MensajeHandler.listRespuestasMensaje(null, codMensaje, profRespuestas, limite, offset, usuarioLog, errorBean);
 		
 		if(listaMensajes == null) {
 			respuesta = new RespuestaBean<MensajeBean>(listaMensajes);
@@ -109,7 +109,7 @@ public class MensajeServicio extends GenericServicio{
 		ErrorBean errorBean = new ErrorBean();
 		RespuestaBean<MensajeBean> respuesta = null;
 		boolean aut = MensajeHandler.autenticar(null, null);
-		MensajeBean privado = MensajeHandler.getMensaje(null, codMensaje, profRespuestas, original, aut, errorBean);
+		MensajeBean privado = MensajeHandler.getMensaje(null, codMensaje, profRespuestas, original, usuarioLog, errorBean);
 		
 		if (privado == null) {
 			respuesta = new RespuestaBean<MensajeBean>(errorBean);
@@ -128,7 +128,7 @@ public class MensajeServicio extends GenericServicio{
 		ErrorBean errorBean = new ErrorBean();
 		RespuestaBean<MensajeBean> respuesta = null;
 		boolean aut = MensajeHandler.autenticar(null, null);
-		MensajeBean privado = MensajeHandler.insertMensaje(null, privadoRaw, aut, errorBean);
+		MensajeBean privado = MensajeHandler.insertMensaje(null, privadoRaw, usuarioLog, errorBean);
 
 		if(privado == null) {
 			respuesta = new RespuestaBean<MensajeBean>(errorBean);

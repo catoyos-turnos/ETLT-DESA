@@ -10,12 +10,14 @@ import javax.ws.rs.core.Response.Status;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.UsuarioBean;
 
-//23xxxx
 public class AutenticacionHandler extends GenericHandler {
+
+	private static final int LOC_H = 23;
 
 	private static final String GET_APP_Y_SERV_KEYS = "SELECT app.llave_secreta as secretKey, serv.valor as servidorKey FROM aplicacion app, config_servidor serv WHERE app.llave_publica=? AND serv.config='SERVIDOR_KEY'";
 	
 	public static String[] getAuthKeys(Connection conexion, String publicKey, ErrorBean errorBean) {
+		int LOC_M = 1;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 

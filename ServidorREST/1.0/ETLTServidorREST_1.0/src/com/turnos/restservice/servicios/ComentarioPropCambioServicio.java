@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -43,7 +45,10 @@ public class ComentarioPropCambioServicio extends GenericServicio{
 	
 	@GET
 	@Valid
-	public Response listaComentarios(@PathParam(WebServUtils.P_PARAM_COD_PROP_CAMBIO) String codCambio) {
+	public Response listaComentarios(@PathParam(WebServUtils.P_PARAM_COD_PROP_CAMBIO) String codCambio,
+			
+			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
+			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<ComentarioBean> listaComentarios = null;
 //		listaComentarios = ComentarioPropCambioHandler.listComentarioPropuesta(null, codRes, codCambio, errorBean); //TODO

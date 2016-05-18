@@ -43,7 +43,7 @@ public class UsuarioServicio extends GenericServicio{
 	@Valid
 	public Response getUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
 		ErrorBean errorBean = new ErrorBean();
-		UsuarioBean usuario = UsuarioHandler.getUsuario(null, codUser, errorBean);
+		UsuarioBean usuario = UsuarioHandler.getUsuario(null, codUser, usuarioLog, errorBean);
 		RespuestaBean<UsuarioBean> respuesta = null;
 		
 		if(usuario == null) {
@@ -80,7 +80,9 @@ public class UsuarioServicio extends GenericServicio{
 	public Response modUsuario(UsuarioBean userRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
 		ErrorBean errorBean = new ErrorBean();
-		UsuarioBean usuario = UsuarioHandler.updateUsuario(null, codUser, userRaw, errorBean);
+		UsuarioBean usuario = null;
+//		UsuarioBean usuario = UsuarioHandler.updateUsuario(null, codUser, userRaw, usuarioLog, errorBean);
+		//TODO mod params uno a uno
 		RespuestaBean<UsuarioBean> respuesta = null;
 		
 		if(usuario == null) {
