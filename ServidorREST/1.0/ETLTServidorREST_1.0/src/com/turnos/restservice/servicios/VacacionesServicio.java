@@ -27,7 +27,6 @@ import com.turnos.datos.WebServUtils;
 import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.handlers.VacacionesHandler;
 import com.turnos.datos.vo.ErrorBean;
-import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.UsuarioBean;
 import com.turnos.datos.vo.VacacionesBean;
 
@@ -59,8 +58,6 @@ public class VacacionesServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
 			@DefaultValue("-1") int time_fin) {
 		ErrorBean errorBean = new ErrorBean();
-		RespuestaBean<VacacionesBean> respuesta = null;
-		
 		Date fecha_ini = null;
 		Date fecha_fin = null;
 		try {
@@ -80,15 +77,10 @@ public class VacacionesServicio extends GenericServicio{
 			String[] params = {String.valueOf(time_ini), String.valueOf(time_fin)};
 			ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "s48", loc, msg, params);
 		}
-		ArrayList<VacacionesBean> listaVacaciones = VacacionesHandler.listVacaciones(null, codRes, codTrab, fecha_ini, fecha_fin, usuarioLog, errorBean);
-		
-		if(listaVacaciones == null) {
-			respuesta = new RespuestaBean<VacacionesBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<VacacionesBean>(listaVacaciones);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		ArrayList<VacacionesBean> listaVacaciones = VacacionesHandler.listVacaciones(null, codRes, codTrab, fecha_ini, fecha_fin,  errorBean);
+
+
+		return creaRespuestaGenericaGETLista(listaVacaciones, errorBean, -1, -1);
 	}
 	
 	@GET
@@ -100,16 +92,9 @@ public class VacacionesServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
 			@PathParam(WebServUtils.P_PARAM_COD_VACS) String codVacs) {
 		ErrorBean errorBean = new ErrorBean();
-		RespuestaBean<VacacionesBean> respuesta = null;
-		VacacionesBean vacaciones = VacacionesHandler.getVacaciones(null, codVacs, usuarioLog, errorBean);
+		VacacionesBean vacaciones = VacacionesHandler.getVacaciones(null, codVacs, errorBean);
 
-		if(vacaciones == null) {
-			respuesta = new RespuestaBean<VacacionesBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<VacacionesBean>(vacaciones);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaGET(vacaciones, errorBean);
 	}
 	
 	@POST
@@ -120,17 +105,9 @@ public class VacacionesServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
-		RespuestaBean<VacacionesBean> respuesta = null;
 		VacacionesBean vacaciones = VacacionesHandler.insertVacaciones(null, codRes, codTrab, vacsRaw, errorBean);
 
-		if(vacaciones == null) {
-			respuesta = new RespuestaBean<VacacionesBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<VacacionesBean>(vacaciones);
-			respuesta.setHtmlStatus(Status.CREATED);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaPOST(vacaciones, errorBean);
 	}
 	
 	@PUT
@@ -143,17 +120,9 @@ public class VacacionesServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
 			@PathParam(WebServUtils.P_PARAM_COD_VACS) String codVacs) {
 		ErrorBean errorBean = new ErrorBean();
-		RespuestaBean<VacacionesBean> respuesta = null;
 		VacacionesBean vacaciones = VacacionesHandler.updateVacaciones(null, codVacs, vacsRaw, errorBean);
-		
-		if(vacaciones == null) {
-			respuesta = new RespuestaBean<VacacionesBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<VacacionesBean>(vacaciones);
-			respuesta.setHtmlStatus(Status.ACCEPTED);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+
+		return creaRespuestaGenericaPUT(vacaciones, errorBean);
 	}
 	
 	@DELETE
@@ -166,15 +135,7 @@ public class VacacionesServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_VACS) String codVacs) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean borrado = VacacionesHandler.deleteVacaciones(null, codVacs, errorBean);
-		RespuestaBean<VacacionesBean> respuesta = null;
-		
-		if(borrado) {
-			respuesta = new RespuestaBean<VacacionesBean>();
-			respuesta.setHtmlStatus(Status.ACCEPTED);
-		} else {
-			respuesta = new RespuestaBean<VacacionesBean>(errorBean);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+
+		return creaRespuestaGenericaDELETE(borrado, VacacionesBean.class, errorBean);
 	}
 }

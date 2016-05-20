@@ -43,16 +43,9 @@ public class UsuarioServicio extends GenericServicio{
 	@Valid
 	public Response getUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
 		ErrorBean errorBean = new ErrorBean();
-		UsuarioBean usuario = UsuarioHandler.getUsuario(null, codUser, usuarioLog, errorBean);
-		RespuestaBean<UsuarioBean> respuesta = null;
-		
-		if(usuario == null) {
-			respuesta = new RespuestaBean<UsuarioBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<UsuarioBean>(usuario);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		UsuarioBean usuario = UsuarioHandler.getUsuario(null, codUser, errorBean);
+
+		return creaRespuestaGenericaGET(usuario, errorBean);
 	}
 	
 	@POST
@@ -61,16 +54,8 @@ public class UsuarioServicio extends GenericServicio{
 	public Response nuevoUsuario(UsuarioBean userRaw) {
 		ErrorBean errorBean = new ErrorBean();
 		UsuarioBean usuario = UsuarioHandler.insertUsuario(null, userRaw, errorBean);
-		RespuestaBean<UsuarioBean> respuesta = null;
 
-		if(usuario == null) {
-			respuesta = new RespuestaBean<UsuarioBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<UsuarioBean>(usuario);
-			respuesta.setHtmlStatus(Status.CREATED);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaPOST(usuario, errorBean);
 	}
 	
 	@PUT
@@ -83,16 +68,8 @@ public class UsuarioServicio extends GenericServicio{
 		UsuarioBean usuario = null;
 //		UsuarioBean usuario = UsuarioHandler.updateUsuario(null, codUser, userRaw, usuarioLog, errorBean);
 		//TODO mod params uno a uno
-		RespuestaBean<UsuarioBean> respuesta = null;
-		
-		if(usuario == null) {
-			respuesta = new RespuestaBean<UsuarioBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<UsuarioBean>(usuario);
-			respuesta.setHtmlStatus(Status.ACCEPTED);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+
+		return creaRespuestaGenericaPUT(usuario, errorBean);
 	}
 	
 	@PUT
@@ -104,15 +81,7 @@ public class UsuarioServicio extends GenericServicio{
 		/* TODO */
 		/*
 		UsuarioBean usuario = UsuarioHandler.updateUsuario(null, codUser, userRaw, errorBean);
-		RespuestaBean<UsuarioBean> respuesta = null;
-		
-		if(usuario == null) {
-			respuesta = new RespuestaBean<UsuarioBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<UsuarioBean>(usuario);
-			respuesta.setHtmlStatus(Status.ACCEPTED);
-		}
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaPUT(usuario, errorBean);
 		*/
 		return Response.status(Status.NOT_IMPLEMENTED).build();
 	}

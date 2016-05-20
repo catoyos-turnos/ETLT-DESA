@@ -14,7 +14,6 @@ import com.turnos.datos.vo.ServicioBean;
 import com.turnos.datos.vo.TrabajadorBean;
 import com.turnos.datos.vo.TurnoBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
-import com.turnos.datos.vo.UsuarioBean;
 
 public class TurnoTrabajadorDiaHandler extends GenericHandler {
 
@@ -54,7 +53,7 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 
 
 	public static ArrayList<TurnoTrabajadorDiaBean> getTodosTurnosDia(Connection conexion, String codRes, Date fecha,
-			int limite, int offset, UsuarioBean usuarioLog, ErrorBean errorBean) {
+			int limite, int offset,  ErrorBean errorBean) {
 		int LOC_M = 1;
 		Connection nconexion = GenericHandler.aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -141,8 +140,7 @@ public class TurnoTrabajadorDiaHandler extends GenericHandler {
 	}
 
 	public static ArrayList<TurnoTrabajadorDiaBean> getTurnosTrabajadorRango(Connection conexion,
-			String codRes, String codTrab, Date fecha_ini, Date fecha_fin,
-			UsuarioBean usuarioLog, ErrorBean errorBean) {
+			String codRes, String codTrab, Date fecha_ini, Date fecha_fin, ErrorBean errorBean) {
 		int LOC_M = 3;
 		Connection nconexion = GenericHandler.aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);

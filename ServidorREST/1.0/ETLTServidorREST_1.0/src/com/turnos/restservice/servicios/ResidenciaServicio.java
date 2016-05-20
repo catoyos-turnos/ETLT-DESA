@@ -82,15 +82,15 @@ public class ResidenciaServicio extends GenericServicio{
 		if (!"".equals(municipio)) {
 			String[] busqueda = { municipio };
 			listaResidencias = ResidenciaHandler
-					.listResidencias(null, TipoBusqueda.MUNICIPIO, busqueda, includeGeo, limite, offset, usuarioLog, eb);
+					.listResidencias(null, TipoBusqueda.MUNICIPIO, busqueda, includeGeo, limite, offset,  eb);
 		} else if (!"".equals(provincia)) {
 			String[] busqueda = { provincia };
 			listaResidencias = ResidenciaHandler
-					.listResidencias(null, TipoBusqueda.PROVINCIA, busqueda, includeGeo, limite, offset, usuarioLog, eb);
+					.listResidencias(null, TipoBusqueda.PROVINCIA, busqueda, includeGeo, limite, offset,  eb);
 		} else if (!"".equals(pais)) {
 			String[] busqueda = { pais };
 			listaResidencias = ResidenciaHandler
-					.listResidencias(null, TipoBusqueda.PAIS, busqueda, includeGeo, limite, offset, usuarioLog, eb);
+					.listResidencias(null, TipoBusqueda.PAIS, busqueda, includeGeo, limite, offset,  eb);
 		} else {
 			int[] loc = {70,0,0};
 			String msg = "debe incluir parametros de busqueda: "
@@ -115,7 +115,7 @@ public class ResidenciaServicio extends GenericServicio{
 			@ApiParam(value = "incluir informacion geografica")
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO) @DefaultValue("true") boolean includeGeo) {
 		ErrorBean eb = new ErrorBean();
-		ResidenciaBean residencia = ResidenciaHandler.getResidencia(null, codRes, includeGeo, usuarioLog, eb);
+		ResidenciaBean residencia = ResidenciaHandler.getResidencia(null, codRes, includeGeo,  eb);
 
 		return creaRespuestaGenericaGET(residencia, eb);
 	}
@@ -129,7 +129,7 @@ public class ResidenciaServicio extends GenericServicio{
 	@Valid
 	public Response nuevaResidencia(ResidenciaBean resRaw) {
 		ErrorBean eb = new ErrorBean();
-		ResidenciaBean residencia = ResidenciaHandler.insertResidencia(null, resRaw, usuarioLog, eb);
+		ResidenciaBean residencia = ResidenciaHandler.insertResidencia(null, resRaw,  eb);
 
 		return creaRespuestaGenericaPOST(residencia, eb);
 	}
@@ -147,7 +147,7 @@ public class ResidenciaServicio extends GenericServicio{
 			@ApiParam(value = "codigo de la residencia")
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
-		ResidenciaBean residencia = ResidenciaHandler.updateResidencia(null, codRes, resRaw, usuarioLog, eb);
+		ResidenciaBean residencia = ResidenciaHandler.updateResidencia(null, codRes, resRaw,  eb);
 
 		return creaRespuestaGenericaPUT(residencia, eb);
 	}
@@ -163,7 +163,7 @@ public class ResidenciaServicio extends GenericServicio{
 			@ApiParam(value = "codigo de la residencia")
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean eb = new ErrorBean();
-		boolean borrado = ResidenciaHandler.deleteResidencia(null, codRes, usuarioLog, eb);
+		boolean borrado = ResidenciaHandler.deleteResidencia(null, codRes,  eb);
 		
 		return creaRespuestaGenericaDELETE(borrado, ResidenciaBean.class, eb);
 	}
@@ -214,7 +214,7 @@ public class ResidenciaServicio extends GenericServicio{
 			String[] params = {String.valueOf(time_ini), String.valueOf(time_fin)};
 			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s48", loc, msg, params);
 		}
-		listaFestivos = FestivoHandler.getFestivosResidencia(null, codRes, fecha_ini, fecha_fin, limite, offset, usuarioLog, eb);
+		listaFestivos = FestivoHandler.getFestivosResidencia(null, codRes, fecha_ini, fecha_fin, limite, offset,  eb);
 		
 		return creaRespuestaGenericaGETLista(listaFestivos, eb, limite, offset);
 	}
@@ -255,7 +255,7 @@ public class ResidenciaServicio extends GenericServicio{
 		}
 		
 		if(fecha != null) {
-			listaVacaciones = VacacionesHandler.listVacacionesResDia(null, codRes, fecha, limite, offset, usuarioLog, eb);
+			listaVacaciones = VacacionesHandler.listVacacionesResDia(null, codRes, fecha, limite, offset,  eb);
 		}
 		
 		return creaRespuestaGenericaGETLista(listaVacaciones, eb, limite, offset);
@@ -297,7 +297,7 @@ public class ResidenciaServicio extends GenericServicio{
 		}
 		
 		if(fecha != null) {
-			listaTurnos = TurnoTrabajadorDiaHandler.getTodosTurnosDia(null, codRes, fecha, limite, offset, usuarioLog, eb);
+			listaTurnos = TurnoTrabajadorDiaHandler.getTodosTurnosDia(null, codRes, fecha, limite, offset, eb);
 		}
 		
 		return creaRespuestaGenericaGETLista(listaTurnos, eb, limite, offset);

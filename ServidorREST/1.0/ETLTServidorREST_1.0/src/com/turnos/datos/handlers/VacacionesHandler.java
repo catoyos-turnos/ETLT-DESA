@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.turnos.datos.vo.ErrorBean;
-import com.turnos.datos.vo.UsuarioBean;
 import com.turnos.datos.vo.VacacionesBean;
 
 public class VacacionesHandler extends GenericHandler {
@@ -26,15 +25,14 @@ public class VacacionesHandler extends GenericHandler {
 
 	//00xx
 	public static ArrayList<VacacionesBean> listVacaciones(Object object,
-			String codRes, String codTrab, Date fecha_ini, Date fecha_fin, UsuarioBean usuarioLog, ErrorBean errorBean) {
+			String codRes, String codTrab, Date fecha_ini, Date fecha_fin,  ErrorBean errorBean) {
 		int LOC_M = 1;
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	//01xx
-	public static VacacionesBean getVacaciones(Object object, String codVacs,
-			UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static VacacionesBean getVacaciones(Object object, String codVacs, ErrorBean errorBean) {
 		int LOC_M = 2;
 		// TODO Auto-generated method stub
 		return null;
@@ -42,7 +40,7 @@ public class VacacionesHandler extends GenericHandler {
 
 	//02xx
 	public static ArrayList<VacacionesBean> listVacacionesResDia(Object object,
-			String codRes, Date fecha, int limite, int offset, UsuarioBean usuarioLog, ErrorBean eb) {
+			String codRes, Date fecha, int limite, int offset,  ErrorBean eb) {
 		int LOC_M = 3;
 		// TODO Auto-generated method stub
 		return null;

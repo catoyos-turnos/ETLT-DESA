@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.fabricas.ErrorBeanFabrica;
@@ -63,18 +62,11 @@ public class MensajeHandler extends GenericHandler {
 
 	public static ArrayList<MensajeBean> listMensajesUser(Connection conexion,
 			long usrMensaje, RolUsuario rol, boolean listaLeidos,
-			int profRespuestas, boolean original, int limite, int offset,
-			UsuarioBean usuarioLog, ErrorBean errorBean) {
+			int profRespuestas, boolean original, int limite, int offset, ErrorBean errorBean) {
 		int LOC_M = 1;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean auth = UsuarioHandler.autenticar(usuarioLog, HttpMethod.GET, usrMensaje);
-		if(!auth) {
-			int[] loc = {LOC_H,LOC_M,0};
-			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
-			terminaOperacion(nconexion, cierraConexion);
-			return null;
-		}
+
 		ArrayList<MensajeBean> listaMsgs = new ArrayList<MensajeBean>();
 		PreparedStatement ps = null;
 		ResultSet rs;
@@ -133,7 +125,7 @@ public class MensajeHandler extends GenericHandler {
 
 				idusr = rs.getLong("idRemitente");
 				if (!tablaUsers.containsKey(""+idusr)) {
-					user = UsuarioHandler.getUsuario(nconexion, idusr, usuarioLog, errorBean);
+					user = UsuarioHandler.getUsuario(nconexion, idusr, errorBean);
 					if (user != null) tablaUsers.put(""+idusr, user);
 				} else {
 					user = tablaUsers.get(""+idusr);
@@ -144,7 +136,7 @@ public class MensajeHandler extends GenericHandler {
 
 				idusr = rs.getLong("idDestinatario");
 				if (!tablaUsers.containsKey(""+idusr)) {
-					user = UsuarioHandler.getUsuario(nconexion, idusr, usuarioLog, errorBean);
+					user = UsuarioHandler.getUsuario(nconexion, idusr, errorBean);
 					if (user != null) tablaUsers.put(""+idusr, user);
 				} else {
 					user = tablaUsers.get(""+idusr);
@@ -155,12 +147,12 @@ public class MensajeHandler extends GenericHandler {
 
 				if (profRespuestas > 0) {
 					respuestas = MensajeHandler.listRespuestasMensaje(
-							nconexion, msg.getId_mensaje(), profRespuestas - 1, 0, 0, usuarioLog, errorBean);
+							nconexion, msg.getId_mensaje(), profRespuestas - 1, 0, 0, errorBean);
 					msg.setRespuestas(respuestas);
 				}
 				
 				if (original) {
-					msg.setMsgOriginal(getMensaje(nconexion, msg.getId_msg_original(), 0, false, usuarioLog, errorBean));
+					msg.setMsgOriginal(getMensaje(nconexion, msg.getId_msg_original(), 0, false, errorBean));
 				}
 				
 				listaMsgs.add(msg);
@@ -180,17 +172,10 @@ public class MensajeHandler extends GenericHandler {
 
 	public static ArrayList<MensajeBean> listRespuestasMensaje(
 			Connection conexion, long codMensaje, int profRespuestas,
-			int limite, int offset, UsuarioBean usuarioLog, ErrorBean errorBean) {
+			int limite, int offset,  ErrorBean errorBean) {
 		int LOC_M = 2;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean auth = UsuarioHandler.autenticar(usuarioLog, HttpMethod.GET, -1);
-		if (!auth) {
-			int[] loc = { LOC_H, LOC_M, 0 };
-			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
-			terminaOperacion(nconexion, cierraConexion);
-			return null;
-		}
 
 		ArrayList<MensajeBean> listaMsgs = new ArrayList<MensajeBean>();
 		PreparedStatement ps = null;
@@ -229,7 +214,7 @@ public class MensajeHandler extends GenericHandler {
 
 				idusr = rs.getLong("idRemitente");
 				if (!tablaUsers.containsKey("" + idusr)) {
-					user = UsuarioHandler.getUsuario(nconexion, idusr, usuarioLog, errorBean);
+					user = UsuarioHandler.getUsuario(nconexion, idusr,  errorBean);
 					if (user != null) tablaUsers.put("" + idusr, user);
 				} else {
 					user = tablaUsers.get("" + idusr);
@@ -240,7 +225,7 @@ public class MensajeHandler extends GenericHandler {
 
 				idusr = rs.getLong("idDestinatario");
 				if (!tablaUsers.containsKey("" + idusr)) {
-					user = UsuarioHandler.getUsuario(nconexion, idusr, usuarioLog, errorBean);
+					user = UsuarioHandler.getUsuario(nconexion, idusr,  errorBean);
 					if (user != null) tablaUsers.put("" + idusr, user);
 				} else {
 					user = tablaUsers.get("" + idusr);
@@ -251,7 +236,7 @@ public class MensajeHandler extends GenericHandler {
 
 				if (profRespuestas > 0) {
 					respuestas = MensajeHandler.listRespuestasMensaje(
-							nconexion, msg.getId_mensaje(), profRespuestas - 1, 0, 0, usuarioLog, errorBean);
+							nconexion, msg.getId_mensaje(), profRespuestas - 1, 0, 0,  errorBean);
 					msg.setRespuestas(respuestas);
 				}
 
@@ -271,18 +256,11 @@ public class MensajeHandler extends GenericHandler {
 	}
 
 	public static MensajeBean getMensaje(Connection conexion, long codMensaje,
-			int profRespuestas, boolean original, UsuarioBean usuarioLog,
+			int profRespuestas, boolean original,  
 			ErrorBean errorBean) {
 		int LOC_M = 3;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean auth = UsuarioHandler.autenticar(usuarioLog, HttpMethod.GET, -1);
-		if (!auth) {
-			int[] loc = { LOC_H, LOC_M, 0 };
-			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
-			terminaOperacion(nconexion, cierraConexion);
-			return null;
-		}
 		MensajeBean msg = null;
 
 		if (codMensaje >= 0) {
@@ -300,20 +278,20 @@ public class MensajeHandler extends GenericHandler {
 					msg.setTexto(rs.getString("texto"));
 
 					long idusr = rs.getLong("idRemitente");
-					UsuarioBean user = UsuarioHandler.getUsuario(nconexion, idusr, usuarioLog, errorBean);
+					UsuarioBean user = UsuarioHandler.getUsuario(nconexion, idusr,  errorBean);
 					if (user != null) {
 						msg.setRemitente(user);
 					}
 
 					idusr = rs.getLong("idDestinatario");
-					user = UsuarioHandler.getUsuario(nconexion, idusr, usuarioLog, errorBean);
+					user = UsuarioHandler.getUsuario(nconexion, idusr,  errorBean);
 					if (user != null) {
 						msg.setDestinatario(user);
 					}
 
 					if (profRespuestas > 0) {
 						ArrayList<MensajeBean> respuestas = MensajeHandler.listRespuestasMensaje(
-								nconexion, codMensaje, profRespuestas - 1, 0, 0, usuarioLog, errorBean);
+								nconexion, codMensaje, profRespuestas - 1, 0, 0,  errorBean);
 						msg.setRespuestas(respuestas);
 					}
 				} else {
@@ -340,7 +318,7 @@ public class MensajeHandler extends GenericHandler {
 	}
 
 	public static MensajeBean insertMensaje(Connection conexion,
-			MensajeBean privadoRaw, UsuarioBean usuarioLog, ErrorBean errorBean) {
+			MensajeBean privadoRaw, ErrorBean errorBean) {
 		int LOC_M = 4;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -352,14 +330,7 @@ public class MensajeHandler extends GenericHandler {
 			terminaOperacion(nconexion, cierraConexion);
 			return null;
 		}
-		boolean auth = UsuarioHandler.autenticar(usuarioLog, HttpMethod.POST, privadoRaw.getId_remitente());
-		if (!auth) {
-			int[] loc = { LOC_H, LOC_M, 0 };
-			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
-			terminaOperacion(nconexion, cierraConexion);
-			terminaOperacion(nconexion, cierraConexion);
-			return null;
-		}
+		
 		MensajeBean msg = null;
 		try {
 			PreparedStatement ps;
@@ -379,7 +350,7 @@ public class MensajeHandler extends GenericHandler {
 			int c = ps.executeUpdate();
 			if (c > 0 && ps.getGeneratedKeys().next()) {
 				long codMensaje = ps.getGeneratedKeys().getLong(1);
-				msg = getMensaje(nconexion, codMensaje, 1, false, usuarioLog, errorBean);
+				msg = getMensaje(nconexion, codMensaje, 1, false, errorBean);
 				if (msg == null) {
 					errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
 					errorBean.updateErrorCode("69910203");
@@ -401,24 +372,11 @@ public class MensajeHandler extends GenericHandler {
 	}
 
 	public static boolean marcaMensajeLeido(Connection conexion,
-			long codMensaje, boolean leido, UsuarioBean usuarioLog,
+			long codMensaje, boolean leido,
 			ErrorBean errorBean) {
 		int LOC_M = 5;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-
-		MensajeBean m = getMensaje(nconexion, codMensaje, 0, false, usuarioLog, errorBean);
-		if (m == null) {
-			int[] loc = { LOC_H, LOC_M, 3 };
-			ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h48", loc, "no encotrado mensaje con codigo " + codMensaje);
-		}
-		boolean auth = UsuarioHandler.autenticar(usuarioLog, HttpMethod.PUT, m.getId_remitente());
-		if (!auth) {
-			int[] loc = { LOC_H, LOC_M, 0 };
-			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
-			terminaOperacion(nconexion, cierraConexion);
-			return false;
-		}
 
 		try {
 			PreparedStatement ps = nconexion.prepareStatement(UPDATE_UPDATE_MENSAJE_LEIDO);
@@ -428,6 +386,9 @@ public class MensajeHandler extends GenericHandler {
 			int c = ps.executeUpdate();
 			if (c > 0) {
 				return true;
+			} else {
+				int[] loc = { LOC_H, LOC_M, 3 };
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h48", loc, "no encotrado mensaje con codigo " + codMensaje);
 			}
 		} catch (SQLException e) {
 			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);

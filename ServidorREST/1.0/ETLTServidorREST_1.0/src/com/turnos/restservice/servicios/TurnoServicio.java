@@ -19,12 +19,11 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.WebServUtils;
 import com.turnos.datos.handlers.TurnoHandler;
 import com.turnos.datos.vo.ErrorBean;
-import com.turnos.datos.vo.RespuestaBean;
+import com.turnos.datos.vo.ResidenciaBean;
 import com.turnos.datos.vo.TurnoBean;
 import com.turnos.datos.vo.TurnoBean.TipoTurno;
 import com.turnos.datos.vo.UsuarioBean;
@@ -51,22 +50,15 @@ public class TurnoServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_INC_SERVS) @DefaultValue("false") boolean includeServs) {
 		ErrorBean errorBean = new ErrorBean();
 		ArrayList<TurnoBean> listaTurnos;
-		RespuestaBean<TurnoBean> respuesta = null;
-		
+			
 		if (tipoStr == null) {
 			listaTurnos = TurnoHandler.listTodosTurnos(null, codRes, includeServs, errorBean);
 		} else {
 			TipoTurno tipo = TipoTurno.safeValueOf(tipoStr);
 			listaTurnos = TurnoHandler.listTurnosTipo(null, codRes, tipo, includeServs, errorBean);
 		}
-		
-		if(listaTurnos == null) {
-			respuesta = new RespuestaBean<TurnoBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<TurnoBean>(listaTurnos);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+
+		return creaRespuestaGenericaGETLista(listaTurnos, errorBean);
 	}
 	
 	@GET
@@ -77,15 +69,8 @@ public class TurnoServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_INC_SERVS) @DefaultValue("false") boolean includeServs) {
 		ErrorBean errorBean = new ErrorBean();
 		TurnoBean turno = TurnoHandler.getTurno(null, codRes, codTurno, includeServs, errorBean);
-		RespuestaBean<TurnoBean> respuesta = null;
 
-		if(turno == null) {
-			respuesta = new RespuestaBean<TurnoBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<TurnoBean>(turno);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaGET(turno, errorBean);
 	}
 	
 	@POST
@@ -94,18 +79,9 @@ public class TurnoServicio extends GenericServicio{
 	public Response nuevoTurno(TurnoBean turnoRaw, 
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean aut = TurnoHandler.autenticar(null, null); //TODO
-		TurnoBean turno = TurnoHandler.insertTurno(null, codRes, turnoRaw, aut, errorBean);
-		RespuestaBean<TurnoBean> respuesta = null;
+		TurnoBean turno = TurnoHandler.insertTurno(null, codRes, turnoRaw, errorBean);
 
-		if(turno == null) {
-			respuesta = new RespuestaBean<TurnoBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<TurnoBean>(turno);
-			respuesta.setHtmlStatus(Status.CREATED);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaPOST(turno, errorBean);
 	}
 	
 	@PUT
@@ -116,18 +92,9 @@ public class TurnoServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean aut = TurnoHandler.autenticar(null, null); //TODO
-		TurnoBean turno = TurnoHandler.updateTurno(null, codRes, codTurno, turnoRaw, aut, errorBean);
-		RespuestaBean<TurnoBean> respuesta = null;
-		
-		if(turno == null) {
-			respuesta = new RespuestaBean<TurnoBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<TurnoBean>(turno);
-			respuesta.setHtmlStatus(Status.ACCEPTED);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		TurnoBean turno = TurnoHandler.updateTurno(null, codRes, codTurno, turnoRaw, errorBean);
+
+		return creaRespuestaGenericaPUT(turno, errorBean);
 	}
 	
 	@DELETE
@@ -136,18 +103,9 @@ public class TurnoServicio extends GenericServicio{
 	public Response borraTurno(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean aut = TurnoHandler.autenticar(null, null); //TODO
-		boolean borrado = TurnoHandler.deleteTurno(null, codRes, codTurno, aut, errorBean);
-		RespuestaBean<TurnoBean> respuesta = null;
+		boolean borrado = TurnoHandler.deleteTurno(null, codRes, codTurno, errorBean);
 		
-		if(borrado) {
-			respuesta = new RespuestaBean<TurnoBean>();
-			respuesta.setHtmlStatus(Status.ACCEPTED);
-		} else {
-			respuesta = new RespuestaBean<TurnoBean>(errorBean);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaDELETE(borrado, ResidenciaBean.class, errorBean);
 	}
 	
 }

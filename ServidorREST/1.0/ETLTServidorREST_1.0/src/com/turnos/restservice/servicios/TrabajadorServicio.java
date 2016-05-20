@@ -57,15 +57,8 @@ public class TrabajadorServicio extends GenericServicio{
 		int[] limiteOffset = calculaLimiteOffsetCorrectos(limite, offset);
 		limite = limiteOffset[0]; offset = limiteOffset[1];
 		ArrayList<TrabajadorBean> listaTrabajadores = TrabajadorHandler.listTrabajadores(null, codTrab, errorBean);
-		RespuestaBean<TrabajadorBean> respuesta = null;
-		
-		if(listaTrabajadores == null) {
-			respuesta = new RespuestaBean<TrabajadorBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<TrabajadorBean>(listaTrabajadores);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+
+		return creaRespuestaGenericaGETLista(listaTrabajadores, errorBean, limite, offset);
 	}
 	
 	@GET
@@ -75,15 +68,8 @@ public class TrabajadorServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
 		TrabajadorBean trabajador = TrabajadorHandler.getTrabajador(null, codRes, codTrab, errorBean);
-		RespuestaBean<TrabajadorBean> respuesta = null;
 
-		if(trabajador == null) {
-			respuesta = new RespuestaBean<TrabajadorBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<TrabajadorBean>(trabajador);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaGET(trabajador, errorBean);
 	}
 	
 	@POST
@@ -93,16 +79,8 @@ public class TrabajadorServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes) {
 		ErrorBean errorBean = new ErrorBean();
 		TrabajadorBean trabajador = TrabajadorHandler.insertTrabajador(null, codRes, trabRaw, errorBean);
-		RespuestaBean<TrabajadorBean> respuesta = null;
 
-		if(trabajador == null) {
-			respuesta = new RespuestaBean<TrabajadorBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<TrabajadorBean>(trabajador);
-			respuesta.setHtmlStatus(Status.CREATED);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaPOST(trabajador, errorBean);
 	}
 	
 	@PUT
@@ -114,16 +92,8 @@ public class TrabajadorServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
 		TrabajadorBean trabajador = TrabajadorHandler.updateTrabajador(null, codRes, codTrab, trabRaw, errorBean);
-		RespuestaBean<TrabajadorBean> respuesta = null;
-		
-		if(trabajador == null) {
-			respuesta = new RespuestaBean<TrabajadorBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<TrabajadorBean>(trabajador);
-			respuesta.setHtmlStatus(Status.ACCEPTED);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+
+		return creaRespuestaGenericaPUT(trabajador, errorBean);
 	}
 	
 	@DELETE
@@ -133,16 +103,8 @@ public class TrabajadorServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean borrado = TrabajadorHandler.deleteTrabajador(null, codRes, codTrab, errorBean);
-		RespuestaBean<TrabajadorBean> respuesta = null;
-		
-		if(borrado) {
-			respuesta = new RespuestaBean<TrabajadorBean>();
-			respuesta.setHtmlStatus(Status.ACCEPTED);
-		} else {
-			respuesta = new RespuestaBean<TrabajadorBean>(errorBean);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+
+		return creaRespuestaGenericaDELETE(borrado, TrabajadorBean.class, errorBean);
 	}
 	
 	
@@ -154,7 +116,6 @@ public class TrabajadorServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_FECHA)
 			@DefaultValue("-1") int time) {
 		Date fecha = null;
-		RespuestaBean<TurnoTrabajadorDiaBean> respuesta = null;
 		ErrorBean eb = new ErrorBean();
 		try {
 			if (time > 0) {
@@ -170,13 +131,8 @@ public class TrabajadorServicio extends GenericServicio{
 		}
 
 		TurnoTrabajadorDiaBean turno = TurnoTrabajadorDiaHandler.getTurnoTrabajadorDia(null, codRes, codTrab, fecha, eb);
-		if(turno == null) {
-			respuesta = new RespuestaBean<TurnoTrabajadorDiaBean>(eb);
-		} else {
-			respuesta = new RespuestaBean<TurnoTrabajadorDiaBean>(turno);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+
+		return creaRespuestaGenericaGET(turno, eb);
 	}
 
 	@GET
@@ -209,14 +165,9 @@ public class TrabajadorServicio extends GenericServicio{
 			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s48", loc, msg, params);
 		}
 		
-		ArrayList<TurnoTrabajadorDiaBean> listaTurnos = TurnoTrabajadorDiaHandler.getTurnosTrabajadorRango(null, codRes, codTrab, fecha_ini, fecha_fin, usuarioLog, eb);
-		if(listaTurnos == null) {
-			respuesta = new RespuestaBean<TurnoTrabajadorDiaBean>(eb);
-		} else {
-			respuesta = new RespuestaBean<TurnoTrabajadorDiaBean>(listaTurnos);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		ArrayList<TurnoTrabajadorDiaBean> listaTurnos = TurnoTrabajadorDiaHandler.getTurnosTrabajadorRango(null, codRes, codTrab, fecha_ini, fecha_fin,  eb);
+
+		return creaRespuestaGenericaGETLista(listaTurnos, eb, -1, -1 );
 	}
 
 }

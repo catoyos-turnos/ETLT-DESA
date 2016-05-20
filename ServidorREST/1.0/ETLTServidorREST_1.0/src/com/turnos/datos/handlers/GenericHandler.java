@@ -61,7 +61,7 @@ public abstract class GenericHandler {
 		
 		if(usuarioLog != null && usuarioLog.getIdUsuario() != -1 && usuarioLog.isActivado()) {
 			if(usuarioLog.getCodRes() == null || usuarioLog.getCodTrab() == null) {
-				UsuarioBean aux = UsuarioHandler.getUsuario(null, usuarioLog.getIdUsuario(), usuarioLog, new ErrorBean());
+				UsuarioBean aux = UsuarioHandler.getUsuario(null, usuarioLog.getIdUsuario(), new ErrorBean());
 				if(aux == null) {
 					usuarioLog.setIdUsuario(-1);
 				} else {

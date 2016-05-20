@@ -17,40 +17,28 @@ public class UsuarioHandler extends GenericHandler {
 
 	private static final int LOC_H = 90;
 
-	private static final String QUERY_GET_USER_COD =
-			"SELECT usr.id_usuario as idUsuario, get_nombre_usuario(usr.id_usuario) as nombre,"
-				+ "usr.user, trab.codigo as codTrab, res.codigo as codRes, usr.activado, usr.nivel "
+	private static final String QUERY_GET_USER_COD = "SELECT usr.id_usuario as idUsuario, get_nombre_usuario(usr.id_usuario) as nombre,"
+			+ "usr.user, trab.codigo as codTrab, res.codigo as codRes, usr.activado, usr.nivel "
 			+ "FROM app_usuario usr "
-				+ "LEFT JOIN trabajador trab ON usr.id_trabajador=trab.id_trabajador "
-				+ "LEFT JOIN residencia res ON usr.id_residencia=res.id_residencia "
+			+ "LEFT JOIN trabajador trab ON usr.id_trabajador=trab.id_trabajador "
+			+ "LEFT JOIN residencia res ON usr.id_residencia=res.id_residencia "
 			+ "WHERE usr.id_usuario=?";
 
-	private static final String QUERY_GET_USER_USER_PASS =
-			"SELECT usr.id_usuario as idUsuario, usr.user, usr.pass_hash, usr.activado, usr.nivel "
+	private static final String QUERY_GET_USER_USER_PASS = "SELECT usr.id_usuario as idUsuario, usr.user, usr.pass_hash, usr.activado, usr.nivel "
 			+ "FROM app_usuario usr WHERE usr.user=?";
 
-	private static final String UPDATE_INSERT_NUEVO_USER_ =
-			"INSERT INTO app_usuario(id_usuario, user, pass_hash, id_trabajador, id_residencia, activado) "
+	private static final String UPDATE_INSERT_NUEVO_USER_ = "INSERT INTO app_usuario(id_usuario, user, pass_hash, id_trabajador, id_residencia, activado) "
 			+ "VALUES ?,?,?,?,?,?"; // TODO ?
-	
-	private static final String UPDATE_UPDATE_USER = 
-			"UPDATE app_usuario SET %s WHERE id_usuario=?";
-	
+
+	private static final String UPDATE_UPDATE_USER = "UPDATE app_usuario SET %s WHERE id_usuario=?";
+
 	private static final String UPDATE_DELETE_USER = "DELETE FROM app_usuario WHERE id_usuario=?";
 
-	public static UsuarioBean getUsuario(Connection conexion, long codUser, UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static UsuarioBean getUsuario(Connection conexion, long codUser,
+			ErrorBean errorBean) {
 		int LOC_M = 1;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean auth = UsuarioHandler.autenticar(usuarioLog, HttpMethod.GET, codUser);
-		if(!auth) {
-			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57700500");
-			errorBean.updateMsg("Sin autenticar");
-			
-			terminaOperacion(nconexion, cierraConexion);
-			return null;
-		}
 
 		UsuarioBean usuario = null;
 		if (codUser >= 0) {
@@ -72,7 +60,8 @@ public class UsuarioHandler extends GenericHandler {
 				} else {
 					errorBean.setHttpCode(Status.BAD_REQUEST);
 					errorBean.updateErrorCode("91900102");
-					errorBean.updateMsg("no encontrado usuario con codigo: " + codUser);
+					errorBean.updateMsg("no encontrado usuario con codigo: "
+							+ codUser);
 				}
 			} catch (SQLException e) {
 				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
@@ -90,13 +79,15 @@ public class UsuarioHandler extends GenericHandler {
 		return usuario;
 	}
 
-	public static UsuarioBean getUsuario(Connection conexion, String user, String pass, ErrorBean errorBean) {
+	public static UsuarioBean getUsuario(Connection conexion, String user,
+			String pass, ErrorBean errorBean) {
 		int LOC_M = 2;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
 		UsuarioBean usuario = null;
-		if (user != null && !"".equals(user) && pass != null && !"".equals(pass)) {			
+		if (user != null && !"".equals(user) && pass != null
+				&& !"".equals(pass)) {
 			PreparedStatement ps = null;
 			ResultSet rs;
 			try {
@@ -106,7 +97,8 @@ public class UsuarioHandler extends GenericHandler {
 				if (rs.next()) {
 					boolean check = false;
 					try {
-						check = PasswordUtils.check(pass, rs.getString("pass_hash"));
+						check = PasswordUtils.check(pass,
+								rs.getString("pass_hash"));
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -143,87 +135,93 @@ public class UsuarioHandler extends GenericHandler {
 		return usuario;
 	}
 
-	public static UsuarioBean insertUsuario(Connection conexion, UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static UsuarioBean insertUsuario(Connection conexion, UsuarioBean userRaw,
+			ErrorBean errorBean) {
 		int LOC_M = 3;
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public static UsuarioBean modUserUsuario(Connection conexion, long codUser, String user,
-			UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static UsuarioBean modUserUsuario(Connection conexion, long codUser,
+			String user, ErrorBean errorBean) {
 		int LOC_M = 4;
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public static UsuarioBean modPassUsuario(Connection conexion, long codUser, String pass,
-			UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static UsuarioBean modPassUsuario(Connection conexion, long codUser,
+			String pass, ErrorBean errorBean) {
 		int LOC_M = 5;
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public static UsuarioBean modNombreUsuario(Connection conexion, long codUser, String nombre,
-			UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static UsuarioBean modNombreUsuario(Connection conexion,
+			long codUser, String nombre, ErrorBean errorBean) {
 		int LOC_M = 6;
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public static UsuarioBean activarUsuario(Connection conexion, long codUser,
-			UsuarioBean usuarioLog, ErrorBean errorBean) {
+			ErrorBean errorBean) {
 		int LOC_M = 7;
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public static UsuarioBean desactivarUsuario(Connection conexion, long codUser,
-			UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static UsuarioBean desactivarUsuario(Connection conexion,
+			long codUser, ErrorBean errorBean) {
 		int LOC_M = 8;
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public static UsuarioBean modNivelUsuario(Connection conexion, long codUser,
-			NivelUsuario nivel, UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static UsuarioBean modNivelUsuario(Connection conexion,
+			long codUser, NivelUsuario nivel, ErrorBean errorBean) {
 		int LOC_M = 9;
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public static boolean deleteUsuario(Connection conexion, long codUser,
-			UsuarioBean usuarioLog, ErrorBean errorBean) {
+			ErrorBean errorBean) {
 		int LOC_M = 10;
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-
-
-	public static boolean autenticar(UsuarioBean usuarioLog, String metodo, long idUsuarioRelevante) {
-		if(metodo.equals(HttpMethod.GET) || metodo.equals(HttpMethod.HEAD) || metodo.equals(HttpMethod.OPTIONS)) {
+	public static boolean autenticar(UsuarioBean usuarioLog, String metodo,
+			long idUsuarioRelevante) {
+		if (metodo.equals(HttpMethod.GET) || metodo.equals(HttpMethod.HEAD)
+				|| metodo.equals(HttpMethod.OPTIONS)) {
 			return true;
 		} else {
-			if(usuarioLog!=null && usuarioLog.getIdUsuario()!=-1 && usuarioLog.isActivado()) {
-				NivelUsuario nivel = NivelUsuario.safeValueOf(usuarioLog.getNivel());
-				if (nivel == null) return false;
-				else if(nivel == NivelUsuario.SUPERADMIN) {
+			if (usuarioLog != null && usuarioLog.getIdUsuario() != -1
+					&& usuarioLog.isActivado()) {
+				NivelUsuario nivel = NivelUsuario.safeValueOf(usuarioLog
+						.getNivel());
+				if (nivel == null)
+					return false;
+				else if (nivel == NivelUsuario.SUPERADMIN) {
 					return true;
-				} else if(nivel == NivelUsuario.BANEADO) {
+				} else if (nivel == NivelUsuario.BANEADO) {
 					return false;
 				} else {
 					return (usuarioLog.getIdUsuario() == idUsuarioRelevante);
 				}
-			} else return false;
+			} else
+				return false;
 		}
 	}
-	
-	//@Override
-	public static boolean autenticar(UsuarioBean usuarioLog, String metodo, String codTrabRelevante, String codResRelevante) {
+
+	// @Override
+	public static boolean autenticar(UsuarioBean usuarioLog, String metodo,
+			String codTrabRelevante, String codResRelevante) {
 		return false;
 	}
 
-	//@Override
+	// @Override
 	public static boolean autenticar(UsuarioBean usuarioLog, String metodo) {
 		return false;
 	}

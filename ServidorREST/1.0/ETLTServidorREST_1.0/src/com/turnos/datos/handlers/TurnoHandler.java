@@ -3,8 +3,6 @@ package com.turnos.datos.handlers;
 import java.sql.Connection;
 import java.util.ArrayList;
 
-import javax.ws.rs.core.Response.Status;
-
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.TurnoBean;
 import com.turnos.datos.vo.TurnoBean.TipoTurno;
@@ -105,17 +103,11 @@ public class TurnoHandler extends GenericHandler {
 	}
 
 	public static TurnoBean insertTurno(Connection conexion, String codRes,
-			TurnoBean turnoRaw, boolean aut, ErrorBean errorBean) {
+			TurnoBean turnoRaw, ErrorBean errorBean) {
 		int LOC_M = 5;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		if (!aut) {
-			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57730300");
-			errorBean.updateMsg("Sin autenticar");
-			return null;
-		}
-
+		
 		TurnoBean turno = null;
 		try {
 			// TODO Auto-generated method stub
@@ -126,16 +118,10 @@ public class TurnoHandler extends GenericHandler {
 	}
 
 	public static TurnoBean updateTurno(Connection conexion, String codRes,
-			String codTurno, TurnoBean turnoRaw, boolean aut, ErrorBean errorBean) {
+			String codTurno, TurnoBean turnoRaw,  ErrorBean errorBean) {
 		int LOC_M = 6;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		if (!aut) {
-			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57730400");
-			errorBean.updateMsg("Sin autenticar");
-			return null;
-		}
 
 		TurnoBean turno = null;
 		try {
@@ -147,16 +133,10 @@ public class TurnoHandler extends GenericHandler {
 	}
 
 	public static boolean deleteTurno(Connection conexion, String codRes,
-			String codTurno, boolean aut, ErrorBean errorBean) {
+			String codTurno, ErrorBean errorBean) {
 		int LOC_M = 7;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		if (!aut) {
-			errorBean.setHttpCode(Status.FORBIDDEN);
-			errorBean.updateErrorCode("57730500");
-			errorBean.updateMsg("Sin autenticar");
-			return false;
-		}
 
 		boolean res = false;
 		try {

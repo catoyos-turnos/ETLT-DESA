@@ -7,14 +7,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.MunicipioBean;
 import com.turnos.datos.vo.ResidenciaBean;
-import com.turnos.datos.vo.UsuarioBean;
 
 public class ResidenciaHandler extends GenericHandler {
 
@@ -63,7 +61,7 @@ public class ResidenciaHandler extends GenericHandler {
 	private static final String UPDATE_UPDATE_RESIDENCIA = "UPDATE residencia SET %s WHERE codigo=?";
 	private static final String UPDATE_DELETE_RESIDENCIA = "DELETE FROM residencia WHERE codigo=?";
 
-	public static boolean existeResidencia(Connection conexion, String codigo, UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static boolean existeResidencia(Connection conexion, String codigo, ErrorBean errorBean) {
 		int LOC_M = 1;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -91,7 +89,7 @@ public class ResidenciaHandler extends GenericHandler {
 		}
 	}
 
-	public static ResidenciaBean getResidencia(Connection conexion, String codigo, boolean includeGeo, UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static ResidenciaBean getResidencia(Connection conexion, String codigo, boolean includeGeo, ErrorBean errorBean) {
 		int LOC_M = 2;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -135,7 +133,7 @@ public class ResidenciaHandler extends GenericHandler {
 
 	public static ArrayList<ResidenciaBean> listResidencias(Connection conexion,
 			TipoBusqueda tipo, String[] busqueda, boolean includeGeo, int limite, int offset,
-			UsuarioBean usuarioLog, ErrorBean errorBean) {
+			ErrorBean errorBean) {
 		int LOC_M = 3;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -204,17 +202,10 @@ public class ResidenciaHandler extends GenericHandler {
 		return listaRess;
 	}
 
-	public static ResidenciaBean insertResidencia(Connection conexion, ResidenciaBean resRaw, UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static ResidenciaBean insertResidencia(Connection conexion, ResidenciaBean resRaw, ErrorBean errorBean) {
 		int LOC_M = 4;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean auth = autenticar(usuarioLog, HttpMethod.POST);
-		if(!auth) {
-			int[] loc = {LOC_H,LOC_M,0};
-			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
-			terminaOperacion(nconexion, cierraConexion);
-			return null;
-		}
 
 		ResidenciaBean res = null;
 		if (resRaw != null) {
@@ -222,7 +213,7 @@ public class ResidenciaHandler extends GenericHandler {
 			String codigo;
 			do {
 				codigo = generaNuevoResCodigo(resRaw, i++);
-			} while (existeResidencia(nconexion, codigo, usuarioLog, errorBean) && i < 10);
+			} while (existeResidencia(nconexion, codigo, errorBean) && i < 10);
 			if(i >= 10) {
 				int[] loc = {LOC_H,LOC_M,2};
 				ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "nombre demasiado común, intenta otro nombre");
@@ -238,7 +229,7 @@ public class ResidenciaHandler extends GenericHandler {
 				ps.setString(5, resRaw.getMunicipioCod());
 				int c = ps.executeUpdate();
 				if (c > 0) {
-					res = getResidencia(nconexion, codigo, true, usuarioLog, errorBean);
+					res = getResidencia(nconexion, codigo, true, errorBean);
 					if(res == null) {
 						int[] loc = {LOC_H,LOC_M,4};
 						ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h96", loc, "no insertada (?)");
@@ -260,17 +251,10 @@ public class ResidenciaHandler extends GenericHandler {
 	}
 
 	public static ResidenciaBean updateResidencia(Connection conexion,
-			String codigo, ResidenciaBean resRaw, UsuarioBean usuarioLog, ErrorBean errorBean) {
+			String codigo, ResidenciaBean resRaw,ErrorBean errorBean) {
 		int LOC_M = 5;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean auth = autenticar(usuarioLog, HttpMethod.PUT, null, codigo);
-		if(!auth) {
-			int[] loc = {LOC_H,LOC_M,0};
-			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
-			terminaOperacion(nconexion, cierraConexion);
-			return null;
-		}
 		
 		ResidenciaBean res = null;
 		if (resRaw != null) {
@@ -310,7 +294,7 @@ public class ResidenciaHandler extends GenericHandler {
 
 					int c = ps.executeUpdate();
 					if (c > 0) {
-						res = getResidencia(nconexion, codigo, true, usuarioLog, errorBean);
+						res = getResidencia(nconexion, codigo, true, errorBean);
 						if(res == null) {
 							int[] loc = {LOC_H,LOC_M,4};
 							ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h96", loc, "???");
@@ -336,17 +320,10 @@ public class ResidenciaHandler extends GenericHandler {
 		return res;
 	}
 
-	public static boolean deleteResidencia(Connection conexion, String codigo, UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static boolean deleteResidencia(Connection conexion, String codigo, ErrorBean errorBean) {
 		int LOC_M = 6;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean auth = autenticar(usuarioLog, HttpMethod.DELETE, null, codigo);
-		if(!auth) {
-			int[] loc = {LOC_H,LOC_M,0};
-			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
-			terminaOperacion(nconexion, cierraConexion);
-			return false;
-		}
 		
 		try {
 			PreparedStatement ps = nconexion.prepareStatement(UPDATE_DELETE_RESIDENCIA);

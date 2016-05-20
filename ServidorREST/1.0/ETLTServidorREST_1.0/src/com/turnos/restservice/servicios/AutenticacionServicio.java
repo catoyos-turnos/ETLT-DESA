@@ -13,6 +13,9 @@ import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.CriptoUtils;
 import com.turnos.datos.WebServUtils;
+import com.turnos.datos.handlers.UsuarioHandler;
+import com.turnos.datos.vo.ErrorBean;
+import com.turnos.datos.vo.SesionBean;
 import com.turnos.datos.vo.UsuarioBean;
 import com.turnos.restservice.filtros.AutenticacionFiltro;
 
@@ -46,28 +49,29 @@ public class AutenticacionServicio extends GenericServicio{
 	@Path(WebServUtils.PREF_LOGIN_PATH)
 	public Response login() {
 
-		if(usuarioLog == null) {
-			System.out.println("usuarioLog == null");
-		} else {
-			System.out.println(usuarioLog.getIdUsuario()
-					+","+usuarioLog.getUser()+","+usuarioLog.getNombre()
-					+","+usuarioLog.getNivel()+","+usuarioLog.isActivado());
-		}
-		
-		
+		ErrorBean errorBean = new ErrorBean();
+		long time = System.currentTimeMillis();
 		String tokenSesion = null;
+		UsuarioBean usuario = null;
+		SesionBean sesion = null;
 		if(usuarioLog!=null && secretKey!=null && servidorKey!=null) {
-			tokenSesion = generaTokenSesion(usuarioLog, secretKey, servidorKey);
+			tokenSesion = generaTokenSesion(usuarioLog, secretKey, servidorKey, time);
+			usuario = UsuarioHandler.getUsuario(null, usuarioLog.getIdUsuario(), errorBean);
+			if(tokenSesion!=null && usuario!=null) {
+				sesion = new SesionBean();
+				sesion.setTokenSesion(tokenSesion);
+				sesion.setUsuario(usuario);
+			}
 		}
-		
-		if(tokenSesion == null) {
-			return Response.status(Status.UNAUTHORIZED).build();
+
+		if(sesion == null) {
+			return Response.status(Status.UNAUTHORIZED).entity(errorBean).build();
 		} else {
-			return Response.status(Status.OK).entity(tokenSesion).build();
+			return Response.status(Status.OK).entity(sesion).build();
 		}
 	}
 	
-	private static String generaTokenSesion(UsuarioBean res, String secretKey, String servidorKey){
+	private static String generaTokenSesion(UsuarioBean res, String secretKey, String servidorKey, long time){
 		String[] fieldsB = new String[4];
 		fieldsB[0] = "" + res.getIdUsuario();
 		fieldsB[1] = res.getUser();
@@ -76,7 +80,7 @@ public class AutenticacionServicio extends GenericServicio{
 		String desncrB = String.join(":", fieldsB);
 		String[] fields = new String[3];
 		fields[0] = CriptoUtils.generaRandomHexString(8); //sal
-		fields[1] = "" + System.currentTimeMillis();
+		fields[1] = "" + time;
 		try {
 			fields[2] = CriptoUtils.encripta(desncrB, secretKey);
 			String desncrA = String.join("@", fields);

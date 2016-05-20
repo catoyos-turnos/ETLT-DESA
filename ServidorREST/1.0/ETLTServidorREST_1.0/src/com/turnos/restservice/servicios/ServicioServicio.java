@@ -19,12 +19,10 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.WebServUtils;
 import com.turnos.datos.handlers.ServicioHandler;
 import com.turnos.datos.vo.ErrorBean;
-import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.ServicioBean;
 import com.turnos.datos.vo.UsuarioBean;
 
@@ -55,16 +53,9 @@ public class ServicioServicio extends GenericServicio{
 		ErrorBean errorBean = new ErrorBean();
 		int[] limiteOffset = calculaLimiteOffsetCorrectos(limite, offset);
 		limite = limiteOffset[0]; offset = limiteOffset[1];
-		ArrayList<ServicioBean> listaServicios = ServicioHandler.listServicios(null, codRes, codTurno, limite, offset, usuarioLog, errorBean);
-		RespuestaBean<ServicioBean> respuesta = null;
-
-		if (listaServicios == null) {
-			respuesta = new RespuestaBean<ServicioBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<ServicioBean>(listaServicios);
-		}
-
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		ArrayList<ServicioBean> listaServicios = ServicioHandler.listServicios(null, codRes, codTurno, limite, offset, errorBean);
+		
+		return creaRespuestaGenericaGETLista(listaServicios, errorBean, limite, offset);
 	}
 	
 	@GET
@@ -74,16 +65,9 @@ public class ServicioServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
 		ErrorBean errorBean = new ErrorBean();
-		ServicioBean servicio = ServicioHandler.getServicio(null, codServ, usuarioLog, errorBean);
-		RespuestaBean<ServicioBean> respuesta = null;
+		ServicioBean servicio = ServicioHandler.getServicio(null, codServ, errorBean);
 
-		if(servicio == null) {
-			respuesta = new RespuestaBean<ServicioBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<ServicioBean>(servicio);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaGET(servicio, errorBean);
 	}
 	
 	@POST
@@ -93,18 +77,9 @@ public class ServicioServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean aut = ServicioHandler.autenticar(null, null); //TODO
-		ServicioBean servicio = ServicioHandler.insertServicio(null, codRes, servicioRaw, usuarioLog, errorBean);
-		RespuestaBean<ServicioBean> respuesta = null;
+		ServicioBean servicio = ServicioHandler.insertServicio(null, codRes, servicioRaw, errorBean);
 
-		if(servicio == null) {
-			respuesta = new RespuestaBean<ServicioBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<ServicioBean>(servicio);
-			respuesta.setHtmlStatus(Status.CREATED);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaPOST(servicio, errorBean);
 	}
 	
 	@PUT
@@ -116,18 +91,9 @@ public class ServicioServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean aut = ServicioHandler.autenticar(null, null); //TODO
-		ServicioBean servicio = ServicioHandler.updateServicio(null, codRes, codServ, servicioRaw, usuarioLog, errorBean);
-		RespuestaBean<ServicioBean> respuesta = null;
-		
-		if(servicio == null) {
-			respuesta = new RespuestaBean<ServicioBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<ServicioBean>(servicio);
-			respuesta.setHtmlStatus(Status.ACCEPTED);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		ServicioBean servicio = ServicioHandler.updateServicio(null, codRes, codServ, servicioRaw, errorBean);
+
+		return creaRespuestaGenericaPUT(servicio, errorBean);
 	}
 	
 	@DELETE
@@ -137,18 +103,9 @@ public class ServicioServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
 			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean aut = ServicioHandler.autenticar(null, null); //TODO
-		boolean borrado = ServicioHandler.deleteServicio(null, codRes, codServ, usuarioLog, errorBean);
-		RespuestaBean<ServicioBean> respuesta = null;
+		boolean borrado = ServicioHandler.deleteServicio(null, codRes, codServ, errorBean);
 
-		if(borrado) {
-			respuesta = new RespuestaBean<ServicioBean>();
-			respuesta.setHtmlStatus(Status.ACCEPTED);
-		} else {
-			respuesta = new RespuestaBean<ServicioBean>(errorBean);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaDELETE(borrado, ServicioBean.class, errorBean);
 	}
 
 }

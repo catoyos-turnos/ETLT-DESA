@@ -17,14 +17,12 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.WebServUtils;
 import com.turnos.datos.handlers.MensajeHandler;
 import com.turnos.datos.handlers.MensajeHandler.RolUsuario;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.MensajeBean;
-import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.UsuarioBean;
 
 @Api(value = "Mensaje")
@@ -54,21 +52,13 @@ public class MensajeServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_PROF_RESPUESTAS) @DefaultValue("0") int profRespuestas // (niveles de respuesta a devolver)
 			) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean aut = MensajeHandler.autenticar(null, null);
 		RolUsuario rol = RolUsuario.safeValueOf(rolStr);
 		if(rol == null) {
 			rol = RolUsuario.DESTINATARIO;
 		}
-		RespuestaBean<MensajeBean> respuesta;
-		ArrayList<MensajeBean> listaMensajes = MensajeHandler.listMensajesUser(null, codUser, rol, incLeidos, profRespuestas, original, limite, offset, usuarioLog, errorBean);
-		
-		if(listaMensajes == null) {
-			respuesta = new RespuestaBean<MensajeBean>(listaMensajes);
-		} else {
-			respuesta = new RespuestaBean<MensajeBean>(listaMensajes);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		ArrayList<MensajeBean> listaMensajes = MensajeHandler.listMensajesUser(null, codUser, rol, incLeidos, profRespuestas, original, limite, offset, errorBean);
+
+		return creaRespuestaGenericaGETLista(listaMensajes, errorBean, limite, offset);
 	}
 
 	@GET
@@ -84,18 +74,9 @@ public class MensajeServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_PROF_RESPUESTAS) @DefaultValue("0") int profRespuestas // (niveles de respuesta a devolver)
 			) {
 		ErrorBean errorBean = new ErrorBean();
-		boolean aut = MensajeHandler.autenticar(null, null);
+		ArrayList<MensajeBean> listaMensajes = MensajeHandler.listRespuestasMensaje(null, codMensaje, profRespuestas, limite, offset,  errorBean);
 		
-		RespuestaBean<MensajeBean> respuesta;
-		ArrayList<MensajeBean> listaMensajes = MensajeHandler.listRespuestasMensaje(null, codMensaje, profRespuestas, limite, offset, usuarioLog, errorBean);
-		
-		if(listaMensajes == null) {
-			respuesta = new RespuestaBean<MensajeBean>(listaMensajes);
-		} else {
-			respuesta = new RespuestaBean<MensajeBean>(listaMensajes);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaGETLista(listaMensajes, errorBean, limite, offset);
 	}
 
 	@GET
@@ -107,17 +88,9 @@ public class MensajeServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_PROF_RESPUESTAS) @DefaultValue("1") int profRespuestas,
 			@QueryParam(WebServUtils.Q_PARAM_INC_MSG_ORIGINAL) @DefaultValue("false") boolean original) {
 		ErrorBean errorBean = new ErrorBean();
-		RespuestaBean<MensajeBean> respuesta = null;
-		boolean aut = MensajeHandler.autenticar(null, null);
-		MensajeBean privado = MensajeHandler.getMensaje(null, codMensaje, profRespuestas, original, usuarioLog, errorBean);
+		MensajeBean privado = MensajeHandler.getMensaje(null, codMensaje, profRespuestas, original, errorBean);
 		
-		if (privado == null) {
-			respuesta = new RespuestaBean<MensajeBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<MensajeBean>(privado);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaGET(privado, errorBean);
 	}
 
 	@POST
@@ -126,18 +99,9 @@ public class MensajeServicio extends GenericServicio{
 	public Response nuevoMensaje(MensajeBean privadoRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
 		ErrorBean errorBean = new ErrorBean();
-		RespuestaBean<MensajeBean> respuesta = null;
-		boolean aut = MensajeHandler.autenticar(null, null);
-		MensajeBean privado = MensajeHandler.insertMensaje(null, privadoRaw, usuarioLog, errorBean);
+		MensajeBean privado = MensajeHandler.insertMensaje(null, privadoRaw, errorBean);
 
-		if(privado == null) {
-			respuesta = new RespuestaBean<MensajeBean>(errorBean);
-		} else {
-			respuesta = new RespuestaBean<MensajeBean>(privado);
-			respuesta.setHtmlStatus(Status.CREATED);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaPOST(privado, errorBean);
 	}
 
 	//TODO leido get/post/put/delete

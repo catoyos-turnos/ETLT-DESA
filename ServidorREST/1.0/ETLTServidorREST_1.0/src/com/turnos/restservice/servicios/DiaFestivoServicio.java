@@ -13,6 +13,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -31,7 +32,6 @@ import com.turnos.datos.handlers.FestivoHandler;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.FestivoBean;
 import com.turnos.datos.vo.FestivoBean.TipoFiesta;
-import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.UsuarioBean;
 
 @Api(value = "Día Festivo")
@@ -85,7 +85,6 @@ public class DiaFestivoServicio extends GenericServicio{
 		TipoFiesta tipo = TipoFiesta.safeValueOf(tipoStr);
 		int[] limiteOffset = calculaLimiteOffsetCorrectos(limite, offset, 20);
 		limite = limiteOffset[0]; offset = limiteOffset[1];
-		RespuestaBean<FestivoBean> respuesta = null;
 		
 		Date fecha_ini = null;
 		Date fecha_fin = null;
@@ -109,25 +108,19 @@ public class DiaFestivoServicio extends GenericServicio{
 
 		ArrayList<FestivoBean> listaFestivos = null;
 		if (!"".equals(codMunicipio)) {
-			listaFestivos = FestivoHandler.getFestivosMunicipio(null, codMunicipio, tipo, fecha_ini, fecha_fin, completo, incGeo, limite, offset, usuarioLog, eb);
+			listaFestivos = FestivoHandler.getFestivosMunicipio(null, codMunicipio, tipo, fecha_ini, fecha_fin, completo, incGeo, limite, offset,  eb);
 		} else if (!"".equals(codProvincia)) {
-			listaFestivos = FestivoHandler.getFestivosProvincia(null, codProvincia, tipo, fecha_ini, fecha_fin, completo, incGeo, limite, offset, usuarioLog, eb);
+			listaFestivos = FestivoHandler.getFestivosProvincia(null, codProvincia, tipo, fecha_ini, fecha_fin, completo, incGeo, limite, offset,  eb);
 		} else if (!"".equals(codPais)) {
-			listaFestivos = FestivoHandler.getFestivosPais(null, codPais, tipo, fecha_ini, fecha_fin, completo, incGeo, limite, offset, usuarioLog, eb);
+			listaFestivos = FestivoHandler.getFestivosPais(null, codPais, tipo, fecha_ini, fecha_fin, completo, incGeo, limite, offset,  eb);
 		} else {
 			int[] loc = {80,0,1};
 			String msg = "debe incluir parametros de busqueda: "
 					 + WebServUtils.Q_PARAM_COD_PAIS + ", " + WebServUtils.Q_PARAM_COD_PROV + ", o " + WebServUtils.Q_PARAM_COD_MUNI;
 			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s45", loc, msg, null);
 		}
-		
-		if(listaFestivos == null) {
-			respuesta = new RespuestaBean<FestivoBean>(eb);
-		} else {
-			respuesta = new RespuestaBean<FestivoBean>(listaFestivos);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+
+		return creaRespuestaGenericaGETLista(listaFestivos, eb, limite, offset);
 	}
 
 	@GET
@@ -139,16 +132,9 @@ public class DiaFestivoServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo) {
 		ErrorBean eb = new ErrorBean();
-		FestivoBean festivo = FestivoHandler.getFestivo(null, codFest, incGeo, usuarioLog, eb);
-		RespuestaBean<FestivoBean> respuesta;
+		FestivoBean festivo = FestivoHandler.getFestivo(null, codFest, incGeo,  eb);
 
-		if(festivo == null) {
-			respuesta = new RespuestaBean<FestivoBean>(eb);
-		} else {
-			respuesta = new RespuestaBean<FestivoBean>(festivo);
-		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+		return creaRespuestaGenericaGET(festivo, eb);
 	}
 
 	// ---------------------POST----------------------------------------------
@@ -160,18 +146,16 @@ public class DiaFestivoServicio extends GenericServicio{
 	@Valid
 	public Response nuevoDiaFestivo(FestivoBean festRaw) {
 		ErrorBean eb = new ErrorBean();
-		boolean aut = FestivoHandler.autenticar(null, null);
-		FestivoBean festivo = FestivoHandler.insertFestivo(null, festRaw, usuarioLog, eb);
-		RespuestaBean<FestivoBean> respuesta;
-
-		if(festivo == null) {
-			respuesta = new RespuestaBean<FestivoBean>(eb);
+		FestivoBean festivo = null;
+		boolean auth = FestivoHandler.autenticar(usuarioLog, HttpMethod.POST);
+		if(!auth) {
+			int[] loc = {80,3,0};
+			ErrorBeanFabrica.generaErrorBean(eb, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
 		} else {
-			respuesta = new RespuestaBean<FestivoBean>(festivo);
-			respuesta.setHtmlStatus(Status.CREATED);
+			festivo = FestivoHandler.insertFestivo(null, festRaw, eb);
 		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+
+		return creaRespuestaGenericaPOST(festivo, eb);
 	}
 
 	// ---------------------PUT-----------------------------------------------
@@ -186,18 +170,16 @@ public class DiaFestivoServicio extends GenericServicio{
 	public Response modDiaFestivo(FestivoBean festRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
 		ErrorBean eb = new ErrorBean();
-		boolean aut = FestivoHandler.autenticar(null, null);
-		FestivoBean festivo = FestivoHandler.updateFestivo(null, codFest, festRaw, usuarioLog, eb);
-		RespuestaBean<FestivoBean> respuesta;
-
-		if(festivo == null) {
-			respuesta = new RespuestaBean<FestivoBean>(eb);
+		FestivoBean festivo = null;
+		boolean auth = FestivoHandler.autenticar(usuarioLog, HttpMethod.PUT);
+		if(!auth) {
+			int[] loc = {80,4,0};
+			ErrorBeanFabrica.generaErrorBean(eb, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
 		} else {
-			respuesta = new RespuestaBean<FestivoBean>(festivo);
-			respuesta.setHtmlStatus(Status.ACCEPTED);
+			festivo = FestivoHandler.updateFestivo(null, codFest, festRaw, eb);
 		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+
+		return creaRespuestaGenericaPUT(festivo, eb);
 	}
 
 	// ---------------------DELETE--------------------------------------------
@@ -208,18 +190,16 @@ public class DiaFestivoServicio extends GenericServicio{
 	@Valid
 	public Response borraDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
 		ErrorBean eb = new ErrorBean();
-		boolean aut = FestivoHandler.autenticar(null, null);
-		boolean borrado = FestivoHandler.deleteFestivo(null, codFest, usuarioLog, eb);
-		RespuestaBean<FestivoBean> respuesta;
-
-		if(borrado) {
-			respuesta = new RespuestaBean<FestivoBean>();
-			respuesta.setHtmlStatus(Status.ACCEPTED);
+		boolean borrado = false;
+		boolean auth = FestivoHandler.autenticar(usuarioLog, HttpMethod.POST);
+		if(!auth) {
+			int[] loc = {80,3,0};
+			ErrorBeanFabrica.generaErrorBean(eb, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
 		} else {
-			respuesta = new RespuestaBean<FestivoBean>(eb);
+			borrado = FestivoHandler.deleteFestivo(null, codFest, eb);
 		}
-		
-		return Response.status(respuesta.getHtmlStatus()).entity(respuesta).build();
+
+		return creaRespuestaGenericaDELETE(borrado, FestivoBean.class, eb);
 	}
 
 	// ---------------------misc.---------------------------------------------

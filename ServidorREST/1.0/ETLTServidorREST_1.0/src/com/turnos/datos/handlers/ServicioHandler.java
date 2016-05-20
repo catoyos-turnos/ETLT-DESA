@@ -3,13 +3,8 @@ package com.turnos.datos.handlers;
 import java.sql.Connection;
 import java.util.ArrayList;
 
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.Response.Status;
-
-import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.ServicioBean;
-import com.turnos.datos.vo.UsuarioBean;
 
 public class ServicioHandler extends GenericHandler {
 
@@ -71,7 +66,7 @@ public class ServicioHandler extends GenericHandler {
 
 	private static final String UPDATE_DELETE_SERVICIO = "DELETE FROM servicio WHERE id_servicio=?";
 
-	public static boolean existeServicio(Connection conexion, int codServ, UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static boolean existeServicio(Connection conexion, int codServ, ErrorBean errorBean) {
 		int LOC_M = 1;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -89,7 +84,7 @@ public class ServicioHandler extends GenericHandler {
 	}
 
 	public static ArrayList<ServicioBean> listServicios(Connection conexion, String codRes, String codTurno,
-			int limite, int offset, UsuarioBean usuarioLog, ErrorBean errorBean) {
+			int limite, int offset,   ErrorBean errorBean) {
 		int LOC_M = 2;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -103,7 +98,7 @@ public class ServicioHandler extends GenericHandler {
 		return listaServs;
 	}
 
-	public static ServicioBean getServicio(Connection conexion, int codServ, UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static ServicioBean getServicio(Connection conexion, int codServ, ErrorBean errorBean) {
 		int LOC_M = 3;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -120,17 +115,10 @@ public class ServicioHandler extends GenericHandler {
 		return serv;
 	}
 
-	public static ServicioBean insertServicio(Connection conexion, String codRes, ServicioBean servRaw, UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static ServicioBean insertServicio(Connection conexion, String codRes, ServicioBean servRaw,  ErrorBean errorBean) {
 		int LOC_M = 4;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean auth = autenticar(usuarioLog, HttpMethod.POST, null, codRes);
-		if(!auth) {
-			int[] loc = {LOC_H,LOC_M,0};
-			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
-			terminaOperacion(nconexion, cierraConexion);
-			return null;
-		}
 		
 		ServicioBean serv = null;
 		try {
@@ -141,18 +129,10 @@ public class ServicioHandler extends GenericHandler {
 		return serv;
 	}
 
-	public static ServicioBean updateServicio(Connection conexion, String codRes, int codServ, ServicioBean servRaw, UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static ServicioBean updateServicio(Connection conexion, String codRes, int codServ, ServicioBean servRaw , ErrorBean errorBean) {
 		int LOC_M = 5;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean auth = autenticar(usuarioLog, HttpMethod.PUT, null, codRes);
-		if(!auth) {
-			int[] loc = {LOC_H,LOC_M,0};
-			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
-			terminaOperacion(nconexion, cierraConexion);
-			return null;
-		}
-		
 		ServicioBean serv = null;
 		try {
 			// TODO Auto-generated method stub
@@ -162,17 +142,10 @@ public class ServicioHandler extends GenericHandler {
 		return serv;
 	}
 
-	public static boolean deleteServicio(Connection conexion, String codRes, int codServ, UsuarioBean usuarioLog, ErrorBean errorBean) {
+	public static boolean deleteServicio(Connection conexion, String codRes, int codServ,  ErrorBean errorBean) {
 		int LOC_M = 6;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-		boolean auth = autenticar(usuarioLog, HttpMethod.DELETE, null, codRes);
-		if(!auth) {
-			int[] loc = {LOC_H,LOC_M,0};
-			ErrorBeanFabrica.generaErrorBean(errorBean, Status.FORBIDDEN, "h57", loc, "Sin autenticar");
-			terminaOperacion(nconexion, cierraConexion);
-			return false;
-		}
 		
 		boolean res = false;
 		try {
