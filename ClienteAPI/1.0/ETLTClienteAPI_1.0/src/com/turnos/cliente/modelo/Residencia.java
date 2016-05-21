@@ -155,5 +155,10 @@ public class Residencia {
 		//TODO
 		return null;
 	}
+
+	public static Residencia genera(ResidenciaBean residencia2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

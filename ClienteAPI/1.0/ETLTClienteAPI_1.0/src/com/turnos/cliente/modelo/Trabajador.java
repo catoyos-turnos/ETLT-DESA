@@ -41,4 +41,9 @@ public class Trabajador {
 		return null;
 	}
 
+	public static Trabajador genera(TrabajadorBean trabajador) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

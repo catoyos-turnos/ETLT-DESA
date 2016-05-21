@@ -8,13 +8,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @XmlRootElement(name = "respuesta")
 @JsonRootName(value = "respuesta")
 @JsonInclude(Include.NON_NULL)
 public class RespuestaBean<T extends ETLTBean> {
+	
+	@JsonDeserialize(as=ArrayList.class, contentAs=ETLTBean.class)
 	private List<T> listaResultados;
 	private ErrorBean error;
 	private int htmlStatus = Status.OK.getStatusCode();
@@ -80,16 +83,22 @@ public class RespuestaBean<T extends ETLTBean> {
 			return Status.fromStatusCode(htmlStatus);
 		}
 	}
-
+/*
 	public void setHtmlStatus(int htmlStatus) {
 		this.htmlStatus = htmlStatus;
 		if (this.error != null && this.error.getHttpCode() != null) {
 			this.error.setHttpCode(htmlStatus);
 		}
 	}
-
+*/
+	
 	public void setHtmlStatus(Status status) {
-		this.setHtmlStatus(status.getStatusCode());
+		if (status!=null) {
+			this.htmlStatus = status.getStatusCode();
+			if (this.error != null && this.error.getHttpCode() != null) {
+				this.error.setHttpCode(status);
+			}
+		}
 	}
 
 	public int getOffset() {

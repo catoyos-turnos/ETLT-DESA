@@ -190,13 +190,13 @@ public abstract class GenericHandler {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			errorBean.setHttpCode(500);
+			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
 			errorBean.updateErrorCode("72690001");
 			errorBean.updateMsg(e.getMessage());
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
-			errorBean.setHttpCode(500);
+			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
 			errorBean.updateErrorCode("72690002");
 			errorBean.updateMsg(e.getMessage());
 			return null;
@@ -254,13 +254,13 @@ public abstract class GenericHandler {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			errorBean.setHttpCode(500);
+			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
 			errorBean.updateErrorCode("72690101");
 			errorBean.updateMsg(e.getMessage());
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
-			errorBean.setHttpCode(500);
+			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
 			errorBean.updateErrorCode("72690102");
 			errorBean.updateMsg(e.getMessage());
 			return null;

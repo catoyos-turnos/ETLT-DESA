@@ -9,10 +9,10 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.CriptoUtils;
 import com.turnos.datos.WebServUtils;
+import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.handlers.UsuarioHandler;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.SesionBean;
@@ -48,7 +48,6 @@ public class AutenticacionServicio extends GenericServicio{
 	@GET
 	@Path(WebServUtils.PREF_LOGIN_PATH)
 	public Response login() {
-
 		ErrorBean errorBean = new ErrorBean();
 		long time = System.currentTimeMillis();
 		String tokenSesion = null;
@@ -61,14 +60,14 @@ public class AutenticacionServicio extends GenericServicio{
 				sesion = new SesionBean();
 				sesion.setTokenSesion(tokenSesion);
 				sesion.setUsuario(usuario);
+				sesion.setAbierto(time);
+				sesion.setTokenCaduca(AutenticacionFiltro.MARGEN_SESION + time);
+			} else {
+				ErrorBeanFabrica.generaUNAUTHORIZEDErrorBean(errorBean, "999999999", "no autorizado", null);
 			}
 		}
 
-		if(sesion == null) {
-			return Response.status(Status.UNAUTHORIZED).entity(errorBean).build();
-		} else {
-			return Response.status(Status.OK).entity(sesion).build();
-		}
+		return creaRespuestaGenericaGET(sesion, errorBean);
 	}
 	
 	private static String generaTokenSesion(UsuarioBean res, String secretKey, String servidorKey, long time){

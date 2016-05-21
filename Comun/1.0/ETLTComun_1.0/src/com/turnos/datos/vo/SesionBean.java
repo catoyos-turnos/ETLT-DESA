@@ -1,8 +1,9 @@
 package com.turnos.datos.vo;
 
-public class SesionBean {
+public class SesionBean extends ETLTBean {
 	private String tokenSesion;
 	private long abierto;
+	private long tokenCaduca;
 	private UsuarioBean usuario;
 
 	public String getTokenSesion() {
@@ -21,6 +22,14 @@ public class SesionBean {
 		this.abierto = abierto;
 	}
 
+	public long getTokenCaduca() {
+		return tokenCaduca;
+	}
+
+	public void setTokenCaduca(long tokenCaduca) {
+		this.tokenCaduca = tokenCaduca;
+	}
+
 	public UsuarioBean getUsuario() {
 		return usuario;
 	}
@@ -29,4 +38,8 @@ public class SesionBean {
 		this.usuario = usuario;
 	}
 
+
+    public static Class<?> getBeanClass() {
+    	return SesionBean.class;
+    }
 }

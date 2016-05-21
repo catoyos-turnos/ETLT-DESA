@@ -95,53 +95,6 @@ public class AutenticacionFiltro implements ContainerRequestFilter {
 		}
 	}
 
-	/*
-	 * TODO pasar a ClienteAPI
-	 */
-	/*
-	 * private String crearTokenLogin(String user, String pass, String
-	 * secretKey) { //TODO DEBUG BORRAR String[] fields = new String[4];
-	 * 
-	 * fields[0] = CipherUtils.generaRandomHexString(8); //sal (TODO RANDOMIZAR)
-	 * fields[1] = "" + System.currentTimeMillis(); fields[2] = user.trim();
-	 * fields[3] = pass.trim();
-	 * 
-	 * String desncr = String.join("@", fields); String tokenLogin = null; try {
-	 * tokenLogin = CriptoUtils.encripta(desncr, secretKey); } catch
-	 * (InvalidKeyException | UnsupportedEncodingException |
-	 * NoSuchAlgorithmException | NoSuchProviderException |
-	 * NoSuchPaddingException | ShortBufferException | IllegalBlockSizeException
-	 * | BadPaddingException e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); } System.out.println("tokenLogin: " + tokenLogin);
-	 * return tokenLogin; }
-	 */
-
-	/*
-	 * trasladado a AutenticacionServicio
-	 */
-	/*
-	 * private String crearTokenSesion(UsuarioBean res, String secretKey, String
-	 * servidorKey) { //TODO DEBUG BORRAR String[] fieldsB = new String[4];
-	 * fieldsB[0] = "" + res.getIdUsuario(); fieldsB[1] = res.getUser();
-	 * fieldsB[2] = res.getNivel(); fieldsB[3] = "" + res.isActivado(); String
-	 * desncrB = String.join(":", fieldsB); String[] fields = new String[3];
-	 * fields[0] = CipherUtils.generaRandomHexString(8); //sal (TODO RANDOMIZAR)
-	 * fields[1] = "" + System.currentTimeMillis(); try { fields[2] =
-	 * CriptoUtils.encripta(desncrB, secretKey); String desncrA =
-	 * String.join("@", fields); String tokenSesion = null; try { tokenSesion =
-	 * CriptoUtils.encripta(desncrA, servidorKey);
-	 * System.out.println("tokenSesion: " + tokenSesion); return tokenSesion; }
-	 * catch (InvalidKeyException | UnsupportedEncodingException |
-	 * NoSuchAlgorithmException | NoSuchProviderException |
-	 * NoSuchPaddingException | ShortBufferException | IllegalBlockSizeException
-	 * | BadPaddingException e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); } } catch (InvalidKeyException |
-	 * UnsupportedEncodingException | NoSuchAlgorithmException |
-	 * NoSuchProviderException | NoSuchPaddingException | ShortBufferException |
-	 * IllegalBlockSizeException | BadPaddingException e1) { // TODO
-	 * Auto-generated catch block e1.printStackTrace(); } return null; }
-	 */
-
 	private static UsuarioBean usuarioDesdeLogin(String tokenLogin,
 			String secretKey, String servidorKey, long ahora,
 			ErrorBean errorBean) {

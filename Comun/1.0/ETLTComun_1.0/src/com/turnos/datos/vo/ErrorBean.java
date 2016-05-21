@@ -37,7 +37,7 @@ public class ErrorBean {
 		this.httpCode = status;
 	}
 
-	public void setHttpCode(int status) {
+	public void setHttpCodeNum(int status) {
 		this.httpCode = Status.fromStatusCode(status);
 	}
 
