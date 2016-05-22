@@ -65,7 +65,6 @@ public class ResidenciaHandler extends GenericHandler {
 		int LOC_M = 1;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
-//		boolean auth = autenticar(usuarioLog, HttpMethod.GET);
 		
 		if(codigo == null || "".equals(codigo)) {
 			return false;
@@ -145,15 +144,15 @@ public class ResidenciaHandler extends GenericHandler {
 		try {
 			switch (tipo) {
 			case MUNICIPIO:
-				ps = nconexion.prepareStatement(QUERY_GET_LISTA_RESIDENCIAS_MUNI);
+				ps = nconexion.prepareStatement(anadeLimiteOffset(QUERY_GET_LISTA_RESIDENCIAS_MUNI, limite, offset));
 				ps.setString(1, busqueda[0]);
 				break;
 			case PROVINCIA:
-				ps = nconexion.prepareStatement(QUERY_GET_LISTA_RESIDENCIAS_PROV);
+				ps = nconexion.prepareStatement(anadeLimiteOffset(QUERY_GET_LISTA_RESIDENCIAS_PROV, limite, offset));
 				ps.setString(1, busqueda[0]);
 				break;
 			case PAIS:
-				ps = nconexion.prepareStatement(QUERY_GET_LISTA_RESIDENCIAS_PAIS);
+				ps = nconexion.prepareStatement(anadeLimiteOffset(QUERY_GET_LISTA_RESIDENCIAS_PAIS, limite, offset));
 				ps.setString(1, busqueda[0]);
 				break;
 			default:

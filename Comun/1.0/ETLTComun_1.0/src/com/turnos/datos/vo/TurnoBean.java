@@ -24,6 +24,10 @@ public class TurnoBean extends ETLTBean {
 	private String codResidencia;
 	private TipoTurno tipo;
 	private List<ServicioBean> servicios;
+	
+	public TurnoBean() {
+		super(TurnoBean.class);
+	}
 
 	public String getCodTurno() {
 		return codTurno;

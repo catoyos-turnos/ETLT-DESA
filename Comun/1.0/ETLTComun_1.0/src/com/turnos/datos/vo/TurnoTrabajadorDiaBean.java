@@ -13,6 +13,10 @@ public class TurnoTrabajadorDiaBean extends ETLTBean {
 	private ServicioBean servicio;
 	private TurnoBean turno;
 	private Date fecha;
+	
+	public TurnoTrabajadorDiaBean() {
+		super(TurnoTrabajadorDiaBean.class);
+	}
 
 	public TrabajadorBean getTrabajador() {
 		return trabajador;

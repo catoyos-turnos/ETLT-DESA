@@ -13,10 +13,18 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 @JsonRootName(value = "objeto")
 @JsonInclude(Include.NON_NULL)
 public abstract class ETLTBean {
-	public ETLTBean() { }
+	private String tipoBean;
+
+	public ETLTBean(Class<?> clz) {
+		this.tipoBean = clz.getCanonicalName();
+	}
+
+	public String getTipoBean() {
+		return tipoBean;
+	}
 	
 	public String toJSONString() {
-		ObjectWriter ow = new ObjectMapper().writer();
+		ObjectWriter ow = ETLTBeanDeserializer.mapperProvider.getContext().writer();
 		try {
 			return ow.writeValueAsString(this);
 		} catch (JsonProcessingException e) {

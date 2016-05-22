@@ -14,7 +14,11 @@ public class VacacionesBean extends ETLTBean {
 	private String codRes;
 	private Date fechaInicio;
 	private Date fechaFin;
-
+	
+	public VacacionesBean() {
+		super(VacacionesBean.class);
+	}
+	
 	public long getId_vacaciones() {
 		return id_vacaciones;
 	}

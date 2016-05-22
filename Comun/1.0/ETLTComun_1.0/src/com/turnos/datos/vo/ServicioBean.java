@@ -21,6 +21,9 @@ public class ServicioBean extends ETLTBean {
 	private String descripcion;
 	private ArrayList<ServicioTipoDiaBean> tiposDia;
 
+	public ServicioBean() {
+		super(ServicioBean.class);
+	}
 
 	public void setId_servicio(long id_servicio) {
 		this.id_servicio = id_servicio;

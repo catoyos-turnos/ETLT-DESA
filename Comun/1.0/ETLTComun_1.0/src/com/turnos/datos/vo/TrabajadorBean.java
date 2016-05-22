@@ -11,6 +11,10 @@ public class TrabajadorBean extends ETLTBean {
 	private String codResidencia;
 	private String nombre;
 	private String apellidos;
+	
+	public TrabajadorBean() {
+		super(TrabajadorBean.class);
+	}
 
 	public String getCodigo() {
 		return codigo;

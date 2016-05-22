@@ -13,6 +13,10 @@ public class ProvinciaBean extends ETLTBean {
 	private String paisCod;
 	private String paisNombre;
 	private String tz;
+	
+	public ProvinciaBean() {
+		super(ProvinciaBean.class);
+	}
 
 	public String getProvinciaCod() {
 		return provinciaCod;

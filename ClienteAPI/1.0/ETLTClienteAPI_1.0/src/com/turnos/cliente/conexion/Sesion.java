@@ -1,7 +1,5 @@
-package com.turnos.cliente.sesion;
+package com.turnos.cliente.conexion;
 
-import com.turnos.cliente.conexion.Aplicacion;
-import com.turnos.cliente.conexion.ClienteREST;
 import com.turnos.cliente.modelo.Usuario;
 import com.turnos.datos.CriptoUtils;
 import com.turnos.datos.vo.SesionBean;
@@ -29,7 +27,7 @@ public class Sesion {
 	}
 
 	public String getTokenSesion() {
-		if((System.currentTimeMillis() - tokenCaduca) < (60*1000)) refresca();
+		if((tokenCaduca-System.currentTimeMillis()) < (60*1000)) refresca();
 		return tokenSesion;
 	}
 

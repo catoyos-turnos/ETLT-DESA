@@ -19,6 +19,7 @@ import com.turnos.datos.vo.UsuarioBean;
 import com.turnos.datos.vo.UsuarioBean.NivelUsuario;
 //69xxxx
 public abstract class GenericHandler {
+	
 	private static final String QUERY_GET_INFO_DIA = "SELECT get_info_residencia_dia(?, ?) AS infodia";
 	private static final String QUERY_GET_INFO_RANGO_DIAS = "SELECT get_info_residencia_rango_dias(?, ?, ?) AS infodias";
 	
@@ -164,6 +165,29 @@ public abstract class GenericHandler {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	protected static String anadeLimiteOffset(String query, int limite, int offset){
+		String lim = null;
+		if(limite <= 0) {
+			return query;
+		} else if(offset > 0) {
+			lim = " LIMIT %d OFFSET %d";
+			lim = String.format(lim, limite, offset);
+		} else {
+			lim = " LIMIT %s";
+			lim = String.format(lim, limite);
+		}
+		
+		StringBuffer sb = new StringBuffer(query);
+		int id = -1;
+		if ((id = sb.lastIndexOf(";")) > 0) {
+			sb.insert(id, lim);
+		} else {
+			sb.append(lim);
+		}
+		
+		return sb.toString(); 
 	}
 	
 	protected static String[] getInfoDia(Connection conexion,

@@ -11,6 +11,10 @@ public class PaisBean extends ETLTBean {
 	private String paisNombre;
 	private String tz_estandar;
 
+	public PaisBean() {
+		super(PaisBean.class);
+	}
+
 	public String getPaisCod() {
 		return paisCod;
 	}

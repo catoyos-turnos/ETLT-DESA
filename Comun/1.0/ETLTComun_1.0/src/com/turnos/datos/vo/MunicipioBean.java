@@ -14,6 +14,10 @@ public class MunicipioBean extends ETLTBean {
 	private String paisCod;
 	private String paisNombre;
 	private String tz;
+	
+	public MunicipioBean() {
+		super(MunicipioBean.class);
+	}
 
 	public String getMunicipioCod() {
 		return municipioCod;

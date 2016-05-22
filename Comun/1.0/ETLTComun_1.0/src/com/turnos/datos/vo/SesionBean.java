@@ -6,6 +6,10 @@ public class SesionBean extends ETLTBean {
 	private long tokenCaduca;
 	private UsuarioBean usuario;
 
+	public SesionBean() {
+		super(SesionBean.class);
+	}
+
 	public String getTokenSesion() {
 		return tokenSesion;
 	}

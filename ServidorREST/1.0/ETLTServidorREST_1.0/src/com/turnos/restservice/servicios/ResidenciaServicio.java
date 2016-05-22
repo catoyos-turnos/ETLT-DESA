@@ -82,15 +82,15 @@ public class ResidenciaServicio extends GenericServicio{
 		if (!"".equals(municipio)) {
 			String[] busqueda = { municipio };
 			listaResidencias = ResidenciaHandler
-					.listResidencias(null, TipoBusqueda.MUNICIPIO, busqueda, includeGeo, limite, offset,  eb);
+					.listResidencias(null, TipoBusqueda.MUNICIPIO, busqueda, includeGeo, limite, offset, eb);
 		} else if (!"".equals(provincia)) {
 			String[] busqueda = { provincia };
 			listaResidencias = ResidenciaHandler
-					.listResidencias(null, TipoBusqueda.PROVINCIA, busqueda, includeGeo, limite, offset,  eb);
+					.listResidencias(null, TipoBusqueda.PROVINCIA, busqueda, includeGeo, limite, offset, eb);
 		} else if (!"".equals(pais)) {
 			String[] busqueda = { pais };
 			listaResidencias = ResidenciaHandler
-					.listResidencias(null, TipoBusqueda.PAIS, busqueda, includeGeo, limite, offset,  eb);
+					.listResidencias(null, TipoBusqueda.PAIS, busqueda, includeGeo, limite, offset, eb);
 		} else {
 			int[] loc = {70,0,0};
 			String msg = "debe incluir parametros de busqueda: "

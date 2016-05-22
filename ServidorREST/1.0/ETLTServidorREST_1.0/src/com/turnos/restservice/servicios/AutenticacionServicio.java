@@ -38,9 +38,6 @@ public class AutenticacionServicio extends GenericServicio{
 		this.secretKey = secretKObj == null ? null : (String) secretKObj;
 		Object servKObj = request.getProperty(AutenticacionFiltro.REQUEST_PARAM_SERVIDOR_KEY);
 		this.servidorKey = servKObj == null ? null : (String) servKObj;
-
-		System.out.println(secretKObj + "///" +  servKObj);
-		System.out.println(secretKey + "///" +  servidorKey);
 	}
 
 	// ---------------------GET-----------------------------------------------
@@ -63,7 +60,7 @@ public class AutenticacionServicio extends GenericServicio{
 				sesion.setAbierto(time);
 				sesion.setTokenCaduca(AutenticacionFiltro.MARGEN_SESION + time);
 			} else {
-				ErrorBeanFabrica.generaUNAUTHORIZEDErrorBean(errorBean, "999999999", "no autorizado", null);
+				ErrorBeanFabrica.generaUNAUTHORIZEDErrorBean(errorBean, "xx999999999", "no autorizado", null);
 			}
 		}
 
@@ -86,7 +83,6 @@ public class AutenticacionServicio extends GenericServicio{
 			String tokenSesion = null;
 			try {
 				tokenSesion = CriptoUtils.encripta(desncrA, servidorKey);
-				// System.out.println("tokenSesion: " + tokenSesion);
 				return tokenSesion;
 			} catch (Exception e) {
 			// TODO error

@@ -84,9 +84,7 @@ public class AutenticacionFiltro implements ContainerRequestFilter {
 				}
 				requestContext.abortWith(Response.status(errorBean.getHttpCode()).entity(errorBean).build());
 			} else {
-				System.out.println("/" + requestContext.getUriInfo().getPath());
 				String loginPath = (WebServUtils.PREF_AUTH_PATH + WebServUtils.PREF_LOGIN_PATH);
-				System.out.println(loginPath);
 				if (loginPath.equalsIgnoreCase("/" + requestContext.getUriInfo().getPath())) {
 					requestContext.setProperty(REQUEST_PARAM_APP_SECRET, secretKey);
 					requestContext.setProperty(REQUEST_PARAM_SERVIDOR_KEY, servidorKey);
@@ -101,7 +99,6 @@ public class AutenticacionFiltro implements ContainerRequestFilter {
 
 		String desncr = null;
 		try {
-			System.out.println(tokenLogin);
 			desncr = CriptoUtils.desencripta(tokenLogin, secretKey);
 		} catch (Exception e) {
 			// TODO ERROR
@@ -148,14 +145,12 @@ public class AutenticacionFiltro implements ContainerRequestFilter {
 			ErrorBean errorBean) {
 		String desncrA = null;
 		try {
-			System.out.println(tokenSesion);
 			desncrA = CriptoUtils.desencripta(tokenSesion, servidorKey);
 		} catch (Exception e) {
 			// TODO ERROR
 			e.printStackTrace(); // TODO borrar
 		}
 
-		System.out.println(desncrA);
 		if (desncrA != null) {
 			String[] fields = desncrA.split("@");
 			long time = -1;
@@ -172,14 +167,12 @@ public class AutenticacionFiltro implements ContainerRequestFilter {
 			} else {
 				String desncrB = null;
 				try {
-					System.out.println(fields[2]);
 					desncrB = CriptoUtils.desencripta(fields[2].trim(),
 							secretKey).trim();
 				} catch (Exception e) {
 					// TODO ERROR
 					e.printStackTrace(); // TODO borrar
 				}
-				System.out.println(desncrB);
 				if (desncrB != null) {
 					String[] fieldsB = desncrB.split(":");
 					if (fieldsB.length > 3) {

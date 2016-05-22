@@ -8,13 +8,18 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 
 @XmlRootElement(name = "comentario")
 @JsonRootName(value = "comentario")
-public abstract class ComentarioBean extends ETLTBean {
+public class ComentarioBean extends ETLTBean {
+	
 	private long id_comentario = -1;
 	private long id_prop_cambio = -1;
 	private long id_usuario = -1;
 	private String nombreUsuario;
 	private Date hora;
 	private String texto;
+	
+	public ComentarioBean() {
+		super(ComentarioBean.class);
+	}
 
 	public long getId_comentario() {
 		return id_comentario;

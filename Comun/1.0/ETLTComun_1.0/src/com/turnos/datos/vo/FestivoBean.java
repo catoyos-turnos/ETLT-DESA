@@ -34,6 +34,10 @@ public class FestivoBean extends ETLTBean {
 	private String paisCod;
 	private String paisNombre;
 
+	public FestivoBean() {
+		super(FestivoBean.class);
+	}
+
 	public long getCodigo() {
 		return codigo;
 	}

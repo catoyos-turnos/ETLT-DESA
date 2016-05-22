@@ -13,6 +13,10 @@ public class ResidenciaBean extends ETLTBean {
 	private String ciudad;
 	private String municipioCod;
 	private MunicipioBean municipio;
+	
+	public ResidenciaBean() {
+		super(ResidenciaBean.class);
+	}
 
 	public String getCodigo() {
 		return codigo;

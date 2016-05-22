@@ -23,6 +23,10 @@ public class MensajeBean extends ETLTBean {
 	private Date hora;
 	private String texto;
 	private boolean leido;
+	
+	public MensajeBean() {
+		super(MensajeBean.class);
+	}
 
 	public long getId_mensaje() {
 		return id_mensaje;

@@ -30,6 +30,10 @@ public class UsuarioBean extends ETLTBean {
 	private ResidenciaBean residencia;
 	private NivelUsuario nivel = NivelUsuario.USUARIO;
 	private boolean activado = false;
+	
+	public UsuarioBean() {
+		super(UsuarioBean.class);
+	}
 
 	public long getIdUsuario() {
 		return idUsuario;

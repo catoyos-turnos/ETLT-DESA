@@ -21,6 +21,10 @@ public class ServicioTipoDiaBean extends ETLTBean {
 	private String dia;
 	private SelectorTipoDia festivo;
 	private SelectorTipoDia vispera;
+	
+	public ServicioTipoDiaBean() {
+		super(ServicioTipoDiaBean.class);
+	}
 
 	public String getDia() {
 		return dia;

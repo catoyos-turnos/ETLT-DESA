@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonInclude(Include.NON_NULL)
 public class RespuestaBean<T extends ETLTBean> {
 	
-	@JsonDeserialize(as=ArrayList.class, contentAs=ETLTBean.class)
+	@JsonDeserialize(as=ArrayList.class, contentUsing=ETLTBeanDeserializer.class)
 	private List<T> listaResultados;
 	private ErrorBean error;
 	private int htmlStatus = Status.OK.getStatusCode();
