@@ -120,6 +120,7 @@ public class ResidenciaHandler extends GenericHandler {
 				int[] loc = {LOC_H,LOC_M,2};
 				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
+				return null;
 			} finally {
 				terminaOperacion(nconexion, cierraConexion);
 			}
@@ -215,7 +216,7 @@ public class ResidenciaHandler extends GenericHandler {
 			} while (existeResidencia(nconexion, codigo, errorBean) && i < 10);
 			if(i >= 10) {
 				int[] loc = {LOC_H,LOC_M,2};
-				ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "nombre demasiado común, intenta otro nombre");
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "nombre demasiado comï¿½n, intenta otro nombre");
 				return null;
 			}
 
@@ -238,6 +239,7 @@ public class ResidenciaHandler extends GenericHandler {
 				int[] loc = {LOC_H,LOC_M,3};
 				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
+				return null;
 			} finally {
 				terminaOperacion(nconexion, cierraConexion);
 			}

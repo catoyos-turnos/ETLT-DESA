@@ -1,9 +1,9 @@
-package com.turnos.datos.handlers;
+ package com.turnos.datos.handlers;
 
 public class PropCambioHandler extends GenericHandler{
 
 	private static final int LOC_H = 91;
-	
+	/*
 	private static final String QUERY_LISTA_PROP_CAMBIOS_USUARIO =
 		"SELECT com.id_comentario_pc, com.id_prop_cambio, "
 		+ "com.id_usuario, GET_NOMBRE_USUARIO(com.id_usuario) "
@@ -22,4 +22,5 @@ public class PropCambioHandler extends GenericHandler{
 	private static final String UPDATE_DELETE_PROP_CAMBIOS = 
 		"DELETE FROM comentario_prop_cambio com"
 		+ "WHERE com.id_comentario_pc=?";
+*/
 }

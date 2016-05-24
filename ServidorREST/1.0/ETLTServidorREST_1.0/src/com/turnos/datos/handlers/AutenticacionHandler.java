@@ -38,9 +38,8 @@ public class AutenticacionHandler extends GenericHandler {
 					errorBean.updateMsg("clave publica no encontrada");
 				}
 			} catch (SQLException e) {
-				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-				errorBean.updateErrorCode("95230101");
-				errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,1};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
 			} finally {
 				terminaOperacion(nconexion, cierraConexion);

@@ -213,16 +213,14 @@ public abstract class GenericHandler {
 				errorBean.updateMsg("infoDia.length != 3 (infodia="+String.join(";", infoDia)+")");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-			errorBean.updateErrorCode("72690001");
-			errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,1};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
+				e.printStackTrace();
 			return null;
 		} catch (Exception e) {
-			e.printStackTrace();
-			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-			errorBean.updateErrorCode("72690002");
-			errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,2};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
+				e.printStackTrace();
 			return null;
 		} finally {
 			GenericHandler.terminaOperacion(nconexion, cierraConexion);
@@ -277,16 +275,14 @@ public abstract class GenericHandler {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
-			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-			errorBean.updateErrorCode("72690101");
-			errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,1};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
+				e.printStackTrace();
 			return null;
 		} catch (Exception e) {
-			e.printStackTrace();
-			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-			errorBean.updateErrorCode("72690102");
-			errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,2};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h68", loc, e.getMessage(), null);
+				e.printStackTrace();
 			return null;
 		} finally {
 			GenericHandler.terminaOperacion(nconexion, cierraConexion);
