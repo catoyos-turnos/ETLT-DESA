@@ -1,18 +1,15 @@
-package com.turnos.cliente.servlet;
+package com.turnos.cliente.spring;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.TimeZone;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.turnos.datos.vo.MunicipioBean;
 import com.turnos.datos.vo.ResidenciaBean;
@@ -21,38 +18,52 @@ import com.turnos.datos.vo.TrabajadorBean;
 import com.turnos.datos.vo.TurnoBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 
-/**
- * Servlet implementation class CentralServlet
- */
-//@WebServlet(asyncSupported = true, urlPatterns = { "/front" })
-public class CentralServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+@Controller
+public class CentralControlador {
+
 	private static final SimpleDateFormat sdfIn = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat sdfEx = new SimpleDateFormat("EEE MM/dd");
-
-	@Override
-	public void init() throws ServletException {
-		super.init();
-		getServletContext().setAttribute("sdfIn", sdfIn);
-		getServletContext().setAttribute("sdfEx", sdfEx);
-	}
 	
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public ModelAndView getdata() {
 
-		HttpSession sesion = request.getSession();
+		System.out.println("HOLA");
 		
+		TrabajadorBean trabajador = getTrabajador();
+		ResidenciaBean residencia = getResidencia();
+		
+		ModelAndView model = new ModelAndView("central");
+		
+		Calendar c = Calendar.getInstance(TimeZone.getTimeZone(residencia.getMunicipio().getTz()));
+		c.set(2016, 5, 23);
+		model.addObject("hoy", c.getTime().clone());
+		List<TurnoTrabajadorDiaBean> servicios = getServicios(trabajador, residencia, c);
+		model.addObject("trabajador", trabajador);
+		model.addObject("residencia", residencia);
+		model.addObject("servicios", servicios);
+		
+		
+		model.addObject("sdfIn", sdfIn);//TODO sacar a session
+		model.addObject("sdfEx", sdfEx);//TODO sacar a session
+		
+		return model;
+
+	}
+
+
+	private TrabajadorBean getTrabajador() {
+
 		TrabajadorBean trabajador = new TrabajadorBean();
 		trabajador.setCodigo("6173");
 		trabajador.setNombre("Juan Jose");
 		trabajador.setApellidos("Riera Moran");
 		trabajador.setCodResidencia("OVIEDO_URIA");
-		sesion.setAttribute("trabajador", trabajador);
-		
+		return trabajador;
+	}
+	
+	private ResidenciaBean getResidencia() {
+
 		ResidenciaBean residencia = new ResidenciaBean();
 		residencia.setCodigo("OVIEDO_URIA");
 		residencia.setCiudad("Oviedo");
@@ -70,17 +81,16 @@ public class CentralServlet extends HttpServlet {
 		municipio.setTz("Europe/Madrid");
 		residencia.setMunicipio(municipio);
 		
-		sesion.setAttribute("residencia", residencia);
-		
-		Calendar c = Calendar.getInstance(TimeZone.getTimeZone(residencia.getMunicipio().getTz()));
-		c.set(2016, 4, 13);
-		sesion.setAttribute("hoy", c.getTime().clone());
+		return residencia;
+	}
+	
+	private List<TurnoTrabajadorDiaBean> getServicios(TrabajadorBean trabajador, ResidenciaBean residencia, Calendar c) {
 
 		LinkedList<TurnoTrabajadorDiaBean> servicios = new LinkedList<TurnoTrabajadorDiaBean>();
 		TurnoTrabajadorDiaBean ttdAux;
 		ServicioBean servAux;
 		TurnoBean turnoAux;
-		
+
 		c.add(Calendar.DATE, 1);
 		ttdAux = new TurnoTrabajadorDiaBean();
 		ttdAux.setTrabajador(trabajador);
@@ -102,14 +112,8 @@ public class CentralServlet extends HttpServlet {
 		ttdAux.setTurno(turnoAux);
 		servicios.add(ttdAux);
 
-		sesion.setAttribute("servicios", servicios);
-		
-		
-		RequestDispatcher rd = request.getRequestDispatcher("/central.jsp");
-		try {
-			rd.forward(request, response);
-		} catch (ServletException e) {
-			e.printStackTrace();
-		}
+		return servicios;
+
 	}
+
 }
