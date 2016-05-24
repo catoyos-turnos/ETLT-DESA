@@ -77,13 +77,12 @@ public class GeoHandler extends GenericHandler {
 				listaPaises.add(pais);
 			}
 		} catch (SQLException e) {
-			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-			errorBean.updateErrorCode("69600100");
-			errorBean.updateMsg(e.getMessage());
-			e.printStackTrace();
+				int[] loc = {LOC_H,LOC_M,1};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
+				e.printStackTrace();
+				return null;
 		} finally {
 			terminaOperacion(nconexion, cierraConexion);
-
 		}
 		return listaPaises;
 	}
@@ -107,27 +106,25 @@ public class GeoHandler extends GenericHandler {
 					pais.setPaisNombre(rs.getString("paisNombre"));
 					pais.setTz_estandar(rs.getString("tz"));
 				} else {
-					errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-					errorBean.updateErrorCode("69600202");
-					errorBean.updateMsg("no encontrado pais con codigo " + codPais);
+					int[] loc = {LOC_H,LOC_M,3};
+					ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h48", loc, "no encotrado pais con codigo " + codPais);
 				}
 			} catch (SQLException e) {
-				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-				errorBean.updateErrorCode("69600201");
-				errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,2};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
+				return null;
 			} finally {
 				terminaOperacion(nconexion, cierraConexion);
 			}
 		} else {
-			errorBean.setHttpCode(Status.BAD_REQUEST);
-			errorBean.updateErrorCode("69600200");
-			errorBean.updateMsg("debe incluir codigo");
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "debe incluir codigo");
 		}
 		return pais;
 	}
 
-	public static ArrayList<ProvinciaBean> listProvincias(Connection conexion, String codPais, int limite, int offset, ErrorBean errorBean) {
+	public static ArrayList<ProvinciaBean> listProvincias(Connection conexion, String codPais, boolean simple, int limite, int offset, ErrorBean errorBean) {
 		int LOC_M = 3;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -144,24 +141,25 @@ public class GeoHandler extends GenericHandler {
 				prov = new ProvinciaBean();
 				prov.setProvinciaCod(rs.getString("provinciaCod"));
 				prov.setProvinciaNombre(rs.getString("provinciaNombre"));
-				prov.setPaisCod(rs.getString("paisCod"));
-				prov.setPaisNombre(rs.getString("paisNombre"));
 				prov.setTz(rs.getString("tz"));
+				if(!simple) {
+					prov.setPaisCod(rs.getString("paisCod"));
+					prov.setPaisNombre(rs.getString("paisNombre"));
+				}
 				listaProvs.add(prov);
 			}
 		} catch (SQLException e) {
-			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-			errorBean.updateErrorCode("69600300");
-			errorBean.updateMsg(e.getMessage());
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 			e.printStackTrace();
+			return null;
 		} finally {
 			terminaOperacion(nconexion, cierraConexion);
-
 		}
 		return listaProvs;
 	}
 
-	public static ProvinciaBean getProvincia(Connection conexion, String codProvincia, ErrorBean errorBean) {
+	public static ProvinciaBean getProvincia(Connection conexion, String codProvincia, boolean simple, ErrorBean errorBean) {
 		int LOC_M = 4;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -178,31 +176,31 @@ public class GeoHandler extends GenericHandler {
 					prov = new ProvinciaBean();
 					prov.setProvinciaCod(rs.getString("provinciaCod"));
 					prov.setProvinciaNombre(rs.getString("provinciaNombre"));
-					prov.setPaisCod(rs.getString("paisCod"));
-					prov.setPaisNombre(rs.getString("paisNombre"));
 					prov.setTz(rs.getString("tz"));
+					if(!simple) {
+						prov.setPaisCod(rs.getString("paisCod"));
+						prov.setPaisNombre(rs.getString("paisNombre"));
+					}
 				} else {
-					errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-					errorBean.updateErrorCode("69600402");
-					errorBean.updateMsg("no encontrada provincia con codigo " + codProvincia);
+					int[] loc = {LOC_H,LOC_M,3};
+					ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h48", loc, "no encotrado provincia con codigo " + codProvincia);
 				}
 			} catch (SQLException e) {
-				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-				errorBean.updateErrorCode("69600401");
-				errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,2};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
+				return null;
 			} finally {
 				terminaOperacion(nconexion, cierraConexion);
 			}
 		} else {
-			errorBean.setHttpCode(Status.BAD_REQUEST);
-			errorBean.updateErrorCode("69600400");
-			errorBean.updateMsg("debe incluir codigo");
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "debe incluir codigo");
 		}
 		return prov;
 	}
 
-	public static ArrayList<MunicipioBean> listMunicipios(Connection conexion, String codProv, int limite, int offset, ErrorBean errorBean) {
+	public static ArrayList<MunicipioBean> listMunicipios(Connection conexion, String codProv, boolean simple, int limite, int offset, ErrorBean errorBean) {
 		int LOC_M = 5;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -219,26 +217,27 @@ public class GeoHandler extends GenericHandler {
 				muni = new MunicipioBean();
 				muni.setMunicipioCod(rs.getString("municipioCod"));
 				muni.setMunicipioNombre(rs.getString("municipioNombre"));
-				muni.setProvinciaCod(rs.getString("provinciaCod"));
-				muni.setProvinciaNombre(rs.getString("provinciaNombre"));
-				muni.setPaisCod(rs.getString("paisCod"));
-				muni.setPaisNombre(rs.getString("paisNombre"));
-				muni.setTz(rs.getString("tz"));
+				if(!simple){
+					muni.setProvinciaCod(rs.getString("provinciaCod"));
+					muni.setProvinciaNombre(rs.getString("provinciaNombre"));
+					muni.setPaisCod(rs.getString("paisCod"));
+					muni.setPaisNombre(rs.getString("paisNombre"));
+					muni.setTz(rs.getString("tz"));
+				}
 				listaMunicipios.add(muni);
 			}
 		} catch (SQLException e) {
-			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-			errorBean.updateErrorCode("69600500");
-			errorBean.updateMsg(e.getMessage());
-			e.printStackTrace();
+				int[] loc = {LOC_H,LOC_M,1};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
+				e.printStackTrace();
+				return null;
 		} finally {
 			terminaOperacion(nconexion, cierraConexion);
-
 		}
 		return listaMunicipios;
 	}
 
-	public static MunicipioBean getMunicipio(Connection conexion, String codMunicipio, ErrorBean errorBean) {
+	public static MunicipioBean getMunicipio(Connection conexion, String codMunicipio, boolean simple, ErrorBean errorBean) {
 		int LOC_M = 6;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -255,28 +254,28 @@ public class GeoHandler extends GenericHandler {
 					muni = new MunicipioBean();
 					muni.setMunicipioCod(rs.getString("municipioCod"));
 					muni.setMunicipioNombre(rs.getString("municipioNombre"));
-					muni.setProvinciaCod(rs.getString("provinciaCod"));
-					muni.setProvinciaNombre(rs.getString("provinciaNombre"));
-					muni.setPaisCod(rs.getString("paisCod"));
-					muni.setPaisNombre(rs.getString("paisNombre"));
-					muni.setTz(rs.getString("tz"));
+					if(!simple){
+						muni.setProvinciaCod(rs.getString("provinciaCod"));
+						muni.setProvinciaNombre(rs.getString("provinciaNombre"));
+						muni.setPaisCod(rs.getString("paisCod"));
+						muni.setPaisNombre(rs.getString("paisNombre"));
+						muni.setTz(rs.getString("tz"));
+					}
 				} else {
-					errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-					errorBean.updateErrorCode("69600602");
-					errorBean.updateMsg("no encontrado municipio con codigo " + codMunicipio);
+					int[] loc = {LOC_H,LOC_M,3};
+					ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h48", loc, "no encotrado municipio con codigo " + codMunicipio);
 				}
 			} catch (SQLException e) {
-				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-				errorBean.updateErrorCode("69600601");
-				errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,2};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
+				return null;
 			} finally {
 				terminaOperacion(nconexion, cierraConexion);
 			}
 		} else {
-			errorBean.setHttpCode(Status.BAD_REQUEST);
-			errorBean.updateErrorCode("69600600");
-			errorBean.updateMsg("debe incluir codigo");
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "debe incluir codigo");
 		}
 		return muni;
 	}

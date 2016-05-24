@@ -41,8 +41,7 @@ public class FestivoHandler extends GenericHandler {
 		+ "WHERE muni.id_municipio=? AND ("
 				+ "(fest.tipo='LOCAL' AND fest.id_municipio=muni.id_municipio) "
 			+ ") %s "
-		+ "ORDER BY fest.fecha, fest.tipo "
-		+ "LIMIT ?";
+		+ "ORDER BY fest.fecha, fest.tipo";
 	
 	private static final String QUERY_GET_LISTA_FESTIVOS_MUNI_COMPL = 
 		"SELECT fest.cod_festivo as codigo, fest.festivo as fiesta, fest.notas as notas, "
@@ -58,8 +57,7 @@ public class FestivoHandler extends GenericHandler {
 				+ "OR (fest.tipo='AUTONOMICA' AND fest.id_provincia=muni.id_provincia) "
 				+ "OR (fest.tipo='NACIONAL' AND fest.cod_pais=muni.cod_pais) "
 			+ ") %s "
-		+ "ORDER BY fest.fecha, fest.tipo "
-		+ "LIMIT ?";
+		+ "ORDER BY fest.fecha, fest.tipo";
 	
 	private static final String QUERY_GET_LISTA_FESTIVOS_PROV = 
 		"SELECT fest.cod_festivo as codigo, fest.festivo as fiesta, fest.notas as notas, "
@@ -71,8 +69,7 @@ public class FestivoHandler extends GenericHandler {
 		+ "WHERE prov.id_provincia=? AND ("
 				+ "(fest.tipo='AUTONOMICA' AND fest.id_provincia=prov.id_provincia) "
 			+ ") %s "
-		+ "ORDER BY fest.fecha, fest.tipo "
-		+ "LIMIT ?";
+		+ "ORDER BY fest.fecha, fest.tipo";
 
 	private static final String QUERY_GET_LISTA_FESTIVOS_PROV_COMPL = 
 		"SELECT fest.cod_festivo as codigo, fest.festivo as fiesta, fest.notas as notas, "
@@ -85,8 +82,7 @@ public class FestivoHandler extends GenericHandler {
 				+ "(fest.tipo='AUTONOMICA' AND fest.id_provincia=prov.id_provincia) "
 				+ "OR (fest.tipo='NACIONAL' AND fest.cod_pais=prov.cod_pais) "
 			+ ") %s "
-		+ "ORDER BY fest.fecha, fest.tipo "
-		+ "LIMIT ?";
+		+ "ORDER BY fest.fecha, fest.tipo";
 
 	private static final String QUERY_GET_LISTA_FESTIVOS_PAIS = 
 		"SELECT fest.cod_festivo as codigo, fest.festivo as fiesta, fest.notas as notas, "
@@ -96,8 +92,7 @@ public class FestivoHandler extends GenericHandler {
 		+ "WHERE pais.cod_pais=? AND ("
 				+ "(fest.tipo='NACIONAL' AND fest.cod_pais=pais.cod_pais) "
 			+ ") %s "
-		+ "ORDER BY fest.fecha, fest.tipo "
-		+ "LIMIT ?";
+		+ "ORDER BY fest.fecha, fest.tipo";
 	
 	private static final String QUERY_GET_LISTA_FESTIVOS_RESIDENCIA = 
 		"SELECT fest.cod_festivo as codigo, fest.festivo as fiesta, fest.notas as notas, "
@@ -114,8 +109,7 @@ public class FestivoHandler extends GenericHandler {
 			+ "OR (fest.tipo='AUTONOMICA' AND fest.id_provincia=muni.id_provincia) "
 			+ "OR (fest.tipo='NACIONAL' AND fest.cod_pais=muni.cod_pais) "
 			+ ") %s "
-		+ "ORDER BY fest.fecha, fest.tipo "
-		+ "LIMIT ?";
+		+ "ORDER BY fest.fecha, fest.tipo";
 
 	private static final String QUERY_GET_FESTIVO_COD = 
 		"SELECT fest.cod_festivo as codigo, fest.festivo as fiesta, fest.notas as notas, "
@@ -167,9 +161,8 @@ public class FestivoHandler extends GenericHandler {
 					return rs.getBoolean("existe");
 				}
 			} catch (SQLException e) {
-				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-				errorBean.updateErrorCode("69800000");
-				errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,1};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
 			} finally {
 				terminaOperacion(nconexion, cierraConexion);
@@ -181,7 +174,7 @@ public class FestivoHandler extends GenericHandler {
 
 	public static ArrayList<FestivoBean> getFestivosMunicipio(Connection conexion, String codMunicipio, TipoFiesta tipo,
 			Date fecha_ini, Date fecha_fin, boolean completo, boolean includeGeo, 
-			int limite, int offset,  ErrorBean errorBean) {
+			int limite, int offset, ErrorBean errorBean) {
 		int LOC_M = 2;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -194,29 +187,27 @@ public class FestivoHandler extends GenericHandler {
 			int codpar = 0;
 			if(fecha_ini != null) codpar = 1;
 			if(fecha_fin != null) codpar += 2;
+			String query = "";
 			if (completo) {
-				ps = nconexion.prepareStatement(String.format(QUERY_GET_LISTA_FESTIVOS_MUNI_COMPL, rang));
+				query = anadeLimiteOffset(QUERY_GET_LISTA_FESTIVOS_MUNI_COMPL, limite, offset);
 			} else {
-				ps = nconexion.prepareStatement(String.format(QUERY_GET_LISTA_FESTIVOS_MUNI, rang));
+				query = anadeLimiteOffset(QUERY_GET_LISTA_FESTIVOS_MUNI, limite, offset);
 			}
+			ps = nconexion.prepareStatement(String.format(query, rang));
 			ps.setString(1, codMunicipio);
 			switch (codpar) {
-			default:
-			case 0:
-				ps.setInt(2, limite);
-				break;
 			case 1:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
-				ps.setInt(3, limite);
 				break;
 			case 2:
 				ps.setDate(2, javaDateToSQLDate(fecha_fin));
-				ps.setInt(3, limite);
 				break;
 			case 3:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
 				ps.setDate(3, javaDateToSQLDate(fecha_fin));
-				ps.setInt(4, limite);
+				break;
+			default:
+			case 0:
 				break;
 			}
 
@@ -241,10 +232,10 @@ public class FestivoHandler extends GenericHandler {
 			}
 
 		} catch (SQLException e) {
-			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-			errorBean.updateErrorCode("69800100");
-			errorBean.updateMsg(e.getMessage());
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 			e.printStackTrace();
+			return null;
 		} finally {
 			terminaOperacion(nconexion, cierraConexion);
 		}
@@ -266,29 +257,29 @@ public class FestivoHandler extends GenericHandler {
 			int codpar = 0;
 			if(fecha_ini != null) codpar = 1;
 			if(fecha_fin != null) codpar += 2;
+			
+			String query = "";
 			if (completo) {
-				ps = nconexion.prepareStatement(String.format(QUERY_GET_LISTA_FESTIVOS_PROV_COMPL, rang));
+				query = anadeLimiteOffset(QUERY_GET_LISTA_FESTIVOS_PROV_COMPL, limite, offset);
 			} else {
-				ps = nconexion.prepareStatement(String.format(QUERY_GET_LISTA_FESTIVOS_PROV, rang));
+				query = anadeLimiteOffset(QUERY_GET_LISTA_FESTIVOS_PROV, limite, offset);
 			}
+			ps = nconexion.prepareStatement(String.format(query, rang));
+			
 			ps.setString(1, codProvincia);
 			switch (codpar) {
-			default:
-			case 0:
-				ps.setInt(2, limite);
-				break;
 			case 1:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
-				ps.setInt(3, limite);
 				break;
 			case 2:
 				ps.setDate(2, javaDateToSQLDate(fecha_fin));
-				ps.setInt(3, limite);
 				break;
 			case 3:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
 				ps.setDate(3, javaDateToSQLDate(fecha_fin));
-				ps.setInt(4, limite);
+				break;
+			case 0:
+			default:
 				break;
 			}
 
@@ -311,10 +302,10 @@ public class FestivoHandler extends GenericHandler {
 			}
 
 		} catch (SQLException e) {
-			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-			errorBean.updateErrorCode("69800200");
-			errorBean.updateMsg(e.getMessage());
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 			e.printStackTrace();
+			return null;
 		} finally {
 			terminaOperacion(nconexion, cierraConexion);
 		}
@@ -338,25 +329,23 @@ public class FestivoHandler extends GenericHandler {
 			if(fecha_ini != null) codpar = 1;
 			if(fecha_fin != null) codpar += 2;
 
-			ps = nconexion.prepareStatement(String.format(QUERY_GET_LISTA_FESTIVOS_PAIS, rang));
+			String query = anadeLimiteOffset(QUERY_GET_LISTA_FESTIVOS_PAIS, limite, offset);
+			ps = nconexion.prepareStatement(String.format(query, rang));
+
 			ps.setString(1, codPais);
 			switch (codpar) {
-			default:
-			case 0:
-				ps.setInt(2, limite);
-				break;
 			case 1:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
-				ps.setInt(3, limite);
 				break;
 			case 2:
 				ps.setDate(2, javaDateToSQLDate(fecha_fin));
-				ps.setInt(3, limite);
 				break;
 			case 3:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
 				ps.setDate(3, javaDateToSQLDate(fecha_fin));
-				ps.setInt(4, limite);
+				break;
+			default:
+			case 0:
 				break;
 			}
 
@@ -377,10 +366,10 @@ public class FestivoHandler extends GenericHandler {
 			}
 
 		} catch (SQLException e) {
-			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-			errorBean.updateErrorCode("69800300");
-			errorBean.updateMsg(e.getMessage());
-			e.printStackTrace();
+				int[] loc = {LOC_H,LOC_M,1};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
+				e.printStackTrace();
+				return null;
 		} finally {
 			terminaOperacion(nconexion, cierraConexion);
 		}
@@ -403,25 +392,22 @@ public class FestivoHandler extends GenericHandler {
 			if(fecha_ini != null) codpar = 1;
 			if(fecha_fin != null) codpar += 2;
 
-			ps = nconexion.prepareStatement(String.format(QUERY_GET_LISTA_FESTIVOS_RESIDENCIA, rang));
+			String query = anadeLimiteOffset(QUERY_GET_LISTA_FESTIVOS_RESIDENCIA, limite, offset);
+			ps = nconexion.prepareStatement(String.format(query, rang));
 			ps.setString(1, codigo);
 			switch (codpar) {
-			default:
-			case 0:
-				ps.setInt(2, limite);
-				break;
 			case 1:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
-				ps.setInt(3, limite);
 				break;
 			case 2:
 				ps.setDate(2, javaDateToSQLDate(fecha_fin));
-				ps.setInt(3, limite);
 				break;
 			case 3:
 				ps.setDate(2, javaDateToSQLDate(fecha_ini));
 				ps.setDate(3, javaDateToSQLDate(fecha_fin));
-				ps.setInt(4, limite);
+				break;
+			default:
+			case 0:
 				break;
 			}
 
@@ -442,10 +428,10 @@ public class FestivoHandler extends GenericHandler {
 			}
 
 		} catch (SQLException e) {
-			errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-			errorBean.updateErrorCode("69800400");
-			errorBean.updateMsg(e.getMessage());
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 			e.printStackTrace();
+			return null;
 		} finally {
 			terminaOperacion(nconexion, cierraConexion);
 		}
@@ -487,22 +473,20 @@ public class FestivoHandler extends GenericHandler {
 						fest.setPaisNombre(rs.getString("paisNombre"));
 					}
 				} else {
-					errorBean.setHttpCode(Status.NOT_FOUND);
-					errorBean.updateErrorCode("69700502");
-					errorBean.updateMsg("no encotrada residencia con codigo "+codFest);
+					int[] loc = {LOC_H,LOC_M,3};
+					ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h48", loc, "no encotrado festivo con codigo " + codFest);
 				}
 			} catch (SQLException e) {
-				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-				errorBean.updateErrorCode("69700501");
-				errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,2};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
+				return null;
 			} finally {
 				terminaOperacion(nconexion, cierraConexion);
 			}
 		} else {
-			errorBean.setHttpCode(Status.BAD_REQUEST);
-			errorBean.updateErrorCode("69700500");
-			errorBean.updateMsg("debe incluir codigo");
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "debe incluir codigo");
 		}
 		return fest;
 	}
@@ -537,9 +521,8 @@ public class FestivoHandler extends GenericHandler {
 					}
 				}
 			} catch (SQLException e) {
-				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-				errorBean.updateErrorCode("69800602");
-				errorBean.updateMsg(e.getMessage());
+				int[] loc = {LOC_H,LOC_M,1};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
 			} finally {
 				terminaOperacion(nconexion, cierraConexion);
@@ -603,14 +586,16 @@ public class FestivoHandler extends GenericHandler {
 			
 			
 			if (params == 0 && auxFecha == null) {
-				errorBean.setHttpCode(Status.BAD_REQUEST);
-				errorBean.updateErrorCode("69800701");
-				errorBean.updateMsg("Sin parametros para cambiar");
+				int[] loc = {LOC_H,LOC_M,3};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h36", loc, "Sin parametros para cambiar");
 			} else {
 				try {
 					PreparedStatement ps = nconexion.prepareStatement(String.format(UPDATE_UPDATE_FESTIVO, upd));
 					for (int i = 0; i < params; i++) {
-						ps.setString(i+1, strs[i]);
+						if(strs[i].equals(""))
+							ps.setString(i+1, null);
+						else
+							ps.setString(i+1, strs[i]);
 					}
 					if (auxFecha != null) {
 						ps.setDate(params+1, javaDateToSQLDate(auxFecha));
@@ -621,28 +606,25 @@ public class FestivoHandler extends GenericHandler {
 					if (c > 0) {
 						fest = FestivoHandler.getFestivo(nconexion, codFest, false, errorBean);
 						if(fest == null) {
-							errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-							errorBean.updateErrorCode("69800704");
-							errorBean.updateMsg("???");
+							int[] loc = {LOC_H,LOC_M,4};
+							ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h96", loc, "???");
 						}
 					} else {
-						errorBean.setHttpCode(Status.BAD_REQUEST);
-						errorBean.updateErrorCode("69800702");
-						errorBean.updateMsg("no encontrado festivo con codigo "+codFest);
+						int[] loc = {LOC_H,LOC_M,3};
+						ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h48", loc, "no encotrado festivo con codigo " + codFest);
 					}
 				} catch (SQLException e) {
-					errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-					errorBean.updateErrorCode("69800703");
-					errorBean.updateMsg(e.getMessage());
+					int[] loc = {LOC_H,LOC_M,2};
+					ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 					e.printStackTrace();
+					return null;
 				} finally {
 					terminaOperacion(nconexion, cierraConexion);
 				}
 			}
 		} else {
-			errorBean.setHttpCode(Status.BAD_REQUEST);
-			errorBean.updateErrorCode("69800701");
-			errorBean.updateMsg("debe incluir datos festivo");
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "debe incluir datos festivo");
 		}
 			
 		return fest;
@@ -653,27 +635,23 @@ public class FestivoHandler extends GenericHandler {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		
-		if (FestivoHandler.getFestivo(nconexion, codFest, false, errorBean) != null) {
-			try {
-				PreparedStatement ps = nconexion.prepareStatement(UPDATE_DELETE_FESTIVO);
-				ps.setInt(1, codFest);
+		try {
+			PreparedStatement ps = nconexion.prepareStatement(UPDATE_DELETE_FESTIVO);
+			ps.setInt(1, codFest);
 
-				int c = ps.executeUpdate();
-				if (c > 0) {
-					return true;
-				}
-			} catch (SQLException e) {
-				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
-				errorBean.updateErrorCode("69800802");
-				errorBean.updateMsg(e.getMessage());
-				e.printStackTrace();
-			} finally {
-				terminaOperacion(nconexion, cierraConexion);
+			int c = ps.executeUpdate();
+			if (c > 0) {
+				return true;
+			} else {
+				int[] loc = {LOC_H,LOC_M,2};
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h48", loc, "no encotrado festivo con codigo " + codFest);
 			}
-		} else {
-			errorBean.setHttpCode(Status.BAD_REQUEST);
-			errorBean.updateErrorCode("69800801");
-			errorBean.updateMsg("no encontrado festivo con codigo "+codFest);
+		} catch (SQLException e) {
+			int[] loc = {LOC_H,LOC_M,1};
+			ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
+			e.printStackTrace();
+		} finally {
+			terminaOperacion(nconexion, cierraConexion);
 		}
 		
 		return false;

@@ -41,9 +41,10 @@ public class UsuarioServicio extends GenericServicio{
 	@GET
 	@Path(WebServUtils.COD_USER_PATH)
 	@Valid
-	public Response getUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
+	public Response getUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser,
+			boolean incTrabRes) {
 		ErrorBean errorBean = new ErrorBean();
-		UsuarioBean usuario = UsuarioHandler.getUsuario(null, codUser, errorBean);
+		UsuarioBean usuario = UsuarioHandler.getUsuario(null, codUser, incTrabRes, errorBean);
 
 		return creaRespuestaGenericaGET(usuario, errorBean);
 	}
