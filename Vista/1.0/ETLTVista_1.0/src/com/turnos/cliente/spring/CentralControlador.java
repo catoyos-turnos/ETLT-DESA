@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.TimeZone;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.turnos.datos.vo.MunicipioBean;
@@ -17,16 +18,14 @@ import com.turnos.datos.vo.ServicioBean;
 import com.turnos.datos.vo.TrabajadorBean;
 import com.turnos.datos.vo.TurnoBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
-
 @Controller
 public class CentralControlador {
 
 	private static final SimpleDateFormat sdfIn = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat sdfEx = new SimpleDateFormat("EEE MM/dd");
 	
-	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView getdata() {
+	@RequestMapping({"/front", "/"})
+	public ModelAndView posicionCentral() {
 
 		System.out.println("HOLA");
 		
@@ -48,8 +47,18 @@ public class CentralControlador {
 		model.addObject("sdfEx", sdfEx);//TODO sacar a session
 		
 		return model;
-
 	}
+
+	@RequestMapping({"/trab/{codTrab}/dia"})
+	public ModelAndView getDia(@PathVariable("codTrab") String codTrab, @RequestParam("fecha") String fecha) {
+		System.out.println(fecha);
+		System.out.println(codTrab);
+		ModelAndView model = new ModelAndView("central");
+		model.addObject("trabajador", codTrab);
+		return model;
+	}
+	
+
 
 
 	private TrabajadorBean getTrabajador() {
@@ -115,5 +124,4 @@ public class CentralControlador {
 		return servicios;
 
 	}
-
 }
