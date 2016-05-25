@@ -129,7 +129,7 @@ public class MensajeHandler extends GenericHandler {
 
 				idusr = rs.getLong("idRemitente");
 				if (!tablaUsers.containsKey(""+idusr)) {
-					user = UsuarioHandler.getUsuario(nconexion, idusr, errorBean);
+					user = UsuarioHandler.getUsuario(nconexion, idusr, false, errorBean);
 					if (user != null) tablaUsers.put(""+idusr, user);
 				} else {
 					user = tablaUsers.get(""+idusr);
@@ -140,7 +140,7 @@ public class MensajeHandler extends GenericHandler {
 
 				idusr = rs.getLong("idDestinatario");
 				if (!tablaUsers.containsKey(""+idusr)) {
-					user = UsuarioHandler.getUsuario(nconexion, idusr, errorBean);
+					user = UsuarioHandler.getUsuario(nconexion, idusr, false, errorBean);
 					if (user != null) tablaUsers.put(""+idusr, user);
 				} else {
 					user = tablaUsers.get(""+idusr);
@@ -218,7 +218,7 @@ public class MensajeHandler extends GenericHandler {
 
 				idusr = rs.getLong("idRemitente");
 				if (!tablaUsers.containsKey("" + idusr)) {
-					user = UsuarioHandler.getUsuario(nconexion, idusr,  errorBean);
+					user = UsuarioHandler.getUsuario(nconexion, idusr, false, errorBean);
 					if (user != null) tablaUsers.put("" + idusr, user);
 				} else {
 					user = tablaUsers.get("" + idusr);
@@ -229,7 +229,7 @@ public class MensajeHandler extends GenericHandler {
 
 				idusr = rs.getLong("idDestinatario");
 				if (!tablaUsers.containsKey("" + idusr)) {
-					user = UsuarioHandler.getUsuario(nconexion, idusr,  errorBean);
+					user = UsuarioHandler.getUsuario(nconexion, idusr, false, errorBean);
 					if (user != null) tablaUsers.put("" + idusr, user);
 				} else {
 					user = tablaUsers.get("" + idusr);
@@ -282,20 +282,20 @@ public class MensajeHandler extends GenericHandler {
 					msg.setTexto(rs.getString("texto"));
 
 					long idusr = rs.getLong("idRemitente");
-					UsuarioBean user = UsuarioHandler.getUsuario(nconexion, idusr,  errorBean);
+					UsuarioBean user = UsuarioHandler.getUsuario(nconexion, idusr, false, errorBean);
 					if (user != null) {
 						msg.setRemitente(user);
 					}
 
 					idusr = rs.getLong("idDestinatario");
-					user = UsuarioHandler.getUsuario(nconexion, idusr,  errorBean);
+					user = UsuarioHandler.getUsuario(nconexion, idusr, false, errorBean);
 					if (user != null) {
 						msg.setDestinatario(user);
 					}
 
 					if (profRespuestas > 0) {
 						ArrayList<MensajeBean> respuestas = MensajeHandler.listRespuestasMensaje(
-								nconexion, codMensaje, profRespuestas - 1, 0, 0,  errorBean);
+								nconexion, codMensaje, profRespuestas - 1, 0, 0, errorBean);
 						msg.setRespuestas(respuestas);
 					}
 				} else {
@@ -327,8 +327,8 @@ public class MensajeHandler extends GenericHandler {
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 
+		MensajeBean msg = null;
 		if (privadoRaw != null) {
-			MensajeBean msg = null;
 			try {
 				PreparedStatement ps;
 				if (privadoRaw.getId_msg_original() == -1) {
@@ -402,7 +402,7 @@ public class MensajeHandler extends GenericHandler {
 	
 	public static int numNoLeidosUser(Connection conexion,
 			long usrMensaje, int limite, int offset, ErrorBean errorBean) {
-		
+		return 0;
 	}
 
 

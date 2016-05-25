@@ -90,7 +90,7 @@ public class GeoServicio extends GenericServicio{
 		ErrorBean errorBean = new ErrorBean();
 		int[] limiteOffset = calculaLimiteOffsetCorrectos(limite, offset);
 		limite = limiteOffset[0]; offset = limiteOffset[1];
-		ArrayList<ProvinciaBean> listaProvincias = GeoHandler.listProvincias(null, codPais, limite, offset, errorBean);
+		ArrayList<ProvinciaBean> listaProvincias = GeoHandler.listProvincias(null, codPais, true, limite, offset, errorBean);
 		RespuestaBean<ProvinciaBean> respuesta = null;
 
 		if(listaProvincias == null) {
@@ -109,7 +109,7 @@ public class GeoServicio extends GenericServicio{
 	public Response getProvincia(@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia) {
 		ErrorBean errorBean = new ErrorBean();
-		ProvinciaBean provincia = GeoHandler.getProvincia(null, codProvincia, errorBean);
+		ProvinciaBean provincia = GeoHandler.getProvincia(null, codProvincia, true, errorBean);
 		RespuestaBean<ProvinciaBean> respuesta = null;
 
 		if(provincia == null) {
@@ -134,7 +134,7 @@ public class GeoServicio extends GenericServicio{
 		ErrorBean errorBean = new ErrorBean();
 		int[] limiteOffset = calculaLimiteOffsetCorrectos(limite, offset);
 		limite = limiteOffset[0]; offset = limiteOffset[1];
-		ArrayList<MunicipioBean> listaMunicipios = GeoHandler.listMunicipios(null, codProvincia, limite, offset, errorBean);
+		ArrayList<MunicipioBean> listaMunicipios = GeoHandler.listMunicipios(null, codProvincia, true, limite, offset, errorBean);
 		RespuestaBean<MunicipioBean> respuesta = null;
 
 		if(listaMunicipios == null) {
@@ -155,7 +155,7 @@ public class GeoServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
 			@PathParam(WebServUtils.P_PARAM_COD_MUNI) String codMunicipio) {
 		ErrorBean errorBean = new ErrorBean();
-		MunicipioBean municipio = GeoHandler.getMunicipio(null, codMunicipio, errorBean);
+		MunicipioBean municipio = GeoHandler.getMunicipio(null, codMunicipio, true, errorBean);
 		RespuestaBean<MunicipioBean> respuesta = null;
 		
 		if(municipio == null) {

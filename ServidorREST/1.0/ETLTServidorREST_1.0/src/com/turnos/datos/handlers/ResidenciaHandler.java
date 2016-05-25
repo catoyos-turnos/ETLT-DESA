@@ -109,7 +109,7 @@ public class ResidenciaHandler extends GenericHandler {
 					res.setCiudad(rs.getString("ciudad"));
 					res.setMunicipioCod(rs.getString("municipioCod"));
 					if(includeGeo) {
-						MunicipioBean muni = GeoHandler.getMunicipio(nconexion, res.getMunicipioCod(), errorBean);
+						MunicipioBean muni = GeoHandler.getMunicipio(nconexion, res.getMunicipioCod(), false, errorBean);
 						res.setMunicipio(muni);
 					}
 				} else {
@@ -177,7 +177,7 @@ public class ResidenciaHandler extends GenericHandler {
 					res.setMunicipioCod(codMuni);
 					if(includeGeo) {
 						if (!tablaMunis.containsKey(codMuni)) {
-							muni = GeoHandler.getMunicipio(nconexion, res.getMunicipioCod(), errorBean);
+							muni = GeoHandler.getMunicipio(nconexion, res.getMunicipioCod(), false, errorBean);
 							if (muni != null) tablaMunis.put(codMuni, muni);
 						} else {
 							muni = tablaMunis.get(codMuni);

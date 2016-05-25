@@ -14,6 +14,7 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.AccesoBD;
+import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.UsuarioBean;
 import com.turnos.datos.vo.UsuarioBean.NivelUsuario;
@@ -62,18 +63,20 @@ public abstract class GenericHandler {
 		
 		if(usuarioLog != null && usuarioLog.getIdUsuario() != -1 && usuarioLog.isActivado()) {
 			if(usuarioLog.getCodRes() == null || usuarioLog.getCodTrab() == null) {
-				UsuarioBean aux = UsuarioHandler.getUsuario(null, usuarioLog.getIdUsuario(), new ErrorBean());
+				UsuarioBean aux = UsuarioHandler.getUsuario(null, usuarioLog.getIdUsuario(), true, new ErrorBean());
 				if(aux == null) {
 					usuarioLog.setIdUsuario(-1);
 				} else {
 					usuarioLog.setCodRes(aux.getCodRes());
 					usuarioLog.setCodTrab(aux.getCodTrab());
+					usuarioLog.setResidencia(aux.getResidencia() );
+					usuarioLog.setTrabajador(aux.getTrabajador());
 				}
 			}
 
-			boolean resRel = (codResRelevante.equals(usuarioLog.getCodRes())) ? true : false;
+			boolean resRel = (codResRelevante.equals(usuarioLog.getCodRes()));
 			boolean trabRel = resRel;
-			trabRel &= (codTrabRelevante == null || codTrabRelevante.equals(usuarioLog.getCodTrab())) ? true : false;
+			trabRel &= (codTrabRelevante == null || codTrabRelevante.equals(usuarioLog.getCodTrab()));
 			
 			NivelUsuario nivel = NivelUsuario.safeValueOf(usuarioLog.getNivel());
 			if (nivel == null) return false;
@@ -213,12 +216,12 @@ public abstract class GenericHandler {
 				errorBean.updateMsg("infoDia.length != 3 (infodia="+String.join(";", infoDia)+")");
 			}
 		} catch (SQLException e) {
-				int[] loc = {LOC_H,LOC_M,1};
+				int[] loc = {55,10,1};
 				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
 			return null;
 		} catch (Exception e) {
-				int[] loc = {LOC_H,LOC_M,2};
+				int[] loc = {55,10,2};
 				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
 			return null;
@@ -275,12 +278,12 @@ public abstract class GenericHandler {
 			}
 
 		} catch (SQLException e) {
-				int[] loc = {LOC_H,LOC_M,1};
+				int[] loc = {55,20,1};
 				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h69", loc, e.getMessage(), null);
 				e.printStackTrace();
 			return null;
 		} catch (Exception e) {
-				int[] loc = {LOC_H,LOC_M,2};
+				int[] loc = {55,20,2};
 				ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h68", loc, e.getMessage(), null);
 				e.printStackTrace();
 			return null;

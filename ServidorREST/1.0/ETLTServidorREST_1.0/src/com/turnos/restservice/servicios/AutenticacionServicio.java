@@ -52,7 +52,7 @@ public class AutenticacionServicio extends GenericServicio{
 		SesionBean sesion = null;
 		if(usuarioLog!=null && secretKey!=null && servidorKey!=null) {
 			tokenSesion = generaTokenSesion(usuarioLog, secretKey, servidorKey, time);
-			usuario = UsuarioHandler.getUsuario(null, usuarioLog.getIdUsuario(), errorBean);
+			usuario = UsuarioHandler.getUsuario(null, usuarioLog.getIdUsuario(), true, errorBean);
 			if(tokenSesion!=null && usuario!=null) {
 				sesion = new SesionBean();
 				sesion.setTokenSesion(tokenSesion);

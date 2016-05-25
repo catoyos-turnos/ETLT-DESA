@@ -1,5 +1,18 @@
 package com.turnos.datos.handlers;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import javax.ws.rs.core.Response.Status;
+
+import com.turnos.datos.fabricas.ErrorBeanFabrica;
+import com.turnos.datos.vo.ComentarioBean;
+import com.turnos.datos.vo.ErrorBean;
+
 public class ComentarioPropCambioHandler extends GenericHandler{
 
 	private static final int LOC_H = 92;
@@ -38,7 +51,7 @@ public class ComentarioPropCambioHandler extends GenericHandler{
 		ResultSet rs;
 		try {
 			ps = nconexion.prepareStatement(anadeLimiteOffset(QUERY_LISTA_COMENTARIOS_PROP, limite, offset));
-			ps.setInt(1, propCod);		
+			ps.setLong(1, propCod);		
 			rs = ps.executeQuery();
 			ComentarioBean com;
 			while (rs.next()) {
@@ -73,7 +86,7 @@ public class ComentarioPropCambioHandler extends GenericHandler{
 		if (codComentario > -1) {
 			try {
 				PreparedStatement ps = nconexion.prepareStatement(QUERY_GET_COMENTARIO_COD);
-				ps.setString(1, codComentario);
+				ps.setLong(1, codComentario);
 				ResultSet rs = ps.executeQuery();
 
 				if (rs.next()) {
@@ -86,7 +99,7 @@ public class ComentarioPropCambioHandler extends GenericHandler{
 					com.setTexto(rs.getString("texto"));
 				} else {
 					int[] loc = {LOC_H,LOC_M,3};
-					ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h48", loc, "no encotrada residencia con codigo " + codigo);
+					ErrorBeanFabrica.generaErrorBean(errorBean, Status.NOT_FOUND, "h48", loc, "no encotrada residencia con codigo " + codComentario);
 				}
 			} catch (SQLException e) {
 				int[] loc = {LOC_H,LOC_M,2};
@@ -100,7 +113,7 @@ public class ComentarioPropCambioHandler extends GenericHandler{
 			int[] loc = {LOC_H,LOC_M,1};
 			ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "debe incluir codigo");
 		}
-		return res;
+		return com;
 	}
 		
 	public static ComentarioBean insertComentario(Connection conexion,
@@ -115,13 +128,13 @@ public class ComentarioPropCambioHandler extends GenericHandler{
 				PreparedStatement ps = nconexion.prepareStatement(UPDATE_INSERT_COMENTARIO, Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, comentarioRaw.getId_prop_cambio());
 				ps.setLong(2, comentarioRaw.getId_usuario());
-				ps.setDate(3, javaDateToSqlDate(comentarioRaw.getHora()));
+				ps.setDate(3, javaDateToSQLDate(comentarioRaw.getHora()));
 				ps.setString(4, comentarioRaw.getTexto());
 
 				int c = ps.executeUpdate();
 				if (c > 0 && ps.getGeneratedKeys().next()) {
 					long codComentario = ps.getGeneratedKeys().getLong(1);
-					com = getComentarioPropuesta(nconexion, codMensaje, errorBean);
+					com = getComentarioPropuesta(nconexion, codComentario, errorBean);
 					if (com == null) {
 						int[] loc = {LOC_H,LOC_M,4};
 						ErrorBeanFabrica.generaErrorBean(errorBean, Status.INTERNAL_SERVER_ERROR, "h96", loc, "no insertado (?)");
@@ -139,7 +152,7 @@ public class ComentarioPropCambioHandler extends GenericHandler{
 			ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "debe incluir datos comentario");
 		}
 			
-		return res;
+		return com;
 	}
 
 	
@@ -151,7 +164,7 @@ public class ComentarioPropCambioHandler extends GenericHandler{
 		
 		try {
 			PreparedStatement ps = nconexion.prepareStatement(UPDATE_DELETE_COMENTARIO);
-			ps.setString(1, codComentario);
+			ps.setLong(1, codComentario);
 			int c = ps.executeUpdate();
 			if (c > 0) {
 				return true;

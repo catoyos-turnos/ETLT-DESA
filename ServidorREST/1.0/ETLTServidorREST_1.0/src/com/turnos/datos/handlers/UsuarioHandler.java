@@ -34,7 +34,7 @@ public class UsuarioHandler extends GenericHandler {
 
 	private static final String UPDATE_DELETE_USER = "DELETE FROM app_usuario WHERE id_usuario=?";
 
-	public static UsuarioBean getUsuario(Connection conexion, long codUser,
+	public static UsuarioBean getUsuario(Connection conexion, long codUser,boolean incTrabRes,
 			ErrorBean errorBean) {
 		int LOC_M = 1;
 		Connection nconexion = aseguraConexion(conexion);
@@ -53,10 +53,19 @@ public class UsuarioHandler extends GenericHandler {
 					usuario.setIdUsuario(rs.getLong("idUsuario"));
 					usuario.setUser(rs.getString("user"));
 					usuario.setNombre(rs.getString("nombre"));
-					usuario.setCodTrab(rs.getString("codTrab"));
-					usuario.setCodRes(rs.getString("codRes"));
 					usuario.setActivado(rs.getBoolean("activado"));
 					usuario.setNivel(rs.getString("nivel"));
+					String codRes, codTrab;
+					codRes = rs.getString("codRes");
+					codTrab = rs.getString("codTrab");
+					usuario.setCodTrab(codTrab);
+					usuario.setCodRes(codRes);
+					if (incTrabRes && codRes!=null) {
+						usuario.setResidencia(ResidenciaHandler.getResidencia(nconexion, codRes, false, errorBean));
+						if (codTrab!=null) {
+							usuario.setTrabajador(TrabajadorHandler.getTrabajador(nconexion, codRes, codTrab, errorBean));
+						}
+					}
 				} else {
 					errorBean.setHttpCode(Status.BAD_REQUEST);
 					errorBean.updateErrorCode("91900102");

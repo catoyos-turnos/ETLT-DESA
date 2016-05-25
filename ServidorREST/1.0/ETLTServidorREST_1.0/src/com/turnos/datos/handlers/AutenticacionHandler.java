@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import javax.ws.rs.core.Response.Status;
 
+import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.UsuarioBean;
 
