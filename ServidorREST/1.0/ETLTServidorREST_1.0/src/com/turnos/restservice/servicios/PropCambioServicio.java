@@ -13,7 +13,7 @@ import com.turnos.datos.vo.UsuarioBean;
 
 @Api(value = "Propuesta de cambio")
 @Produces(MediaType.APPLICATION_JSON)
-@Path(WebServUtils.PREF_PROP_CAMBIO_PATH)
+@Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH + WebServUtils.PREF_PROP_CAMBIO_PATH)
 public class PropCambioServicio extends GenericServicio{
 	
 	protected PropCambioServicio(UsuarioBean usuarioLog) {

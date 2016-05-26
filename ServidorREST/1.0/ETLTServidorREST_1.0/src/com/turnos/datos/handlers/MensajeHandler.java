@@ -404,6 +404,22 @@ public class MensajeHandler extends GenericHandler {
 			long usrMensaje, int limite, int offset, ErrorBean errorBean) {
 		return 0;
 	}
+	
+	public static boolean autenticar(UsuarioBean usuarioLog, String metodo,
+			long idUsuarioRelevante) {
+		return UsuarioHandler.autenticar(usuarioLog, metodo, idUsuarioRelevante);
+	}
+
+	// @Override
+	public static boolean autenticar(UsuarioBean usuarioLog, String metodo,
+			String codTrabRelevante, String codResRelevante) {
+		return UsuarioHandler.autenticar(usuarioLog, metodo, codTrabRelevante, codResRelevante);
+	}
+
+	// @Override
+	public static boolean autenticar(UsuarioBean usuarioLog, String metodo) {
+		return UsuarioHandler.autenticar(usuarioLog, metodo);
+	}
 
 
 }

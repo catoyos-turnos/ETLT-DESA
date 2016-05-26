@@ -227,12 +227,12 @@ public class UsuarioHandler extends GenericHandler {
 	// @Override
 	public static boolean autenticar(UsuarioBean usuarioLog, String metodo,
 			String codTrabRelevante, String codResRelevante) {
-		return false;
+		return false;//TODO
 	}
 
 	// @Override
 	public static boolean autenticar(UsuarioBean usuarioLog, String metodo) {
-		return false;
+		return false;//TODO
 	}
 
 }

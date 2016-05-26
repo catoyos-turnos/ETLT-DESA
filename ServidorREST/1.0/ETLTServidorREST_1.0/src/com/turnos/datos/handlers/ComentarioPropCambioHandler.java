@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response.Status;
 import com.turnos.datos.fabricas.ErrorBeanFabrica;
 import com.turnos.datos.vo.ComentarioBean;
 import com.turnos.datos.vo.ErrorBean;
+import com.turnos.datos.vo.UsuarioBean;
 
 public class ComentarioPropCambioHandler extends GenericHandler{
 
@@ -181,6 +182,22 @@ public class ComentarioPropCambioHandler extends GenericHandler{
 		}
 
 		return false;
+	}
+	
+	public static boolean autenticar(UsuarioBean usuarioLog, String metodo,
+			long idUsuarioRelevante) {
+		return UsuarioHandler.autenticar(usuarioLog, metodo, idUsuarioRelevante);
+	}
+
+	// @Override
+	public static boolean autenticar(UsuarioBean usuarioLog, String metodo,
+			String codTrabRelevante, String codResRelevante) {
+		return UsuarioHandler.autenticar(usuarioLog, metodo, codTrabRelevante, codResRelevante);
+	}
+
+	// @Override
+	public static boolean autenticar(UsuarioBean usuarioLog, String metodo) {
+		return UsuarioHandler.autenticar(usuarioLog, metodo);
 	}
 
 }
