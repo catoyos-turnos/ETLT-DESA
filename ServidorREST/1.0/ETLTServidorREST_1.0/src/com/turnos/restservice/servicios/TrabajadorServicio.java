@@ -170,4 +170,39 @@ public class TrabajadorServicio extends GenericServicio{
 		return creaRespuestaGenericaGETLista(listaTurnos, eb, -1, -1 );
 	}
 
+	@GET
+	@Path(WebServUtils.COD_TRAB_PATH + WebServUtils.PREF_CAMBIO_PATH)
+	@Valid
+	public Response getHorarioTrabajadorRango(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
+			@DefaultValue("-1") int time_ini,
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
+			@DefaultValue("-1") int time_fin) {
+		Date fecha_ini = null;
+		Date fecha_fin = null;
+		ErrorBean eb = new ErrorBean();
+		RespuestaBean<PropuestaCambioBean> respuesta = null;
+		try {
+			if (time_ini > 0) {
+				fecha_ini = new Date(time_ini * 1000l);
+			}
+			if (time_fin > 0) {
+				fecha_fin = new Date(time_fin * 1000l);
+			}
+			if(fecha_ini == null && fecha_fin == null) {
+				fecha_ini = Calendar.getInstance().getTime();
+			}
+		} catch (Exception e) {
+			int[] loc = {61,6,0};
+			String msg = "momentos (%s, %s) no parseable, o algo [["+e.getMessage()+"]]";
+			String[] params = {String.valueOf(time_ini), String.valueOf(time_fin)};
+			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s48", loc, msg, params);
+		}
+		
+		ArrayList<PropuestaCambioBean> listaCambios = TurnoTrabajadorDiaHandler.getTurnosTrabajadorRango(null, codRes, codTrab, fecha_ini, fecha_fin,  eb);
+
+		return creaRespuestaGenericaGETLista(listaTurnos, eb, -1, -1 );
+	}
+
 }

@@ -41,6 +41,20 @@ public class MensajeServicio extends GenericServicio{
 	// ---------------------GET-----------------------------------------------
 	
 	@GET
+	@Path(WebServUtils.PREF_NUM_PATH)
+	@Valid
+	public Response numMensajes(
+			@PathParam(WebServUtils.P_PARAM_COD_USER) long codUser,
+			@QueryParam(WebServUtils.Q_PARAM_LISTA_MSG_LEIDOS) @DefaultValue("true") boolean incLeidos,
+			) {
+		ErrorBean errorBean = new ErrorBean();
+		int numMensajes = MensajeHandler.numMensajesUser(null, codUser, incLeidos, errorBean);
+
+		GenericEntity<Integer> numEntity = new GenericEntity<Integer>(new Integer(numMensajes)) {};
+		return Response.status(errorBean.getHtmlStatus()).entity(numEntity).build();
+	}
+	
+	@GET
 	@Valid
 	public Response listaMensajes(
 			@PathParam(WebServUtils.P_PARAM_COD_USER) long codUser, // (usuario a buscar)
@@ -59,6 +73,21 @@ public class MensajeServicio extends GenericServicio{
 		ArrayList<MensajeBean> listaMensajes = MensajeHandler.listMensajesUser(null, codUser, rol, incLeidos, profRespuestas, original, limite, offset, errorBean);
 
 		return creaRespuestaGenericaGETLista(listaMensajes, errorBean, limite, offset);
+	}
+	
+	@GET
+	@Path(WebServUtils.COD_MENSAJE_PATH + WebServUtils.PREF_MSG_RESPUESTA_PATH + WebServUtils.PREF_NUM_PATH)
+	@Valid
+	public Response numRespuestas(
+			@PathParam(WebServUtils.P_PARAM_COD_USER) long codUser,
+			@PathParam(WebServUtils.P_PARAM_COD_MENSAJE) long codMensaje,
+			@QueryParam(WebServUtils.Q_PARAM_LISTA_MSG_LEIDOS) @DefaultValue("true") boolean incLeidos
+			) {
+		ErrorBean errorBean = new ErrorBean();
+		int numMensajes = MensajeHandler.numRespuestasMensaje(null, codMensaje, incLeidos, errorBean);
+
+		GenericEntity<Integer> numEntity = new GenericEntity<Integer>(new Integer(numMensajes)) {};
+		return Response.status(errorBean.getHtmlStatus()).entity(numEntity).build();
 	}
 
 	@GET
@@ -104,6 +133,36 @@ public class MensajeServicio extends GenericServicio{
 		return creaRespuestaGenericaPOST(privado, errorBean);
 	}
 
-	//TODO leido get/post/put/delete
+	@POST
+	@Path(WebServUtils.COD_MENSAJE_PATH + WebServUtils.PREF_MSG_LEIDO_PATH)
+	@Valid
+	public Response setMensajeLeido(
+			@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser,
+			@PathParam(WebServUtils.P_PARAM_COD_MENSAJE) int codMensaje,
+			@QueryParam(WebServUtils.Q_PARAM_LEIDO) @DefaultValue("false") int leido) {
+		ErrorBean errorBean = new ErrorBean();
+		boolean leido = MensajeHandler.setLeido(null, codMensaje, leido, errorBean);
+
+		GenericEntity<Boolean> numEntity = new GenericEntity<Boolean>(new Boolean(leido)) {};
+		return Response.status(errorBean.getHtmlStatus()).entity(leido).build();
+	}
+
+	@PUT
+	@Path(WebServUtils.COD_MENSAJE_PATH + WebServUtils.PREF_MSG_LEIDO_PATH)
+	@Valid
+	public Response setMensajeSiLeido(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser,
+			@PathParam(WebServUtils.P_PARAM_COD_MENSAJE) int codMensaje) {
+		
+		return setMensajeLeido(codUser, codMensaje, true);
+	}
+
+	@DELETE
+	@Path(WebServUtils.COD_MENSAJE_PATH + WebServUtils.PREF_MSG_LEIDO_PATH)
+	@Valid
+	public Response setMensajeNoLeido(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser,
+			@PathParam(WebServUtils.P_PARAM_COD_MENSAJE) int codMensaje) {
+		
+		return setMensajeLeido(codUser, codMensaje, false);
+	}
 
 }

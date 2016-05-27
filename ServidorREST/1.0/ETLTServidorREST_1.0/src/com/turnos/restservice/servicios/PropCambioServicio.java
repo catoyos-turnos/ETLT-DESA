@@ -26,6 +26,8 @@ public class PropCambioServicio extends GenericServicio{
 	
 	// ---------------------GET-----------------------------------------------
 /*
+
+	
 	@GET
 	@Valid
 	public Response listaPropCambios();

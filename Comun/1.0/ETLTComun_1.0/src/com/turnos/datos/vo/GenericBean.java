@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonRootName;
-
+//TODO borrar(???)
 @XmlRootElement(name = "objeto")
 @JsonRootName(value = "objeto")
 public class GenericBean extends ETLTBean {

@@ -7,7 +7,7 @@ import com.turnos.datos.vo.SesionBean;
 public class Sesion {
 	public final Aplicacion aplicacion;
 	private String usuario = null;
-	private String contraseña = null;
+	private String pass = null;
 	
 	private String tokenSesion;
 	private long abierto;
@@ -44,7 +44,7 @@ public class Sesion {
 	}
 	
 	public void refresca() {
-		SesionBean bean = getSesionBean(this.usuario, this.contraseña, this.aplicacion);
+		SesionBean bean = getSesionBean(this.usuario, this.pass, this.aplicacion);
 		if (bean != null) {
 			this.tokenSesion = bean.getTokenSesion();
 			this.abierto = bean.getAbierto();
@@ -53,35 +53,46 @@ public class Sesion {
 		}
 	}
 	
-	public static Sesion genera(String usuario, String contraseña) {
-		return genera(usuario, contraseña, Aplicacion.defaultApp());
+	public static Sesion genera(String usuario, String pass) {
+		return genera(usuario, pass, Aplicacion.defaultApp());
 	}
 	
-	public static Sesion genera(String usuario, String contraseña, Aplicacion aplicacion) {
-		SesionBean bean = Sesion.getSesionBean(usuario,contraseña,aplicacion);
+	public static Sesion genera(String usuario, String pass, Aplicacion aplicacion) {
+		SesionBean bean = Sesion.getSesionBean(usuario,pass,aplicacion);
 		if (bean != null) {
 			Sesion s = new Sesion(bean, aplicacion);
 			s.usuario = usuario;
-			s.contraseña = contraseña;
+			s.pass = pass;
 			return s;
 		} else return null;
 	}
 	
-	private static SesionBean getSesionBean(String usuario, String contraseña, Aplicacion aplicacion) {
-		if(aplicacion != null && usuario != null && contraseña != null && !"".equals(usuario) && !"".equals(contraseña)) {
-			String tokenLogin = crearTokenLogin(usuario, contraseña, aplicacion.secretKey);
+	private static SesionBean getSesionBean(String usuario, String pass, Aplicacion aplicacion) {
+		if(aplicacion != null && usuario != null && pass != null && !"".equals(usuario) && !"".equals(pass)) {
+			String tokenLogin = crearTokenLogin(usuario, pass, aplicacion.secretKey);
 			return ClienteREST.login(tokenLogin, aplicacion);
 		} else return null;
 	}
 	
-	private static String crearTokenLogin(String usuario, String contraseña, String secretKey) {
+	private static SesionBean getSesionBean(String tokenLogin, Aplicacion aplicacion) {
+		if(aplicacion != null && usuario != null && pass != null && !"".equals(usuario) && !"".equals(pass)) {
+			String[] userPass = usuarioPassDesdeToken(tokenLogin, aplicacion.secretKey);
+			if(userPass != null && userPass.lenght > 1) {
+				String usuario = userPass[0];
+				String pass = userPass[1];
+				return getSesionBean(usuario, pass, aplicacion);
+			}
+		} else return null;
+	}
+	
+	private static String crearTokenLogin(String usuario, String pass, String secretKey) {
 		String[] fields = new String[4];
 
 		fields[0] = CriptoUtils.generaRandomHexString(8);
 		
 		fields[1] = "" + System.currentTimeMillis();
 		fields[2] = usuario.trim();
-		fields[3] = contraseña.trim();
+		fields[3] = pass.trim();
 
 		String desncr = String.join("@", fields);
 		String tokenLogin = null;
@@ -92,6 +103,36 @@ public class Sesion {
 		}
 
 		return tokenLogin;
+	}
+
+	private static String[] usuarioPassDesdeToken(String tokenLogin, String secretKey) {
+		String desncr = null;
+		try {
+			desncr = CriptoUtils.desencripta(tokenLogin, secretKey);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (desncr != null) {
+			String[] fields = desncr.split("@");
+			if (fields.length > 3) {
+				String[] userPass = new String[2];
+				long time = -1;
+				try {
+					time = Long.parseLong(fields[1]);
+				} catch (NumberFormatException e) { ; }
+				userPass[0] = fields[2];
+				userPass[1] = fields[3];
+				
+				return userPass;
+			} else {
+				// TODO ERROR
+			}
+		} else {
+			// TODO ERROR
+		}
+
+		return null;
 	}
 	 
 	
