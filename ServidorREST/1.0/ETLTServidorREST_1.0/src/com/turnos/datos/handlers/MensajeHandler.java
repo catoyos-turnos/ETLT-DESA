@@ -37,10 +37,14 @@ public class MensajeHandler extends GenericHandler {
 	private static final String WHSN_QUERY_MENSAJE_ES_RESP = "msg.respuesta_a IS NOT NULL";
 	@SuppressWarnings("unused")
 	private static final String WHSN_QUERY_MENSAJE_NO_ES_RESP = "msg.respuesta_a IS NULL";
+
+	private static final String QUERY_NUM_MENSAJES_USUARIO =
+			"SELECT COUNT(1) as num FROM mensaje_privado msg "
+			+ "WHERE msg.id_destinatario=?";
 	
-	private static final String QUERY_NUM_MENSAJES_NO_LEIDOS =
-			"SELECT COUNT(1) FROM mensaje_privado msg "
-			+ "WHERE msg.id_destinatario=? AND msg.leido=false";
+	private static final String QUERY_NUM_MENSAJES_RESPUESTA =
+			"SELECT COUNT(1) as num FROM mensaje_privado msg "
+			+ "WHERE msg.respuesta_a=?";
 			
 	private static final String QUERY_LISTA_MENSAJE =
 			"SELECT msg.id_privado as idMensaje, msg.id_remitente as idRemitente, "
@@ -399,20 +403,96 @@ public class MensajeHandler extends GenericHandler {
 
 		return false;
 	}
-	
-	public static int numNoLeidosUser(Connection conexion,
-			long usrMensaje, int limite, int offset, ErrorBean errorBean) {
-		return 0;
+
+	public static int numMensajesUser(Connection conexion, long codUser, boolean incLeidos, ErrorBean errorBean) {
+		int LOC_M = 6;
+		Connection nconexion = aseguraConexion(conexion);
+		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
+		int num = 0;
+
+		if (codUser >= 0) {
+			try {
+				String q = QUERY_GET_MENSAJE_COD;
+				if (!incLeidos) {
+					q += " AND " + WHSN_QUERY_MENSAJE_NO_LEIDO;
+				}
+				PreparedStatement ps = nconexion.prepareStatement(q);
+				ps.setLong(1, codUser);
+				ResultSet rs = ps.executeQuery();
+
+				if (rs.next()) {
+					num = rs.getInt("num");
+				} else {
+					errorBean.setHttpCode(Status.NOT_FOUND);
+					errorBean.updateErrorCode("69910202");
+					errorBean.updateMsg("no encotrado usuario con codigo " + codUser);
+				}
+			} catch (SQLException e) {
+				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
+				errorBean.updateErrorCode("69910201");
+				errorBean.updateMsg(e.getMessage());
+				e.printStackTrace();
+			} finally {
+				terminaOperacion(nconexion, cierraConexion);
+			}
+		} else {
+			errorBean.setHttpCode(Status.BAD_REQUEST);
+			errorBean.updateErrorCode("69910200");
+			errorBean.updateMsg("debe incluir 'codUser' correcto");
+		}
+		
+		return num;
+	}
+
+	public static int numRespuestasMensaje(Connection conexion, long codMensaje, boolean incLeidos, ErrorBean errorBean) {
+		int LOC_M = 7;
+		Connection nconexion = aseguraConexion(conexion);
+		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
+		int num = 0;
+
+		if (codMensaje >= 0) {
+			try {
+				String q = QUERY_NUM_MENSAJES_RESPUESTA;
+				if (!incLeidos) {
+					q += " AND " + WHSN_QUERY_MENSAJE_NO_LEIDO;
+				}
+				PreparedStatement ps = nconexion.prepareStatement(q);
+				ps.setLong(1, codMensaje);
+				ResultSet rs = ps.executeQuery();
+
+				if (rs.next()) {
+					num = rs.getInt("num");
+				} else {
+					errorBean.setHttpCode(Status.NOT_FOUND);
+					errorBean.updateErrorCode("69910202");
+					errorBean.updateMsg("no encotrado mensaje con codigo " + codMensaje);
+				}
+			} catch (SQLException e) {
+				errorBean.setHttpCode(Status.INTERNAL_SERVER_ERROR);
+				errorBean.updateErrorCode("69910201");
+				errorBean.updateMsg(e.getMessage());
+				e.printStackTrace();
+			} finally {
+				terminaOperacion(nconexion, cierraConexion);
+			}
+		} else {
+			errorBean.setHttpCode(Status.BAD_REQUEST);
+			errorBean.updateErrorCode("69910200");
+			errorBean.updateMsg("debe incluir 'codMensaje' correcto");
+		}
+		
+		return num;
 	}
 	
-	public static boolean autenticar(UsuarioBean usuarioLog, String metodo,
-			long idUsuarioRelevante) {
+	
+
+	
+	public static boolean autenticar(UsuarioBean usuarioLog, String metodo, long idUsuarioRelevante) {
 		return UsuarioHandler.autenticar(usuarioLog, metodo, idUsuarioRelevante);
 	}
 
 	// @Override
-	public static boolean autenticar(UsuarioBean usuarioLog, String metodo,
-			String codTrabRelevante, String codResRelevante) {
+	public static boolean autenticar(UsuarioBean usuarioLog, String metodo, String codTrabRelevante, String codResRelevante) {
 		return UsuarioHandler.autenticar(usuarioLog, metodo, codTrabRelevante, codResRelevante);
 	}
 
@@ -420,6 +500,5 @@ public class MensajeHandler extends GenericHandler {
 	public static boolean autenticar(UsuarioBean usuarioLog, String metodo) {
 		return UsuarioHandler.autenticar(usuarioLog, metodo);
 	}
-
 
 }

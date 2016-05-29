@@ -6,9 +6,11 @@
 <!DOCTYPE html>
 <html>
 <%@ include file="default-head.jsp" %>
+<c:set var="id_pag" scope="page" value="CENTRAL"/>
 <body>
 <%@ include file="plantilla-cabecera.jsp" %>
 <%@ include file="plantilla-navbar.jsp" %>
+<!-- ${mensaje} -->
 	<h2>mi residencia</h2>
 	<p><a href="${raiz}/res/${residencia.codigo}">${residencia.nombre} (${residencia.ciudad})</a></p>
 	<h2>mi semana</h2>

@@ -4,6 +4,18 @@ body {
   background-color: #eee;
 }
 
+.badge-num-msg {
+  background-color: #990000;
+}
+
+.badge-num-cambios-in {
+  background-color: #009900;
+}
+
+.badge-num-cambios-out {
+  background-color: #3333CC;
+}
+/*
 .form-signin {
   max-width: 330px;
   padding: 15px;
@@ -38,3 +50,4 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+*/

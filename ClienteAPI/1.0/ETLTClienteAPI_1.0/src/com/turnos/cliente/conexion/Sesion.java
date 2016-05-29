@@ -27,7 +27,7 @@ public class Sesion {
 	}
 
 	public String getTokenSesion() {
-		if((tokenCaduca-System.currentTimeMillis()) < (60*1000)) refresca();
+		if(!isActiva()) refresca();
 		return tokenSesion;
 	}
 
@@ -50,6 +50,11 @@ public class Sesion {
 			this.abierto = bean.getAbierto();
 			this.tokenCaduca = bean.getTokenCaduca();
 			this.usuarioLogeado = Usuario.genera(bean.getUsuario());
+		} else {
+			this.tokenSesion = null;
+			this.abierto = -1;
+			this.tokenCaduca = -1;
+			this.usuarioLogeado = null;
 		}
 	}
 	
@@ -58,7 +63,7 @@ public class Sesion {
 	}
 	
 	public static Sesion genera(String usuario, String pass, Aplicacion aplicacion) {
-		SesionBean bean = Sesion.getSesionBean(usuario,pass,aplicacion);
+		SesionBean bean = Sesion.getSesionBean(usuario, pass, aplicacion);
 		if (bean != null) {
 			Sesion s = new Sesion(bean, aplicacion);
 			s.usuario = usuario;
@@ -71,17 +76,6 @@ public class Sesion {
 		if(aplicacion != null && usuario != null && pass != null && !"".equals(usuario) && !"".equals(pass)) {
 			String tokenLogin = crearTokenLogin(usuario, pass, aplicacion.secretKey);
 			return ClienteREST.login(tokenLogin, aplicacion);
-		} else return null;
-	}
-	
-	private static SesionBean getSesionBean(String tokenLogin, Aplicacion aplicacion) {
-		if(aplicacion != null && usuario != null && pass != null && !"".equals(usuario) && !"".equals(pass)) {
-			String[] userPass = usuarioPassDesdeToken(tokenLogin, aplicacion.secretKey);
-			if(userPass != null && userPass.lenght > 1) {
-				String usuario = userPass[0];
-				String pass = userPass[1];
-				return getSesionBean(usuario, pass, aplicacion);
-			}
 		} else return null;
 	}
 	
@@ -103,6 +97,23 @@ public class Sesion {
 		}
 
 		return tokenLogin;
+	}
+
+	public boolean isActiva() {
+		return (tokenSesion != null) && (tokenCaduca - System.currentTimeMillis()) > (1000);
+	}
+	
+	/*
+	private static SesionBean getSesionBean(String tokenLogin, Aplicacion aplicacion) {
+		if(aplicacion != null && tokenLogin != null && !"".equals(tokenLogin)) {
+			String[] userPass = usuarioPassDesdeToken(tokenLogin, aplicacion.secretKey);
+			if(userPass != null && userPass.length > 1) {
+				String usuario = userPass[0];
+				String pass = userPass[1];
+				return getSesionBean(usuario, pass, aplicacion);
+			}
+		}
+		return null;
 	}
 
 	private static String[] usuarioPassDesdeToken(String tokenLogin, String secretKey) {
@@ -134,6 +145,6 @@ public class Sesion {
 
 		return null;
 	}
-	 
+	 */
 	
 }

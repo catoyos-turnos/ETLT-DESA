@@ -12,7 +12,6 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.UriBuilder;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.turnos.datos.WebServUtils;
@@ -124,13 +123,13 @@ public class ClienteREST {
 			
 			//------------------------------.
 			switch(metodo) {
-				case GET: res = b.get().readEntity(res.getClass());
+				case GET: res = b.get().readEntity(RespuestaBean.class);
 					break;
-				case POST: res = b.post(Entity.entity(jsonBody, MediaType.APPLICATION_JSON_TYPE), res.getClass());
+				case POST: res = b.post(Entity.entity(jsonBody, MediaType.APPLICATION_JSON_TYPE), RespuestaBean.class);
 					break;
-				case PUT: res = b.put(Entity.entity(jsonBody, MediaType.APPLICATION_JSON_TYPE), res.getClass());
+				case PUT: res = b.put(Entity.entity(jsonBody, MediaType.APPLICATION_JSON_TYPE), RespuestaBean.class);
 					break;
-				case DELETE: res = b.delete(res.getClass());
+				case DELETE: res = b.delete(RespuestaBean.class);
 					break;
 				default: return null;
 			}

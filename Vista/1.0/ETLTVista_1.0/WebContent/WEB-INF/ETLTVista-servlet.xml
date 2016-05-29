@@ -18,6 +18,13 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 
+	<mvc:interceptors>
+		<mvc:interceptor>
+		    <mvc:mapping path="/app/*"/>
+			<bean class="com.turnos.cliente.spring.LoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
 	<mvc:annotation-driven />
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 </beans>

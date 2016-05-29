@@ -7,6 +7,8 @@ public class WebServUtils {
 
 	public static final String PREF_AUTH_PATH = "/auth";
 	public static final String PREF_LOGIN_PATH = "/login";
+
+	public static final String PREF_NUM_PATH = "num";
 	
 	public static final String PREF_RES_PATH = "/res";
 	public static final String COD_RES_PATH  = "/{codRes: [A-Z0-9_]{3,32}}";
@@ -73,6 +75,8 @@ public class WebServUtils {
 	public static final String PREF_COMENTARIO_PATH = "/comentario";
 	public static final String COD_COMENTARIO_PATH = "/{idComentario: [0-9]{1,11}}";
 	public static final String P_PARAM_COD_COMENTARIO = "idComentario";
+
+	public static final String PREF_MSG_LEIDO_PATH = "/set.leido";
 	
 	public static final String Q_PARAM_ROL_EN_MSG = "msg_rol"; // (rol de usuario a buscar)
 	public static final String Q_PARAM_MSG_ORIGINAL = "original"; // (mensajes original [para devolver respuestas])
@@ -89,6 +93,7 @@ public class WebServUtils {
 	public static final String Q_PARAM_OFFSET = "offset"; // (pagina)
 	public static final String Q_PARAM_COMPLETO = "completo";
 	public static final String Q_PARAM_INC_GEO = "inc_geo"; // (incluye info geografica en respuesta)
+	public static final String Q_PARAM_LEIDO = "leido";
 	
 	
 	public static Date getFecha(int anio, int mes, int dia) {

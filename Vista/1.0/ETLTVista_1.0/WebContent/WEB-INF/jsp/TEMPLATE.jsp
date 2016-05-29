@@ -7,6 +7,7 @@
 <!DOCTYPE html>
 <html>
 <%@ include file="default-head.jsp" %>
+<c:set var="id_pag" scope="page" value="DEFAULT"/>
 <body>
 <%@ include file="plantilla-cabecera.jsp" %>
 <%@ include file="plantilla-navbar.jsp" %>

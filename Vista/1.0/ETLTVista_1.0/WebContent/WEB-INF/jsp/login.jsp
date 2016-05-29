@@ -6,31 +6,19 @@
 <!DOCTYPE html>
 <html>
 <%@ include file="default-head.jsp"%>
+<c:set var="id_pag" scope="page" value="LOGIN"/>
 <body>
 	<%@ include file="plantilla-cabecera.jsp"%>
-	<%@ include file="plantilla-navbar.jsp"%>
+
 	<div class="jumbotron">
 		<div class="container">
-
-			<form class="form-signin">
-				<h2 class="form-signin-heading">Please sign in</h2>
+			<form action="${raiz}/login" method="POST" class="form-signin">
 				<label for="inputUsuario" class="sr-only">Usuario:</label>
-				<input
-					type="text" id="inputUsuario" class="form-control"
-					placeholder="Usuario" required autofocus>
+				<input type="text" id="inputUsuario" name="user" class="form-control" placeholder="Usuario" required autofocus>
 				<label for="inputPassword" class="sr-only">Password:</label>
-				<input
-					type="password" id="inputPassword" class="form-control"
-					placeholder="Password" required>
-				<div class="checkbox">
-					<label><input type="checkbox" value="remember-me">Recuerdame</label>
-				</div>
+				<input type="password" id="inputPassword" name="pass" class="form-control" placeholder="Password" required>
 				<button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
 			</form>
-
-			<p>
-				<a class="btn btn-primary btn-lg" href="#" role="button">EXPLICAME ESTO &raquo;</a>
-			</p>
 		</div>
 	</div>
 	<%@ include file="plantilla-pie.jsp"%>
