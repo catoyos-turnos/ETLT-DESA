@@ -13,10 +13,8 @@ import com.turnos.cliente.conexion.Sesion;
 @Controller
 public class LoginControlador {
 
-	
 	@RequestMapping(value={"/login", "/"}, method = RequestMethod.GET)
 	public ModelAndView loginForm() {
-		System.out.println("00");
 		ModelAndView model = new ModelAndView("login");
 		return model;
 	}
@@ -26,7 +24,6 @@ public class LoginControlador {
 			@RequestParam("user") String user,
 			@RequestParam("pass") String pass,
 			HttpServletRequest request) {
-		System.out.println("01 (" +user + " :: " +pass+")");
 		Sesion s = Sesion.genera(user, pass);
 		if(s.isActiva()) {
 			request.getSession().setAttribute("SesionAPI", s);
@@ -38,7 +35,6 @@ public class LoginControlador {
 
 	@RequestMapping(value={"/logout"}, method = RequestMethod.GET)
 	public ModelAndView logoutAccion(HttpServletRequest request) {
-		System.out.println("02");
 		request.getSession().setAttribute("SesionAPI", null);
 		ModelAndView model = new ModelAndView("login");
 		return model;

@@ -1,11 +1,13 @@
 package com.turnos.cliente.modelo;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.turnos.datos.vo.ServicioBean;
 
 
-public class Servicio {
+public class Servicio implements Serializable {
+	private static final long serialVersionUID = 47L;
 
 	public static List<Servicio> listaTurnos (String codRes, String codTurno) {
 		//TODO

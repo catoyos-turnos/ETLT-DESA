@@ -23,8 +23,6 @@ public class CentralControlador {
 
 	@RequestMapping({"/", "/front"})
 	public ModelAndView posicionCentral() {
-
-		System.out.println("HOLA");
 		Usuario usuario = SesionUtils.getUsuarioLogeado();
 
 		Residencia residencia = usuario.getResidencia();
@@ -39,10 +37,6 @@ public class CentralControlador {
 		model.addObject("trabajador", trabajador);
 		model.addObject("residencia", residencia);
 		model.addObject("servicios", servicios);
-		
-		
-//		model.addObject("sdfIn", sdfIn);//TODO sacar a session
-//		model.addObject("sdfEx", sdfEx);//TODO sacar a session
 		
 		return model;
 	}
@@ -83,7 +77,9 @@ public class CentralControlador {
 		turnoAux.setCodResidencia(residencia.getCodigo());
 		turnoAux.setTipo("ORDINARIO");
 		ttdAux.setTurno(turnoAux);
-		servicios.add(ttdAux);
+		for (int i = 0; i < 10; i++) {
+			servicios.add(ttdAux);
+		}
 
 		return servicios;
 

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "mensaje")
 @JsonRootName(value = "mensaje")
 public class MensajeBean extends ETLTBean {
+	private static final long serialVersionUID = 74L;
 	private long id_mensaje = -1;
 	private long id_remitente;
 	private UsuarioBean remitente;

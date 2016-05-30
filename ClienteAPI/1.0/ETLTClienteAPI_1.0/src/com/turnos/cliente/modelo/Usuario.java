@@ -1,9 +1,14 @@
 package com.turnos.cliente.modelo;
 
+import java.io.Serializable;
+
 import com.turnos.datos.vo.UsuarioBean;
 import com.turnos.datos.vo.UsuarioBean.NivelUsuario;
 
-public class Usuario {
+public class Usuario implements Serializable {
+
+	private static final long serialVersionUID = 47L;
+	
 	private UsuarioBean bean;
 
 	private Usuario(UsuarioBean bean) {

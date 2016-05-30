@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "usuario")
 @JsonRootName(value = "usuario")
 public class UsuarioBean extends ETLTBean {
-
+	private static final long serialVersionUID = 74L;
 	public enum NivelUsuario {
 		USUARIO, ADMIN, SUPERADMIN, BANEADO;
 		public static NivelUsuario safeValueOf(String arg) {

@@ -1,10 +1,12 @@
 package com.turnos.cliente.modelo;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.turnos.datos.vo.TrabajadorBean;
 
-public class Trabajador {
+public class Trabajador implements Serializable {
+	private static final long serialVersionUID = 47L;
 
 	public static List<Trabajador> listaTrabajadores (String codRes) {
 		//TODO

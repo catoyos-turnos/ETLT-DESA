@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "pais")
 @JsonRootName(value = "pais")
 public class PaisBean extends ETLTBean {
+	private static final long serialVersionUID = 74L;
 	private String paisCod;
 	private String paisNombre;
 	private String tz_estandar;

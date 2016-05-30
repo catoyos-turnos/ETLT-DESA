@@ -25,7 +25,7 @@ public class SesionUtils {
 		Usuario u = Usuario.genera(bean);
 		return u;
 	}
-
+	
 	private static TrabajadorBean getTrabajador() {
 
 		TrabajadorBean trabajador = new TrabajadorBean();
@@ -57,5 +57,5 @@ public class SesionUtils {
 		
 		return residencia;
 	}
-	
+
 }

@@ -1,5 +1,6 @@
 package com.turnos.datos.vo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +16,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @XmlRootElement(name = "respuesta")
 @JsonRootName(value = "respuesta")
 @JsonInclude(Include.NON_NULL)
-public class RespuestaBean<T extends ETLTBean> {
-	
+public class RespuestaBean<T extends ETLTBean> implements Serializable {
+	private static final long serialVersionUID = 77L;
 	@JsonDeserialize(as=ArrayList.class, contentUsing=ETLTBeanDeserializer.class)
 	private List<T> listaResultados;
 	private ErrorBean error;

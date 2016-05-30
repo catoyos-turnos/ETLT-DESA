@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "serv_tipo_dia")
 @JsonRootName(value = "serv_tipo_dia")
 public class ServicioTipoDiaBean extends ETLTBean {
+	private static final long serialVersionUID = 74L;
 	public enum SelectorTipoDia {
 		SI, NO, CUALQUIERA;
 		public static SelectorTipoDia safeValueOf(String arg) {

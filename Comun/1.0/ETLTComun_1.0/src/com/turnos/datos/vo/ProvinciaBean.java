@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "provincia")
 @JsonRootName(value = "provincia")
 public class ProvinciaBean extends ETLTBean {
-
+	private static final long serialVersionUID = 74L;
 	private String provinciaCod;
 	private String provinciaNombre;
 	private String paisCod;

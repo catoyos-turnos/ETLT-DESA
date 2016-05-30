@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<header class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -11,12 +11,14 @@
 		<div id="navbar" class="navbar-collapse navbar-right collapse">
 			<ul class="nav navbar-nav">
 				<li class="${(id_pag eq 'MENSAJES')?'active':''}">
-					<a href="${raiz}/app/mensajes">MENSAJES<span class="badge badge-num-msg">1</span></a>
+					<a href="${raiz}/app/mensajes"> MENSAJES
+						<span class="label label-num-msg">1</span>
+					</a>
 				</li>
 				<li class="${(id_pag eq 'CAMBIOS')?'active':''}">
-					<a href="${raiz}/app/cambios">CAMBIOS
-						<span class="badge badge-num-cambios-in">2</span>
-						<span class="badge badge-num-cambios-out">3</span>
+					<a href="${raiz}/app/cambios"> CAMBIOS
+						<span class="label label-pill label-num-cambios-in"> 2 </span>
+						<span class="label label-pill label-num-cambios-out"> 3 </span>
 					</a>
 				</li>
 				<li class="dropdown ${(id_pag eq 'PERFIL')?'active':''}">
@@ -37,4 +39,4 @@
 		</div>
 		</c:if>
 	</div>
-</nav>
+</header>

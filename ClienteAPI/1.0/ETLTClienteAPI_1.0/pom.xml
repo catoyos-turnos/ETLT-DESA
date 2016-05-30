@@ -13,6 +13,14 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
+		  <resources>
+		    <resource>
+		      <directory>src/resources</directory>
+		      <includes>
+		        <include>**/*.properties</include>
+		      </includes>
+		    </resource>
+		  </resources>
         </configuration>
       </plugin>
     </plugins>

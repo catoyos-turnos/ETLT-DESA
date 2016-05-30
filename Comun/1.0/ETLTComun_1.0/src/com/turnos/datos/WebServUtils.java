@@ -62,6 +62,7 @@ public class WebServUtils {
 	public static final String Q_PARAM_USER = "user";
 	public static final String PREF_USER_NIVEL_PATH = "/nivel";
 	public static final String Q_PARAM_USER_NIVEL = "nivel";
+	public static final String Q_PARAM_INC_TRAB_RES = "inc_trab_res";
 
 	public static final String PREF_MENSAJE_PATH = "/msg";
 	public static final String COD_MENSAJE_PATH  = "/{codMsg: [0-9]{1,11}}";

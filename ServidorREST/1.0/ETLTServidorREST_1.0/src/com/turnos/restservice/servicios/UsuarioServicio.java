@@ -41,7 +41,7 @@ public class UsuarioServicio extends GenericServicio{
 	@Path(WebServUtils.COD_USER_PATH)
 	@Valid
 	public Response getUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser,
-			boolean incTrabRes) {
+			@QueryParam(WebServUtils.Q_PARAM_INC_TRAB_RES) boolean incTrabRes) {
 		ErrorBean errorBean = new ErrorBean();
 		UsuarioBean usuario = UsuarioHandler.getUsuario(null, codUser, incTrabRes, errorBean);
 
@@ -77,9 +77,9 @@ public class UsuarioServicio extends GenericServicio{
 	@Valid
 	public Response cambiaNivelUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser,
 			@QueryParam(WebServUtils.Q_PARAM_USER_NIVEL) String nivelStr) {
-		ErrorBean errorBean = new ErrorBean();
 		/* TODO */
 		/*
+		ErrorBean errorBean = new ErrorBean();
 		UsuarioBean usuario = UsuarioHandler.updateUsuario(null, codUser, userRaw, errorBean);
 		return creaRespuestaGenericaPUT(usuario, errorBean);
 		*/

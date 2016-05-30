@@ -182,7 +182,7 @@ public class TrabajadorServicio extends GenericServicio{
 	}
 
 	@GET
-	@Path(WebServUtils.COD_TRAB_PATH + WebServUtils.PREF_PROP_CAMBIO_PATH)
+	@Path(WebServUtils.COD_TRAB_PATH + WebServUtils.PREF_PROP_CAMBIO_PATH + WebServUtils.PREF_NUM_PATH)
 	@Valid
 	public Response getNumPropuestasCambio(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab) {

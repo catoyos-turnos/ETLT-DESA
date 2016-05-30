@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "vacaciones")
 @JsonRootName(value = "vacaciones")
 public class VacacionesBean extends ETLTBean {
+	private static final long serialVersionUID = 74L;
 	private long id_vacaciones = -1;
 	private String codTrab;
 	private String codRes;

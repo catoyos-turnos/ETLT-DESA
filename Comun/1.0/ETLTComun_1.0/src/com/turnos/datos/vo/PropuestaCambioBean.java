@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "propuestaCambio")
 @JsonRootName(value = "propuestaCambio")
 public class PropuestaCambioBean extends ETLTBean {
+	private static final long serialVersionUID = 74L;
 	public static enum EstadoPCS {
 		PROPUESTO, ACEPTADO, RECHAZADO, CONFIRMADO, ANULADO, CADUCADO;
 		public static EstadoPCS safeValueOf(String arg) {

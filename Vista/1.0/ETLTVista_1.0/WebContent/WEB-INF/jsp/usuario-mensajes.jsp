@@ -9,7 +9,7 @@
 <c:set var="id_pag" scope="page" value="MENSAJES"/>
 <body>
 <%@ include file="plantilla-cabecera.jsp" %>
-<%@ include file="plantilla-navbar.jsp" %>
+<%@ include file="plantilla-sidebar.jsp" %>
 
 <!-- CONTENIDO -->
 

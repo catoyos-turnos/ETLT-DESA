@@ -12,6 +12,8 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.turnos.datos.WebServUtils;
@@ -109,31 +111,24 @@ public class ClienteREST {
 			}
 			headerParams.put("publicKey", aplicacion.publicKey);
 			b = b.headers(new MultivaluedHashMap<String, Object>(headerParams));
-			
-			/*
-			Entity e = null;
-			if(postParams != null && !postParams.isEmpty()) {
-				Form form = new Form();
-				for(Entry<String, String> entry: postParams.entrySet()) {
-					form.param(entry.getKey(), entry.getValue());
-				}
-				e = Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE);
-			}
-			*/
-			
-			//------------------------------.
+			Response rp;
 			switch(metodo) {
-				case GET: res = b.get().readEntity(RespuestaBean.class);
+				case GET:  rp = b.get();
 					break;
-				case POST: res = b.post(Entity.entity(jsonBody, MediaType.APPLICATION_JSON_TYPE), RespuestaBean.class);
+				case POST: rp = b.post(Entity.entity(jsonBody, MediaType.APPLICATION_JSON_TYPE));
 					break;
-				case PUT: res = b.put(Entity.entity(jsonBody, MediaType.APPLICATION_JSON_TYPE), RespuestaBean.class);
+				case PUT: rp = b.put(Entity.entity(jsonBody, MediaType.APPLICATION_JSON_TYPE));
 					break;
-				case DELETE: res = b.delete(RespuestaBean.class);
+				case DELETE: rp = b.delete();
 					break;
 				default: return null;
 			}
-
+			if (rp.getStatusInfo().getFamily() == Family.SUCCESSFUL) {
+				res = rp.readEntity(RespuestaBean.class);
+			} else {
+				//TODO
+//				System.out.println("****** MAL ******" + rp);
+			}
 		} finally {
 			if(client != null) client.close();
 		}

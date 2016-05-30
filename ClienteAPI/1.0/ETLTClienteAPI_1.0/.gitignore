@@ -1,3 +1,5 @@
 /bin/
 /target/
 /test/
+/hs_err_pid6004.log
+/replay_pid6004.log

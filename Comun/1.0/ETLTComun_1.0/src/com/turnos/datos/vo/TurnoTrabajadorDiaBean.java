@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "turno_dia")
 @JsonRootName(value = "turno_dia")
 public class TurnoTrabajadorDiaBean extends ETLTBean {
+	private static final long serialVersionUID = 74L;
 	private TrabajadorBean trabajador;
 	private ServicioBean servicio;
 	private TurnoBean turno;

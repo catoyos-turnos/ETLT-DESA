@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "festivo")
 @JsonRootName(value = "festivo")
 public class FestivoBean extends ETLTBean {
+	private static final long serialVersionUID = 74L;
 	public enum TipoFiesta {
 		NACIONAL, AUTONOMICA, LOCAL;
 		public static TipoFiesta safeValueOf(String arg) {

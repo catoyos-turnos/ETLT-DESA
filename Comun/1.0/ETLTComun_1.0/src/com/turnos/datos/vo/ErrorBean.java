@@ -1,5 +1,7 @@
 package com.turnos.datos.vo;
 
+import java.io.Serializable;
+
 import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -10,7 +12,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @XmlRootElement(name = "error")
 @JsonRootName(value = "error")
 @JsonInclude(Include.NON_NULL)
-public class ErrorBean {
+public class ErrorBean implements Serializable {
+	private static final long serialVersionUID = 74L;
 	private Status httpCode;
 	private String errorCode;
 	private String msg;

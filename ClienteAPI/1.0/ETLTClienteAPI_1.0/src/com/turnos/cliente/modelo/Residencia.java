@@ -1,5 +1,6 @@
 package com.turnos.cliente.modelo;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,7 +9,9 @@ import com.turnos.cliente.conexion.Sesion;
 import com.turnos.datos.vo.MunicipioBean;
 import com.turnos.datos.vo.ResidenciaBean;
 
-public class Residencia {
+public class Residencia implements Serializable {
+	private static final long serialVersionUID = 47L;
+	
 	private ResidenciaBean beanOriginal;
 	private ResidenciaBean beanAux;
 	private boolean flagNueva;

@@ -45,6 +45,7 @@ public class AutenticacionServicio extends GenericServicio{
 	@GET
 	@Path(WebServUtils.PREF_LOGIN_PATH)
 	public Response login() {
+		System.out.println("+++");
 		ErrorBean errorBean = new ErrorBean();
 		long time = System.currentTimeMillis();
 		String tokenSesion = null;

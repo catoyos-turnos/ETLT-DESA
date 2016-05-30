@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "turno")
 @JsonRootName(value = "turno")
 public class TurnoBean extends ETLTBean {
-
+	private static final long serialVersionUID = 74L;
 	public enum TipoTurno {
 		ORDINARIO, RESERVA, DESCANSO;
 		public static TipoTurno safeValueOf(String arg) {

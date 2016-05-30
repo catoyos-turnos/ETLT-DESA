@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @XmlRootElement(name = "servicio")
 @JsonRootName(value = "servicio")
 public class ServicioBean extends ETLTBean {
+	private static final long serialVersionUID = 74L;
 	private long id_servicio = -1;
 	private String codTurno;
 	private String codRes;

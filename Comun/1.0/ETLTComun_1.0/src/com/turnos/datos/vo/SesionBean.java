@@ -1,6 +1,13 @@
 package com.turnos.datos.vo;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonRootName;
+
+@XmlRootElement(name = "sesion")
+@JsonRootName(value = "sesion")
 public class SesionBean extends ETLTBean {
+	private static final long serialVersionUID = 74L;
 	private String tokenSesion;
 	private long abierto;
 	private long tokenCaduca;
