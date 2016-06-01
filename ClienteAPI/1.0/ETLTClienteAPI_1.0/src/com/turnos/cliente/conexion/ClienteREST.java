@@ -21,6 +21,7 @@ import com.turnos.datos.vo.ETLTBean;
 import com.turnos.datos.vo.ResidenciaBean;
 import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.SesionBean;
+import com.turnos.datos.vo.TrabajadorBean;
 
 public class ClienteREST {
 
@@ -83,6 +84,18 @@ public class ClienteREST {
 			return null;
 		}
 	}
+
+	public static TrabajadorBean trabajadorGetTrabajador(String codRes, String codTrab, Sesion sesion) {
+		RespuestaBean<TrabajadorBean> respuesta = llamada(sesion, new TrabajadorBean(),
+				WebServUtils.PREF_RES_PATH + '/' + codRes + WebServUtils.PREF_TRAB_PATH + '/' + codTrab,
+				MetodoHTTP.GET, null, null, null, null);
+		if (respuesta != null && respuesta.getResultado() != null) {			
+			return respuesta.getResultado();
+		} else {
+			//TODO ( probablemente lanzar excepcion (??) )
+			return null;
+		}
+	}
 		
 	
 	private static <T extends ETLTBean> RespuestaBean<T> llamada(
@@ -90,15 +103,14 @@ public class ClienteREST {
 			Map<String, String> queryParams, Map<String, String> postParams,
 			Map<String, String> headerParams, String jsonBody) {
 		
-		System.out.println(" ***** LLAMANDO *** (" + recurso + ", " + metodo + ", " + jsonBody + ") *****");
+		System.out.println(" ***** LLAMANDO *** (" + recurso + ", " + metodo + ", " + queryParams + ", " + jsonBody + ") *****");
 		
 		RespuestaBean<T> res = new RespuestaBean<T>();
 		Client client = null;
 		
-		try {
+		try {		
 			client = ClientBuilder.newClient().register(JacksonJaxbJsonProvider.class);
 			WebTarget target = client.target(aplicacion.baseURL).path(recurso);
-			
 			if(queryParams != null && !queryParams.isEmpty()) {
 				for(Entry<String, String> entry: queryParams.entrySet()) {
 					target = target.queryParam(entry.getKey(), entry.getValue());

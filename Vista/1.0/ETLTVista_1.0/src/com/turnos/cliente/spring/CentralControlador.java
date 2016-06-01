@@ -1,9 +1,12 @@
 package com.turnos.cliente.spring;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.turnos.cliente.modelo.Residencia;
 import com.turnos.cliente.modelo.Trabajador;
-import com.turnos.cliente.modelo.Usuario;
 import com.turnos.datos.vo.ServicioBean;
 import com.turnos.datos.vo.TurnoBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
@@ -22,27 +24,24 @@ import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 public class CentralControlador {
 
 	@RequestMapping({"/", "/front"})
-	public ModelAndView posicionCentral() {
-		Usuario usuario = SesionUtils.getUsuarioLogeado();
+	public ModelAndView posicionCentral(HttpServletRequest request) {
 
-		Residencia residencia = usuario.getResidencia();
-		Trabajador trabajador = usuario.getTrabajador();
+		Residencia residencia = (Residencia) request.getAttribute("residencia");
+		Trabajador trabajador = (Trabajador) request.getAttribute("trabajador");
+		Date hoy = (Date) request.getAttribute("hoy");
+		
 		Calendar c = Calendar.getInstance(TimeZone.getTimeZone(residencia.getTZ()));
-		c.set(2016, 5, 23);
+		c.setTime(hoy);
 		List<TurnoTrabajadorDiaBean> servicios = getServicios(trabajador, residencia, c);
 		
 		ModelAndView model = new ModelAndView("central");
-//		model.addObject("usuario", usuario);
-		model.addObject("hoy", c.getTime().clone());
-		model.addObject("trabajador", trabajador);
-		model.addObject("residencia", residencia);
 		model.addObject("servicios", servicios);
 		
 		return model;
 	}
 
 	@RequestMapping({"/trab/{codTrab}/dia"})
-	public ModelAndView getDia(@PathVariable("codTrab") String codTrab, @RequestParam("fecha") String fecha) {
+	public ModelAndView getDia(@PathVariable("codTrab") String codTrab, @RequestParam("fecha") String fecha, HttpServletRequest request) {
 		System.out.println(fecha);
 		System.out.println(codTrab);
 		ModelAndView model = new ModelAndView("central");

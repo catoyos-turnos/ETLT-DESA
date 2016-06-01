@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.turnos.cliente.SesionUtils;
+import com.turnos.cliente.conexion.Aplicacion;
 import com.turnos.cliente.conexion.Sesion;
 @Controller
 public class LoginControlador {
@@ -24,8 +26,12 @@ public class LoginControlador {
 			@RequestParam("user") String user,
 			@RequestParam("pass") String pass,
 			HttpServletRequest request) {
-		Sesion s = Sesion.genera(user, pass);
-		if(s.isActiva()) {
+		
+		Aplicacion app = SesionUtils.getAplicacion();
+		System.out.println(user + ", " + pass + ", " + app.baseURL + ", " + app.publicKey + ", " + app.secretKey);
+		Sesion s = Sesion.genera(user, pass, app);
+		
+		if(s!=null && s.isActiva()) {
 			request.getSession().setAttribute("SesionAPI", s);
 			return new RedirectView(request.getContextPath()+"/app/front");
 		} else {

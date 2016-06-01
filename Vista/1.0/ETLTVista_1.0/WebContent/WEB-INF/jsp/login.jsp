@@ -6,12 +6,12 @@
 <!DOCTYPE html>
 <html>
 <%@ include file="default-head.jsp"%>
-<c:set var="id_pag" scope="page" value="LOGIN"/>
+<c:set var="_id_pag" scope="page" value="LOGIN"/>
 <body>
 	<%@ include file="plantilla-cabecera.jsp"%>
 
 	<div class="container">
-		<form action="${raiz}/login" method="POST" class="form-signin">
+		<form action="${_raiz}/login" method="POST" class="form-signin">
 			<label for="inputUsuario" class="sr-only">Usuario:</label>
 			<input type="text" id="inputUsuario" name="user" class="form-control" placeholder="Usuario" required autofocus>
 			<label for="inputPassword" class="sr-only">Password:</label>

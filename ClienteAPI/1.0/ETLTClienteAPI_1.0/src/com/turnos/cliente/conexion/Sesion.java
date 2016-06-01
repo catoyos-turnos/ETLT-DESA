@@ -58,9 +58,11 @@ public class Sesion {
 		}
 	}
 	
+	/*
 	public static Sesion genera(String usuario, String pass) {
 		return genera(usuario, pass, Aplicacion.defaultApp());
 	}
+	*/
 	
 	public static Sesion genera(String usuario, String pass, Aplicacion aplicacion) {
 		SesionBean bean = Sesion.getSesionBean(usuario, pass, aplicacion);

@@ -1,11 +1,16 @@
 package com.turnos.cliente.spring;
 
+import java.sql.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.turnos.cliente.conexion.Sesion;
+import com.turnos.cliente.modelo.Residencia;
+import com.turnos.cliente.modelo.Trabajador;
+import com.turnos.cliente.modelo.Usuario;
 
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
@@ -30,8 +35,21 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			}
 		}
 		if(b) {
-			request.setAttribute("usuario", sesionAPI.getUsuarioLogeado());
-			request.setAttribute("mensaje", "yeaahhh biiaatch");
+			Usuario u = sesionAPI.getUsuarioLogeado();
+			request.setAttribute("usuario", u);
+			if(u != null) {
+				Residencia r = Residencia.getResidencia(u.getCodRes(), sesionAPI);
+				request.setAttribute("residencia", r);
+				Trabajador t = null;
+				if (u.getCodTrab()!=null) {
+					t = Trabajador.getTrabajador(u.getCodRes(), u.getCodTrab(), sesionAPI);
+				}
+				request.setAttribute("trabajador", t);
+				request.setAttribute("hoy", new Date(System.currentTimeMillis()));
+				request.setAttribute("mensaje", "ok");
+			} else {
+				request.setAttribute("mensaje", "MAL");
+			}
 		} else {
 			response.sendRedirect(request.getContextPath()+"/login");
 		}

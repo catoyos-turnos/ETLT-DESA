@@ -198,19 +198,47 @@ public class Residencia implements Serializable {
 
 
 	public void setNombre(String nombre) {
-		
+		if(flagBorrada)
+			;
+		else if(flagNueva)
+			beanOriginal.setNombre(nombre);
+		else {
+			flagModificada = true;
+			beanAux.setNombre(nombre);
+		}
 	}
 
 	public void setDescripcion(String descripcion) {
-		
+		if(flagBorrada)
+			;
+		else if(flagNueva)
+			beanOriginal.setDescripcion(descripcion);
+		else {
+			flagModificada = true;
+			beanAux.setDescripcion(descripcion);
+		}
 	}
 
 	public void setCiudad(String ciudad) {
-		
+		if(flagBorrada)
+			;
+		else if(flagNueva)
+			beanOriginal.setCiudad(ciudad);
+		else {
+			flagModificada = true;
+			beanAux.setCiudad(ciudad);
+		}
 	}
 
 	public void setMunicipioCod(String municipioCod) {
-		
+		if(flagBorrada)
+			;
+		else if(flagNueva)
+			beanOriginal.setMunicipioCod( municipioCod);
+		else {
+			flagModificada = true;
+			beanAux.setMunicipioCod( municipioCod);
+		}
 	}
 
 	public List<DiaFestivo> getDiasFestivos(int time_ini, int time_fin, int limit) {

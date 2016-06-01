@@ -3,6 +3,9 @@ package com.turnos.cliente.modelo;
 import java.io.Serializable;
 import java.util.List;
 
+import com.turnos.cliente.conexion.ClienteREST;
+import com.turnos.cliente.conexion.Sesion;
+import com.turnos.datos.vo.ResidenciaBean;
 import com.turnos.datos.vo.TrabajadorBean;
 
 public class Trabajador implements Serializable {
@@ -13,9 +16,11 @@ public class Trabajador implements Serializable {
 		return null;
 	}
 
-	public static Trabajador getTrabajador (String codRes, String codTrab) {
-		//TODO
-		return null;
+	public static Trabajador getTrabajador (String codRes, String codTrab, Sesion sesion) {
+		TrabajadorBean bean = ClienteREST.trabajadorGetTrabajador(codRes, codTrab, sesion);
+		Trabajador res = Trabajador.genera(bean);
+		
+		return res;
 	}
 
 	public static Trabajador nuevoTrabajador(TrabajadorBean trabRaw, String codRes) {
