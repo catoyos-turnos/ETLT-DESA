@@ -43,7 +43,6 @@ public class Residencia implements Serializable {
 		
 		return res;
 	}
-
 	public static Residencia nuevaResidencia(ResidenciaBean resRaw) {
 		//TODO
 		return null;
@@ -59,6 +58,7 @@ public class Residencia implements Serializable {
 		return false;
 	}
 
+/*
 	public static List<DiaFestivo> getDiasFestivos(String codRes, int time_ini, int time_fin,  int limit) {
 		//TODO
 		return null;
@@ -68,6 +68,7 @@ public class Residencia implements Serializable {
 		//TODO
 		return null;
 	}
+	*/
 	
 	public String getCodigo() {
 		if(flagBorrada)
