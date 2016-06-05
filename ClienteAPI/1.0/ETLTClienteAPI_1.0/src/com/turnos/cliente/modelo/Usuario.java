@@ -2,7 +2,6 @@ package com.turnos.cliente.modelo;
 
 import java.io.Serializable;
 
-import com.turnos.cliente.conexion.ClienteREST;
 import com.turnos.cliente.conexion.Sesion;
 import com.turnos.datos.vo.ResidenciaBean;
 import com.turnos.datos.vo.TrabajadorBean;
@@ -58,7 +57,7 @@ public class Usuario implements Serializable {
 	public Residencia getResidencia(boolean force, Sesion sesion) {
 		ResidenciaBean beanB = null;
 		if(bean != null) beanB = bean.getResidencia();
-		if((sesion != null && sesion.isActiva()) && (force || beanB == null)) {
+		if(force || beanB == null) {
 			if(bean != null && bean.getCodRes() != null) {
 				return Residencia.getResidencia(bean.getCodRes(), sesion);
 			} else {
@@ -71,7 +70,7 @@ public class Usuario implements Serializable {
 	public Trabajador getTrabajador(boolean force, Sesion sesion) {
 		TrabajadorBean beanB = null;
 		if(bean != null) beanB = bean.getTrabajador();
-		if((sesion != null && sesion.isActiva()) && (force || beanB == null)) {
+		if(force || beanB == null) {
 			if(bean != null && bean.getCodRes() != null && bean.getCodTrab() != null) {
 				return Trabajador.getTrabajador(bean.getCodRes(), bean.getCodTrab(), sesion);
 			} else {

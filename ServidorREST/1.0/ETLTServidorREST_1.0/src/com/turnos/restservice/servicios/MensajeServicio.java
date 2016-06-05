@@ -46,7 +46,7 @@ public class MensajeServicio extends GenericServicio{
 	@GET
 	@Path(WebServUtils.PREF_NUM_PATH)
 	@Valid
-	public Response numMensajes(
+	public Response getNumMensajes(
 			@PathParam(WebServUtils.P_PARAM_COD_USER) long codUser,
 			@QueryParam(WebServUtils.Q_PARAM_LISTA_MSG_LEIDOS) @DefaultValue("true") boolean incLeidos
 			) {
@@ -81,7 +81,7 @@ public class MensajeServicio extends GenericServicio{
 	@GET
 	@Path(WebServUtils.COD_MENSAJE_PATH + WebServUtils.PREF_MSG_RESPUESTA_PATH + WebServUtils.PREF_NUM_PATH)
 	@Valid
-	public Response numRespuestas(
+	public Response getNumRespuestas(
 			@PathParam(WebServUtils.P_PARAM_COD_USER) long codUser,
 			@PathParam(WebServUtils.P_PARAM_COD_MENSAJE) long codMensaje,
 			@QueryParam(WebServUtils.Q_PARAM_LISTA_MSG_LEIDOS) @DefaultValue("true") boolean incLeidos

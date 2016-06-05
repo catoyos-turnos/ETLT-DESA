@@ -24,7 +24,7 @@ import com.turnos.datos.vo.UsuarioBean;
 
 @Api(value = "Propuesta de cambio")
 @Produces(MediaType.APPLICATION_JSON)
-@Path(WebServUtils.PREF_RES_PATH + WebServUtils.COD_RES_PATH + WebServUtils.PREF_PROP_CAMBIO_PATH + WebServUtils.COD_PROP_CAMBIO_PATH
+@Path(WebServUtils.PREF_PROP_CAMBIO_PATH + WebServUtils.COD_PROP_CAMBIO_PATH
 		+ WebServUtils.PREF_COMENTARIO_PATH)
 public class ComentarioPropCambioServicio extends GenericServicio{
 	
@@ -42,7 +42,6 @@ public class ComentarioPropCambioServicio extends GenericServicio{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Valid
 	public Response nuevoComentario(ComentarioBean comRaw,
-			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_PROP_CAMBIO) long codCambio) {
 		ErrorBean eb = new ErrorBean();
 		boolean auth = ComentarioPropCambioHandler.autenticar(usuarioLog, HttpMethod.POST, comRaw.getId_usuario());
@@ -61,7 +60,7 @@ public class ComentarioPropCambioServicio extends GenericServicio{
 		response = ComentarioBean.class)
 	@Path(WebServUtils.COD_COMENTARIO_PATH)
 	@Valid
-	public Response borraComentario(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
+	public Response borraComentario(
 			@PathParam(WebServUtils.P_PARAM_COD_PROP_CAMBIO) long codCambio,
 			@PathParam(WebServUtils.P_PARAM_COD_COMENTARIO) long codCom) {
 		ErrorBean eb = new ErrorBean();

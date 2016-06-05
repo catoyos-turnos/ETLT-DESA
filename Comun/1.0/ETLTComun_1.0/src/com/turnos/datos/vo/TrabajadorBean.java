@@ -12,6 +12,7 @@ public class TrabajadorBean extends ETLTBean {
 	private String codResidencia;
 	private String nombre;
 	private String apellidos;
+	private long id_usuario;
 	
 	public TrabajadorBean() {
 		super(TrabajadorBean.class);
@@ -47,6 +48,14 @@ public class TrabajadorBean extends ETLTBean {
 
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
+	}
+
+	public long getId_usuario() {
+		return id_usuario;
+	}
+
+	public void setId_usuario(long id_usuario) {
+		this.id_usuario = id_usuario;
 	}
 
 }

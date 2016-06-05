@@ -12,22 +12,25 @@ public class TrabajadorHandler extends GenericHandler {
 
 	private static final String QUERY_EXISTE_TRABAJADOR =
 			"SELECT count(*) as existe "
-			+ "FROM trabajador trab JOIN residencia res ON trab.id_residencia=res.id_residencia"
+			+ "FROM trabajador trab JOIN residencia res ON trab.id_residencia=res.id_residencia "
 			+ "WHERE trab.codigo=? AND res.codigo=?";
 
 	private static final String QUERY_LISTA_TRABAJADORES_RES = 
-		"SELECT trab.codigo as codTrab, res.codigo as codRes,"
-			+ "trab.nombre as nombre, trab.apellidos as apellidos"
-		+ "FROM trabajador trab JOIN residencia res ON trab.id_residencia=res.id_residencia"
+		"SELECT trab.codigo as codTrab, res.codigo as codRes, "
+			+ "trab.nombre as nombre, trab.apellidos as apellidos "
+		+ "FROM trabajador trab JOIN residencia res ON trab.id_residencia=res.id_residencia "
+		+ "JOIN LEFT usuario u ON trab.id_trabajador=u.id_trabajador "
 		+ "WHERE res.codigo=?";
 
 	private static final String QUERY_GET_TRABAJADOR_COD = 
 			"SELECT trab.codigo as codTrab, res.codigo as codRes,"
-				+ "trab.nombre as nombre, trab.apellidos as apellidos"
-			+ "FROM trabajador trab JOIN residencia res ON trab.id_residencia=res.id_residencia"
+				+ "trab.nombre as nombre, trab.apellidos as apellidos "
+			+ "FROM trabajador trab JOIN residencia res ON trab.id_residencia=res.id_residencia "
+			+ "JOIN LEFT usuario u ON trab.id_trabajador=u.id_trabajador "
 			+ "WHERE trab.codigo AND res.codigo=?";
 
-	private static final String UPDATE_INSERT_NUEVO_TRABAJADOR = "INSERT INTO trabajador (codigo, id_residencia, nombre, apellidos) "
+	private static final String UPDATE_INSERT_NUEVO_TRABAJADOR =
+			"INSERT INTO trabajador (codigo, id_residencia, nombre, apellidos) "
 					+ "SELECT ?, res.id_residencia, ?, ? FROM residencia res WHERE res.codigo=?";
 
 	private static final String UPDATE_UPDATE_TRABAJADOR = 

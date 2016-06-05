@@ -25,12 +25,9 @@ import javax.ws.rs.core.Response.Status;
 
 import com.turnos.datos.WebServUtils;
 import com.turnos.datos.fabricas.ErrorBeanFabrica;
-import com.turnos.datos.handlers.PropCambioHandler;
 import com.turnos.datos.handlers.TrabajadorHandler;
 import com.turnos.datos.handlers.TurnoTrabajadorDiaHandler;
 import com.turnos.datos.vo.ErrorBean;
-import com.turnos.datos.vo.PropuestaCambioBean;
-import com.turnos.datos.vo.RespuestaBean;
 import com.turnos.datos.vo.TrabajadorBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 import com.turnos.datos.vo.UsuarioBean;
@@ -143,19 +140,18 @@ public class TrabajadorServicio extends GenericServicio{
 	public Response getHorarioTrabajadorRango(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
-			@DefaultValue("-1") int time_ini,
+			@DefaultValue("-1") long time_ini,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
-			@DefaultValue("-1") int time_fin) {
+			@DefaultValue("-1") long time_fin) {
 		Date fecha_ini = null;
 		Date fecha_fin = null;
 		ErrorBean eb = new ErrorBean();
-		RespuestaBean<TurnoTrabajadorDiaBean> respuesta = null;
 		try {
 			if (time_ini > 0) {
-				fecha_ini = new Date(time_ini * 1000l);
+				fecha_ini = new Date(time_ini);
 			}
 			if (time_fin > 0) {
-				fecha_fin = new Date(time_fin * 1000l);
+				fecha_fin = new Date(time_fin);
 			}
 			if(fecha_ini == null && fecha_fin == null) {
 				fecha_ini = Calendar.getInstance().getTime();

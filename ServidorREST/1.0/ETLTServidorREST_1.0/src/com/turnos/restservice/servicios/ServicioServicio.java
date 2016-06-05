@@ -63,7 +63,7 @@ public class ServicioServicio extends GenericServicio{
 	@Valid
 	public Response getServicio (@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
-			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
+			@PathParam(WebServUtils.P_PARAM_COD_SERV) long codServ) {
 		ErrorBean errorBean = new ErrorBean();
 		ServicioBean servicio = ServicioHandler.getServicio(null, codServ, errorBean);
 
@@ -89,7 +89,7 @@ public class ServicioServicio extends GenericServicio{
 	public Response modServicio(ServicioBean servicioRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
-			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
+			@PathParam(WebServUtils.P_PARAM_COD_SERV) long codServ) {
 		ErrorBean errorBean = new ErrorBean();
 		ServicioBean servicio = ServicioHandler.updateServicio(null, codRes, codServ, servicioRaw, errorBean);
 
@@ -101,7 +101,7 @@ public class ServicioServicio extends GenericServicio{
 	@Valid
 	public Response borraServicio(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TURNO) String codTurno,
-			@PathParam(WebServUtils.P_PARAM_COD_SERV) int codServ) {
+			@PathParam(WebServUtils.P_PARAM_COD_SERV) long codServ) {
 		ErrorBean errorBean = new ErrorBean();
 		boolean borrado = ServicioHandler.deleteServicio(null, codRes, codServ, errorBean);
 

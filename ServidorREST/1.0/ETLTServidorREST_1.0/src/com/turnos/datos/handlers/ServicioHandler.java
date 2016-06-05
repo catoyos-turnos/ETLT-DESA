@@ -66,7 +66,7 @@ public class ServicioHandler extends GenericHandler {
 
 	private static final String UPDATE_DELETE_SERVICIO = "DELETE FROM servicio WHERE id_servicio=?";
 
-	public static boolean existeServicio(Connection conexion, int codServ, ErrorBean errorBean) {
+	public static boolean existeServicio(Connection conexion, long codServ, ErrorBean errorBean) {
 		int LOC_M = 1;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -98,7 +98,7 @@ public class ServicioHandler extends GenericHandler {
 		return listaServs;
 	}
 
-	public static ServicioBean getServicio(Connection conexion, int codServ, ErrorBean errorBean) {
+	public static ServicioBean getServicio(Connection conexion, long codServ, ErrorBean errorBean) {
 		int LOC_M = 3;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -129,7 +129,7 @@ public class ServicioHandler extends GenericHandler {
 		return serv;
 	}
 
-	public static ServicioBean updateServicio(Connection conexion, String codRes, int codServ, ServicioBean servRaw , ErrorBean errorBean) {
+	public static ServicioBean updateServicio(Connection conexion, String codRes, long codServ, ServicioBean servRaw , ErrorBean errorBean) {
 		int LOC_M = 5;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
@@ -142,7 +142,7 @@ public class ServicioHandler extends GenericHandler {
 		return serv;
 	}
 
-	public static boolean deleteServicio(Connection conexion, String codRes, int codServ,  ErrorBean errorBean) {
+	public static boolean deleteServicio(Connection conexion, String codRes, long codServ,  ErrorBean errorBean) {
 		int LOC_M = 6;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);

@@ -64,12 +64,8 @@ public class UsuarioServicio extends GenericServicio{
 	@Valid
 	public Response modUsuario(UsuarioBean userRaw,
 			@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
-		ErrorBean errorBean = new ErrorBean();
-		UsuarioBean usuario = null;
-//		UsuarioBean usuario = UsuarioHandler.updateUsuario(null, codUser, userRaw, usuarioLog, errorBean);
-		//TODO mod params uno a uno
-
-		return creaRespuestaGenericaPUT(usuario, errorBean);
+		/* TODO */
+		return Response.status(Status.NOT_IMPLEMENTED).build();
 	}
 	
 	@PUT
@@ -86,19 +82,18 @@ public class UsuarioServicio extends GenericServicio{
 		return Response.status(Status.NOT_IMPLEMENTED).build();
 	}
 	
-	/*
-	@GET
+	@PUT
+	@Path(WebServUtils.COD_USER_PATH + WebServUtils.PREF_USER_NOMBRE_PATH)
 	@Valid
-	public Response listaUsuarios () {
+	public Response cambiaNombreUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser,
+			@QueryParam(WebServUtils.Q_PARAM_USER_NOMBRE) String nivelStr) {
+		/* TODO */
+		/*
+		ErrorBean errorBean = new ErrorBean();
+		UsuarioBean usuario = UsuarioHandler.updateUsuario(null, codUser, userRaw, errorBean);
+		return creaRespuestaGenericaPUT(usuario, errorBean);
+		*/
 		return Response.status(Status.NOT_IMPLEMENTED).build();
 	}
-	
-	@DELETE
-	@Path(WebServUtils.COD_USER_PATH)
-	@Valid
-	public Response borraUsuario(@PathParam(WebServUtils.P_PARAM_COD_USER) int codUser) {
-		return Response.status(Status.NOT_IMPLEMENTED).build();
-	}
-	*/
 
 }

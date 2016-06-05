@@ -38,11 +38,13 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			Usuario u = sesionAPI.getUsuarioLogeado();
 			request.setAttribute("usuario", u);
 			if(u != null) {
-				Residencia r = Residencia.getResidencia(u.getCodRes(), sesionAPI);
+//				Residencia r = Residencia.getResidencia(u.getCodRes(), sesionAPI);
+				Residencia r = u.getResidencia(true, sesionAPI);
 				request.setAttribute("residencia", r);
 				Trabajador t = null;
 				if (u.getCodTrab()!=null) {
-					t = Trabajador.getTrabajador(u.getCodRes(), u.getCodTrab(), sesionAPI);
+//					t = Trabajador.getTrabajador(u.getCodRes(), u.getCodTrab(), sesionAPI);
+					t = u.getTrabajador(true, sesionAPI);
 				}
 				request.setAttribute("trabajador", t);
 				request.setAttribute("hoy", new Date(System.currentTimeMillis()));
@@ -55,6 +57,5 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 		}
 		return b;
 	}
-
 	
 }

@@ -31,13 +31,11 @@ import com.turnos.datos.handlers.FestivoHandler;
 import com.turnos.datos.handlers.ResidenciaHandler;
 import com.turnos.datos.handlers.ResidenciaHandler.TipoBusqueda;
 import com.turnos.datos.handlers.TurnoTrabajadorDiaHandler;
-import com.turnos.datos.handlers.VacacionesHandler;
 import com.turnos.datos.vo.ErrorBean;
 import com.turnos.datos.vo.FestivoBean;
 import com.turnos.datos.vo.ResidenciaBean;
 import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 import com.turnos.datos.vo.UsuarioBean;
-import com.turnos.datos.vo.VacacionesBean;
 
 @Api(value = "Residencia")
 @Produces(MediaType.APPLICATION_JSON)
@@ -220,48 +218,6 @@ public class ResidenciaServicio extends GenericServicio{
 	}
 	
 	@GET
-	@ApiOperation(value = "Lista trabajadores de residencia dada en vacaciones en cierta fecha",
-		response = FestivoBean.class,
-		responseContainer = "List")
-	@Path(WebServUtils.COD_RES_PATH + WebServUtils.PREF_VACS_PATH)
-	@Valid
-	public Response getVacacionesDia(
-			@ApiParam(value = "codigo de la residencia")
-			@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
-
-			@ApiParam(value = "fecha a buscar (timestamp en ms.)", defaultValue="fecha actual")
-			@QueryParam(WebServUtils.Q_PARAM_FECHA)
-			@DefaultValue("-1") int time,
-			
-			@QueryParam(WebServUtils.Q_PARAM_LIMITE) @DefaultValue("-1") int limite,
-			@QueryParam(WebServUtils.Q_PARAM_OFFSET) @DefaultValue("-1") int offset) {
-		ErrorBean eb = new ErrorBean();
-		int[] limiteOffset = calculaLimiteOffsetCorrectos(limite, offset, 1000);
-		limite = limiteOffset[0]; offset = limiteOffset[1];
-		
-		ArrayList<VacacionesBean> listaVacaciones = null;
-		Date fecha = null;
-		try {
-			if (time > 0) {
-				fecha = new Date(time * 1000l);
-			} else {
-				fecha = Calendar.getInstance().getTime();
-			}
-		} catch (Exception e) {
-			int[] loc = {70,6,0};
-			String msg = "momento (%s) no parseable, o algo [["+e.getMessage()+"]]";
-			String[] params = {String.valueOf(time)};
-			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s48", loc, msg, params);
-		}
-		
-		if(fecha != null) {
-			listaVacaciones = VacacionesHandler.listVacacionesResDia(null, codRes, fecha, limite, offset,  eb);
-		}
-		
-		return creaRespuestaGenericaGETLista(listaVacaciones, eb, limite, offset);
-	}
-	
-	@GET
 	@ApiOperation(value = "Lista turnos de trabajadores en residencia en cierta fecha",
 		response = TurnoTrabajadorDiaBean.class,
 		responseContainer = "List")
@@ -302,4 +258,5 @@ public class ResidenciaServicio extends GenericServicio{
 		
 		return creaRespuestaGenericaGETLista(listaTurnos, eb, limite, offset);
 	}
+	
 }

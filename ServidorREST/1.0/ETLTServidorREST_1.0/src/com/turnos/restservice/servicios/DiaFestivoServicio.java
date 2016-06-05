@@ -68,10 +68,10 @@ public class DiaFestivoServicio extends GenericServicio{
 			@QueryParam(WebServUtils.Q_PARAM_TIPO_FIESTA) String tipoStr,
 			
 			@ApiParam(value = "", required = false) 
-			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI) @DefaultValue("-1") int time_ini,
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI) @DefaultValue("-1") long time_ini,
 			
 			@ApiParam(value = "", required = false) 
-			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN) @DefaultValue("-1") int time_fin,
+			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN) @DefaultValue("-1") long time_fin,
 			
 			@ApiParam(value = "", required = false) 
 			@QueryParam(WebServUtils.Q_PARAM_COMPLETO) @DefaultValue("false") boolean completo,
@@ -90,10 +90,10 @@ public class DiaFestivoServicio extends GenericServicio{
 		Date fecha_fin = null;
 		try {
 			if (time_ini > 0) {
-				fecha_ini = new Date(time_ini * 1000l);
+				fecha_ini = new Date(time_ini);
 			}
 			if (time_fin > 0) {
-				fecha_fin = new Date(time_fin * 1000l);
+				fecha_fin = new Date(time_fin);
 			}
 			if(fecha_ini == null && fecha_fin == null) {
 				fecha_ini = Calendar.getInstance().getTime();
@@ -128,7 +128,7 @@ public class DiaFestivoServicio extends GenericServicio{
 	@ApiOperation(value = "Devuelve día festivo por ID",
     	response = FestivoBean.class)
 	@Valid
-	public Response getDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest,
+	public Response getDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) long codFest,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo) {
 		ErrorBean eb = new ErrorBean();
@@ -168,7 +168,7 @@ public class DiaFestivoServicio extends GenericServicio{
 		response = FestivoBean.class)
 	@Valid
 	public Response modDiaFestivo(FestivoBean festRaw,
-			@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
+			@PathParam(WebServUtils.P_PARAM_COD_FEST) long codFest) {
 		ErrorBean eb = new ErrorBean();
 		FestivoBean festivo = null;
 		boolean auth = FestivoHandler.autenticar(usuarioLog, HttpMethod.PUT);
@@ -188,7 +188,7 @@ public class DiaFestivoServicio extends GenericServicio{
 	@Path(WebServUtils.COD_FEST_PATH)
 	@ApiOperation(value = "Elimina día festivo existente")
 	@Valid
-	public Response borraDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) int codFest) {
+	public Response borraDiaFestivo(@PathParam(WebServUtils.P_PARAM_COD_FEST) long codFest) {
 		ErrorBean eb = new ErrorBean();
 		boolean borrado = false;
 		boolean auth = FestivoHandler.autenticar(usuarioLog, HttpMethod.POST);

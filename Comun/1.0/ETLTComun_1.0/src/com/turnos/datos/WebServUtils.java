@@ -18,14 +18,16 @@ public class WebServUtils {
 	public static final String COD_TRAB_PATH  = "/{codTrab: [A-Z0-9_]{3,32}}";
 	public static final String P_PARAM_COD_TRAB  = "codTrab";
 	
+	/*
 	public static final String PREF_VACS_PATH = "/vacs";
 	public static final String COD_VACS_PATH  = "/{codVacs: [0-9]{1,11}}";
 	public static final String P_PARAM_COD_VACS  = "codVacs";
+	*/
 	
 	public static final String PREF_TURNO_PATH = "/turno";
 	public static final String COD_TURNO_PATH  = "/{codTurno: [A-Z0-9_]{3,32}}";
 	public static final String P_PARAM_COD_TURNO  = "codTurno";
-	public static final String Q_PARAM_TIPO_TURNO = "tipo_fiesta";
+	public static final String Q_PARAM_TIPO_TURNO = "tipo_turno";
 	public static final String Q_PARAM_INC_SERVS = "inc_servs";
 	
 	public static final String PREF_SERV_PATH = "/serv";
@@ -62,6 +64,8 @@ public class WebServUtils {
 	public static final String Q_PARAM_USER = "user";
 	public static final String PREF_USER_NIVEL_PATH = "/nivel";
 	public static final String Q_PARAM_USER_NIVEL = "nivel";
+	public static final String PREF_USER_NOMBRE_PATH = "/nombre";
+	public static final String Q_PARAM_USER_NOMBRE = "nombre";
 	public static final String Q_PARAM_INC_TRAB_RES = "inc_trab_res";
 
 	public static final String PREF_MENSAJE_PATH = "/msg";

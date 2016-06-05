@@ -1,13 +1,16 @@
 package com.turnos.cliente.modelo;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.turnos.cliente.conexion.ClienteREST;
 import com.turnos.cliente.conexion.Sesion;
+import com.turnos.datos.vo.FestivoBean;
 import com.turnos.datos.vo.MunicipioBean;
 import com.turnos.datos.vo.ResidenciaBean;
+import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
 
 public class Residencia implements Serializable {
 	private static final long serialVersionUID = 47L;
@@ -18,8 +21,8 @@ public class Residencia implements Serializable {
 	private boolean flagModificada;
 	private boolean flagBorrada;
 	
-	private Residencia(ResidenciaBean residencia, boolean nueva) {
-		this.beanOriginal = residencia;
+	private Residencia(ResidenciaBean beanOriginal, boolean nueva) {
+		this.beanOriginal = beanOriginal;
 		this.flagNueva = nueva;
 		this.flagModificada = false;
 		this.flagBorrada = false;
@@ -30,8 +33,8 @@ public class Residencia implements Serializable {
 		List<ResidenciaBean> listBeans = ClienteREST.residenciaListaResidencias(pais, provincia, municipio, false, limite, offset, sesion);
 		List<Residencia> list = new LinkedList<Residencia>();
 		if (listBeans != null && !listBeans.isEmpty()) {
-			for (ResidenciaBean residenciaBean : listBeans) {
-				list.add(Residencia.genera(residenciaBean));
+			for (ResidenciaBean bean : listBeans) {
+				list.add(Residencia.genera(bean));
 			}
 		}
 		return list;
@@ -43,39 +46,64 @@ public class Residencia implements Serializable {
 		
 		return res;
 	}
-	public static Residencia nuevaResidencia(ResidenciaBean resRaw) {
-		//TODO
-		return null;
+
+	public static Residencia nuevoResidencia(ResidenciaBean rawBean, Sesion sesion) {
+		ResidenciaBean bean = ClienteREST.residenciaNuevaResidencia(rawBean, sesion);
+		Residencia res = Residencia.genera(bean);
+		return res;
 	}
 
-	public static Residencia modResidencia(ResidenciaBean resRaw, String codRes) {
-		//TODO
-		return null;
+	public static Residencia modResidencia(ResidenciaBean rawBean, String codRes, Sesion sesion) {
+		ResidenciaBean bean = ClienteREST.residenciaModResidencia(rawBean, codRes, sesion);
+		Residencia res = Residencia.genera(bean);
+		return res;
 	}
 
-	public static boolean borraResidencia(String codRes) {
-		//TODO
-		return false;
+	public static boolean borraResidencia(String codRes, Sesion sesion) {
+		boolean res = ClienteREST.residenciaBorraResidencia(codRes, sesion);
+		return res;
 	}
 
-/*
-	public static List<DiaFestivo> getDiasFestivos(String codRes, int time_ini, int time_fin,  int limit) {
-		//TODO
-		return null;
+	public static List<Festivo> getDiasFestivos(String codRes, Date time_ini, Date time_fin, int limit, int offset, Sesion sesion) {
+		List<FestivoBean> listBeans = ClienteREST.residenciaGetDiasFestivos(codRes, time_ini, time_fin, limit, offset, sesion);
+		List<Festivo> list = new LinkedList<Festivo>();
+		if (listBeans != null && !listBeans.isEmpty()) {
+			for (FestivoBean bean : listBeans) {
+				list.add(Festivo.genera(bean));
+			}
+		}
+		return list;
 	}
 
-	public static List<TurnoTrabajadorDia> getHorarioCompletoDia(String codRes, int time) {
-		//TODO
-		return null;
+
+	public List<Festivo> getDiasFestivos(Date time_ini, Date time_fin, int limit, int offset, Sesion sesion) {
+		return Residencia.getDiasFestivos(this.getCodigo(), time_ini, time_fin, limit, offset, sesion);
 	}
-	*/
+
+	public static List<TurnoTrabajadorDia> getHorarioCompletoDia(String codRes, Date time, int limit, int offset, Sesion sesion) {
+		List<TurnoTrabajadorDiaBean> listBeans = ClienteREST.residenciaGetHorarioCompletoDia(codRes, time, limit, offset, sesion);
+		List<TurnoTrabajadorDia> list = new LinkedList<TurnoTrabajadorDia>();
+		if (listBeans != null && !listBeans.isEmpty()) {
+			for (TurnoTrabajadorDiaBean bean : listBeans) {
+				list.add(TurnoTrabajadorDia.genera(bean));
+			}
+		}
+		return list;
+	}
+	
+	public List<TurnoTrabajadorDia> getHorarioCompletoDia(Date time, int limit, int offset, Sesion sesion) {
+		return Residencia.getHorarioCompletoDia(this.getCodigo(), time, limit, offset, sesion);
+	}
 	
 	public String getCodigo() {
-		if(flagBorrada)
+		if (flagBorrada)
 			return null;
-		else if(flagNueva)
-			return null;
-		else return beanOriginal.getCodigo();
+		else if (flagNueva)
+			return beanOriginal.getCodigo();
+		else if (flagModificada && beanAux.getCodigo() != null)
+			return beanAux.getCodigo();
+		else
+			return beanOriginal.getCodigo();
 	}
 
 	public String getNombre() {
@@ -88,6 +116,18 @@ public class Residencia implements Serializable {
 		else return beanOriginal.getNombre();
 	}
 
+
+	public void setNombre(String nombre) {
+		if(flagBorrada)
+			;
+		else if(flagNueva)
+			beanOriginal.setNombre(nombre);
+		else {
+			flagModificada = true;
+			beanAux.setNombre(nombre);
+		}
+	}
+
 	public String getDescripcion() {
 		if(flagBorrada)
 			return null;
@@ -96,6 +136,17 @@ public class Residencia implements Serializable {
 		else if(flagModificada && beanAux.getDescripcion()!=null)
 			return beanAux.getDescripcion();
 		else return beanOriginal.getDescripcion();
+	}
+
+	public void setDescripcion(String descripcion) {
+		if(flagBorrada)
+			;
+		else if(flagNueva)
+			beanOriginal.setDescripcion(descripcion);
+		else {
+			flagModificada = true;
+			beanAux.setDescripcion(descripcion);
+		}
 	}
 
 	public String getCiudad() {
@@ -108,6 +159,17 @@ public class Residencia implements Serializable {
 		else return beanOriginal.getCiudad();
 	}
 
+	public void setCiudad(String ciudad) {
+		if(flagBorrada)
+			;
+		else if(flagNueva)
+			beanOriginal.setCiudad(ciudad);
+		else {
+			flagModificada = true;
+			beanAux.setCiudad(ciudad);
+		}
+	}
+
 	public String getMunicipioCod() {
 		if(flagBorrada)
 			return null;
@@ -116,6 +178,17 @@ public class Residencia implements Serializable {
 		else if(flagModificada && beanAux.getMunicipioCod()!=null)
 			return beanAux.getMunicipioCod();
 		else return beanOriginal.getMunicipioCod();
+	}
+
+	public void setMunicipioCod(String municipioCod) {
+		if(flagBorrada)
+			;
+		else if(flagNueva)
+			beanOriginal.setMunicipioCod( municipioCod);
+		else {
+			flagModificada = true;
+			beanAux.setMunicipioCod( municipioCod);
+		}
 	}
 
 	public Municipio getMunicipio() {
@@ -132,133 +205,42 @@ public class Residencia implements Serializable {
 	}
 
 	public String getMunicipioNombre() {
-		if(flagBorrada)
-			return null;
-		else if(flagNueva)
-			return beanOriginal.getNombre();
-		else if (beanOriginal.getMunicipio() == null) {
-			return null;
-		}
-		return beanOriginal.getMunicipio().getMunicipioNombre();
+		Municipio m = getMunicipio();
+		return m==null ? null : m.getMunicipioNombre();
 	}
 
 	public String getProvinciaCod() {
-		if(flagBorrada)
-			return null;
-		else if(flagNueva)
-			return beanOriginal.getNombre();
-		else if (beanOriginal.getMunicipio() == null) {
-			return null;
-		}
-		return beanOriginal.getMunicipio().getProvinciaCod();
+		Municipio m = getMunicipio();
+		return m==null ? null : m.getProvinciaCod();
 	}
 
 	public String getProvinciaNombre() {
-		if(flagBorrada)
-			return null;
-		else if(flagNueva)
-			return beanOriginal.getNombre();
-		else if (beanOriginal.getMunicipio() == null) {
-			return null;
-		}
-		return beanOriginal.getMunicipio().getProvinciaNombre();
+		Municipio m = getMunicipio();
+		return m==null ? null : m.getProvinciaNombre();
 	}
 
 	public String getPaisCod() {
-		if(flagBorrada)
-			return null;
-		else if(flagNueva)
-			return beanOriginal.getNombre();
-		else if (beanOriginal.getMunicipio() == null) {
-			return null;
-		}
-		return beanOriginal.getMunicipio().getPaisCod();
+		Municipio m = getMunicipio();
+		return m==null ? null : m.getPaisCod();
 	}
 
 	public String getPaisNombre() {
-		if(flagBorrada)
-			return null;
-		else if(flagNueva)
-			return beanOriginal.getNombre();
-		else if (beanOriginal.getMunicipio() == null) {
-			return null;
-		}
-		return beanOriginal.getMunicipio().getPaisNombre();
+		Municipio m = getMunicipio();
+		return m==null ? null : m.getPaisNombre();
 	}
 
-	public String getTZ() {
-		if(flagBorrada)
-			return null;
-		else if(flagNueva)
-			return beanOriginal.getNombre();
-		else if (beanOriginal.getMunicipio() == null) {
-			return null;
-		}
-		return beanOriginal.getMunicipio().getTz();
+	public String getTz() {
+		Municipio m = getMunicipio();
+		return m==null ? null : m.getTz();
 	}
 
 
-	public void setNombre(String nombre) {
-		if(flagBorrada)
-			;
-		else if(flagNueva)
-			beanOriginal.setNombre(nombre);
-		else {
-			flagModificada = true;
-			beanAux.setNombre(nombre);
-		}
-	}
-
-	public void setDescripcion(String descripcion) {
-		if(flagBorrada)
-			;
-		else if(flagNueva)
-			beanOriginal.setDescripcion(descripcion);
-		else {
-			flagModificada = true;
-			beanAux.setDescripcion(descripcion);
-		}
-	}
-
-	public void setCiudad(String ciudad) {
-		if(flagBorrada)
-			;
-		else if(flagNueva)
-			beanOriginal.setCiudad(ciudad);
-		else {
-			flagModificada = true;
-			beanAux.setCiudad(ciudad);
-		}
-	}
-
-	public void setMunicipioCod(String municipioCod) {
-		if(flagBorrada)
-			;
-		else if(flagNueva)
-			beanOriginal.setMunicipioCod( municipioCod);
-		else {
-			flagModificada = true;
-			beanAux.setMunicipioCod( municipioCod);
-		}
-	}
-
-	public List<DiaFestivo> getDiasFestivos(int time_ini, int time_fin, int limit) {
-		//TODO
-		return null;
-	}
-
-	public List<TurnoTrabajadorDia> getHorarioCompletoDia(int time) {
-		//TODO
-		return null;
-	}
-
-
-	public void graba() {
+	public void graba(Sesion sesion) {
 		Residencia aux = null;
 		if(flagNueva)
-			aux = Residencia.nuevaResidencia(beanOriginal);
+			aux = Residencia.nuevoResidencia(beanOriginal, sesion);
 		else if(flagModificada)
-			aux = Residencia.modResidencia(beanAux, getCodigo());
+			aux = Residencia.modResidencia(beanAux, beanOriginal.getCodigo(), sesion);
 		
 		if (aux != null) {
 			this.beanOriginal = aux.beanOriginal;
@@ -269,11 +251,12 @@ public class Residencia implements Serializable {
 		flagBorrada = false;
 	}
 
-	public void borra() {
+	public void borra(Sesion sesion) {
 		boolean b = false;
 		if(!flagBorrada && !flagNueva)
-			b = Residencia.borraResidencia(getCodigo());
-		
+			b = Residencia.borraResidencia(beanOriginal.getCodigo(), sesion);//TODO  codigo
+		else
+			b = true;
 		if (b) {
 			this.beanOriginal = null;
 			this.beanAux = null;
@@ -294,26 +277,5 @@ public class Residencia implements Serializable {
 		return new Residencia(new ResidenciaBean(), true);
 	}
 
-	@Override
-	public String toString() {
-		return "Residencia ["
-				
-				+ "getCodigo()=" + getCodigo() + ", getNombre()="
-				+ getNombre() + ", getDescripcion()=" + getDescripcion()
-				+ ", getCiudad()=" + getCiudad() + ", getMunicipioCod()="
-				+ getMunicipioCod() + ", getMunicipio()=" + getMunicipio()
-				+ ", getMunicipioNombre()=" + getMunicipioNombre()
-				+ ", getProvinciaCod()=" + getProvinciaCod()
-				+ ", getProvinciaNombre()=" + getProvinciaNombre()
-				+ ", getPaisCod()=" + getPaisCod() + ", getPaisNombre()="
-				+ getPaisNombre() + ", getTZ()=" + getTZ()
-
-				+ ", flagNueva=" + flagNueva + ", flagModificada="
-				+ flagModificada + ", flagBorrada=" + flagBorrada
-				
-				+ "]";
-	}
-	
-	
 	
 }

@@ -177,11 +177,9 @@ public class GeoServicio extends GenericServicio{
 	public Response getFestivosPais(
 			@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
-			@DefaultValue("-1") int time_ini,
+			@DefaultValue("-1") long time_ini,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
-			@DefaultValue("-1") int time_fin,
-			@QueryParam(WebServUtils.Q_PARAM_LIMITE)
-			@DefaultValue("-1") int limit,
+			@DefaultValue("-1") long time_fin,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
 			@DefaultValue("false") boolean incGeo,
 			
@@ -199,11 +197,9 @@ public class GeoServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_PAIS) String codPais,
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
-			@DefaultValue("-1") int time_ini,
+			@DefaultValue("-1") long time_ini,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
-			@DefaultValue("-1") int time_fin,
-			@QueryParam(WebServUtils.Q_PARAM_LIMITE)
-			@DefaultValue("-1") int limit,
+			@DefaultValue("-1") long time_fin,
 			@QueryParam(WebServUtils.Q_PARAM_COMPLETO)
 			@DefaultValue("false") boolean completo,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)
@@ -225,11 +221,9 @@ public class GeoServicio extends GenericServicio{
 			@PathParam(WebServUtils.P_PARAM_COD_PROV) String codProvincia,
 			@PathParam(WebServUtils.P_PARAM_COD_MUNI) String codMunicipio,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_INI)
-			@DefaultValue("-1") int time_ini,
+			@DefaultValue("-1") long time_ini,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
-			@DefaultValue("-1") int time_fin,
-			@QueryParam(WebServUtils.Q_PARAM_LIMITE)
-			@DefaultValue("-1") int limit,
+			@DefaultValue("-1") long time_fin,
 			@QueryParam(WebServUtils.Q_PARAM_COMPLETO)
 			@DefaultValue("false") boolean completo,
 			@QueryParam(WebServUtils.Q_PARAM_INC_GEO)

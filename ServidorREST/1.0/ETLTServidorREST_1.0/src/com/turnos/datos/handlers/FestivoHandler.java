@@ -439,7 +439,7 @@ public class FestivoHandler extends GenericHandler {
 		return listaFests;
 	}
 
-	public static FestivoBean getFestivo(Connection conexion, int codFest, boolean includeGeo, 
+	public static FestivoBean getFestivo(Connection conexion, long codFest, boolean includeGeo, 
 			ErrorBean errorBean) {
 		int LOC_M = 6;
 		Connection nconexion = aseguraConexion(conexion);
@@ -454,7 +454,7 @@ public class FestivoHandler extends GenericHandler {
 				} else {
 					ps = nconexion.prepareStatement(QUERY_GET_FESTIVO_COD);
 				}
-				ps.setInt(1, codFest);
+				ps.setLong(1, codFest);
 				ResultSet rs;
 				rs = ps.executeQuery();
 
@@ -537,7 +537,7 @@ public class FestivoHandler extends GenericHandler {
 		return fest;
 	}
 
-	public static FestivoBean updateFestivo(Connection conexion, int codFest,
+	public static FestivoBean updateFestivo(Connection conexion, long codFest,
 			FestivoBean festRaw,  ErrorBean errorBean) {
 		int LOC_M = 8;
 		Connection nconexion = aseguraConexion(conexion);
@@ -601,7 +601,7 @@ public class FestivoHandler extends GenericHandler {
 					if (auxFecha != null) {
 						ps.setDate(params+1, javaDateToSQLDate(auxFecha));
 					}
-					ps.setInt(params+2, codFest);
+					ps.setLong(params+2, codFest);
 					
 					int c = ps.executeUpdate();
 					if (c > 0) {
@@ -631,14 +631,14 @@ public class FestivoHandler extends GenericHandler {
 		return fest;
 	}
 
-	public static boolean deleteFestivo(Connection conexion, int codFest, ErrorBean errorBean) {
+	public static boolean deleteFestivo(Connection conexion, long codFest, ErrorBean errorBean) {
 		int LOC_M = 9;
 		Connection nconexion = aseguraConexion(conexion);
 		boolean cierraConexion = (conexion == null) || (conexion != nconexion);
 		
 		try {
 			PreparedStatement ps = nconexion.prepareStatement(UPDATE_DELETE_FESTIVO);
-			ps.setInt(1, codFest);
+			ps.setLong(1, codFest);
 
 			int c = ps.executeUpdate();
 			if (c > 0) {

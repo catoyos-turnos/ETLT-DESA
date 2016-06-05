@@ -30,7 +30,7 @@ public class CentralControlador {
 		Trabajador trabajador = (Trabajador) request.getAttribute("trabajador");
 		Date hoy = (Date) request.getAttribute("hoy");
 		
-		Calendar c = Calendar.getInstance(TimeZone.getTimeZone(residencia.getTZ()));
+		Calendar c = Calendar.getInstance(TimeZone.getTimeZone(residencia.getTz()));
 		c.setTime(hoy);
 		List<TurnoTrabajadorDiaBean> servicios = getServicios(trabajador, residencia, c);
 		
