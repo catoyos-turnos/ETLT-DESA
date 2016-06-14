@@ -34,8 +34,8 @@ public class Mensaje implements Serializable {
 		return res;
 	}
 
-	public static int getNumMensajes(long arg0, boolean arg1, Sesion sesion) {
-		int res = ClienteREST.mensajeGetNumMensajes(arg0, arg1, sesion);
+	public static int getNumMensajes(long codUser, boolean incLeidos, Sesion sesion) {
+		int res = ClienteREST.mensajeGetNumMensajes(codUser, incLeidos, sesion);
 		return res;
 	}
 

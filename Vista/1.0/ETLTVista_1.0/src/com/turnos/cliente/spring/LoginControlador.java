@@ -32,9 +32,11 @@ public class LoginControlador {
 		Sesion s = Sesion.genera(user, pass, app);
 		
 		if(s!=null && s.isActiva()) {
+//			System.out.println(s);
 			request.getSession().setAttribute("SesionAPI", s);
 			return new RedirectView(request.getContextPath()+"/app/front");
 		} else {
+//			System.out.println(s);
 			return new RedirectView(request.getContextPath()+"/login");
 		}
 	}

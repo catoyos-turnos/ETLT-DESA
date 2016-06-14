@@ -8,7 +8,7 @@ public class WebServUtils {
 	public static final String PREF_AUTH_PATH = "/auth";
 	public static final String PREF_LOGIN_PATH = "/login";
 
-	public static final String PREF_NUM_PATH = "num";
+	public static final String PREF_NUM_PATH = "/num";
 	
 	public static final String PREF_RES_PATH = "/res";
 	public static final String COD_RES_PATH  = "/{codRes: [A-Z0-9_]{3,32}}";

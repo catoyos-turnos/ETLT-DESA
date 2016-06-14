@@ -188,8 +188,7 @@ public class ResidenciaHandler extends GenericHandler {
 				}
 			} else {
 				int[] loc = {LOC_H,LOC_M,2};
-				ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "debe incluir codigo");
-				errorBean.updateMsg("'tipo' desconocido");
+				ErrorBeanFabrica.generaErrorBean(errorBean, Status.BAD_REQUEST, "h22", loc, "'tipo' desconocido");
 			}
 		} catch (SQLException e) {
 			int[] loc = {LOC_H,LOC_M,1};

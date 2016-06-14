@@ -259,7 +259,8 @@ public abstract class GenericHandler {
 			rs = ps.executeQuery();
 			rs.first();
 			String str = rs.getString("infodias");
-			String[] rows = str.split("|");
+			System.out.println(str);
+			String[] rows = str.split("\\|");
 			String datestr, infostr;
 			for (String row : rows) {
 				datestr = sdfIn.format(sdfIn.parse(row.split(":")[0]));

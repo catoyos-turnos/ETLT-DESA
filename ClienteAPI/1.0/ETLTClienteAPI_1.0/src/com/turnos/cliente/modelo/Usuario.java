@@ -68,12 +68,15 @@ public class Usuario implements Serializable {
 	}
 
 	public Trabajador getTrabajador(boolean force, Sesion sesion) {
+//		System.out.println("u.getTrabajador():");
 		TrabajadorBean beanB = null;
 		if(bean != null) beanB = bean.getTrabajador();
 		if(force || beanB == null) {
 			if(bean != null && bean.getCodRes() != null && bean.getCodTrab() != null) {
+//				System.out.println("bean != null && bean.getCodRes() != null && bean.getCodTrab() != null");
 				return Trabajador.getTrabajador(bean.getCodRes(), bean.getCodTrab(), sesion);
 			} else {
+//				System.out.println("###### " + bean +" - "+ bean.getCodRes() +" - "+ bean.getCodTrab());
 				return null;
 			}
 		}

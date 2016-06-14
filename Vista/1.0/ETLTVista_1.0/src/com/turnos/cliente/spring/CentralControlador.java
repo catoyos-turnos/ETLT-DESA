@@ -2,7 +2,6 @@ package com.turnos.cliente.spring;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -14,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.turnos.cliente.SesionUtils;
+import com.turnos.cliente.conexion.Sesion;
 import com.turnos.cliente.modelo.Residencia;
 import com.turnos.cliente.modelo.Trabajador;
-import com.turnos.datos.vo.ServicioBean;
-import com.turnos.datos.vo.TurnoBean;
-import com.turnos.datos.vo.TurnoTrabajadorDiaBean;
+import com.turnos.cliente.modelo.TurnoTrabajadorDia;
 @Controller
 @RequestMapping({"/app"})
 public class CentralControlador {
@@ -26,13 +25,14 @@ public class CentralControlador {
 	@RequestMapping({"/", "/front"})
 	public ModelAndView posicionCentral(HttpServletRequest request) {
 
+		Sesion sesionAPI = SesionUtils.getSesionFromRequest(request);
 		Residencia residencia = (Residencia) request.getAttribute("residencia");
 		Trabajador trabajador = (Trabajador) request.getAttribute("trabajador");
 		Date hoy = (Date) request.getAttribute("hoy");
 		
 		Calendar c = Calendar.getInstance(TimeZone.getTimeZone(residencia.getTz()));
 		c.setTime(hoy);
-		List<TurnoTrabajadorDiaBean> servicios = getServicios(trabajador, residencia, c);
+		List<TurnoTrabajadorDia> servicios = getServicios(trabajador, residencia, c, sesionAPI);
 		
 		ModelAndView model = new ModelAndView("central");
 		model.addObject("servicios", servicios);
@@ -50,8 +50,14 @@ public class CentralControlador {
 	}
 	
 	
-	private List<TurnoTrabajadorDiaBean> getServicios(Trabajador trabajador, Residencia residencia, Calendar c) {
-
+	private List<TurnoTrabajadorDia> getServicios(Trabajador trabajador, Residencia residencia, Calendar c, Sesion sesionAPI) {
+		Date fecha_ini, fecha_fin;
+		fecha_ini = c.getTime();
+		c.roll(Calendar.DATE, 7);
+		fecha_fin = c.getTime();
+		List<TurnoTrabajadorDia> servicios = trabajador.getHorarioTrabajadorRango(fecha_ini, fecha_fin, sesionAPI);
+		
+		/*
 		LinkedList<TurnoTrabajadorDiaBean> servicios = new LinkedList<TurnoTrabajadorDiaBean>();
 		TurnoTrabajadorDiaBean ttdAux;
 		ServicioBean servAux;
@@ -79,7 +85,7 @@ public class CentralControlador {
 		for (int i = 0; i < 10; i++) {
 			servicios.add(ttdAux);
 		}
-
+*/
 		return servicios;
 
 	}

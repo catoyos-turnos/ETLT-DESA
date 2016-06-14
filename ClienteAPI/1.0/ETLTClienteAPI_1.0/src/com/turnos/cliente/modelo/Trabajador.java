@@ -1,5 +1,6 @@
 package com.turnos.cliente.modelo;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,8 +25,8 @@ public class Trabajador implements Serializable {
 		this.beanAux = new TrabajadorBean();
 	}
 
-	public static List<Trabajador> listaTrabajadores(String arg0, int arg1, int arg2, Sesion sesion) {
-		List<TrabajadorBean> listBeans = ClienteREST.trabajadorListaTrabajadores(arg0, arg1, arg2, sesion);
+	public static List<Trabajador> listaTrabajadores(String codRes, int limite, int offset, Sesion sesion) {
+		List<TrabajadorBean> listBeans = ClienteREST.trabajadorListaTrabajadores(codRes, limite, offset, sesion);
 		List<Trabajador> list = new LinkedList<Trabajador>();
 		if (listBeans != null && !listBeans.isEmpty()) {
 			for (TrabajadorBean bean : listBeans) {
@@ -35,40 +36,40 @@ public class Trabajador implements Serializable {
 		return list;
 	}
 
-	public static Trabajador getTrabajador(String arg0, String arg1, Sesion sesion) {
-		TrabajadorBean bean = ClienteREST.trabajadorGetTrabajador(arg0, arg1, sesion);
+	public static Trabajador getTrabajador(String codRes, String codTrab, Sesion sesion) {
+		TrabajadorBean bean = ClienteREST.trabajadorGetTrabajador(codRes, codTrab, sesion);
 		Trabajador res = Trabajador.genera(bean);
 		return res;
 	}
 
-	public static Trabajador nuevoTrabajador(TrabajadorBean arg0, String arg1, Sesion sesion) {
-		TrabajadorBean bean = ClienteREST.trabajadorNuevoTrabajador(arg0, arg1, sesion);
+	public static Trabajador nuevoTrabajador(TrabajadorBean arg0, String codRes, Sesion sesion) {
+		TrabajadorBean bean = ClienteREST.trabajadorNuevoTrabajador(arg0, codRes, sesion);
 		Trabajador res = Trabajador.genera(bean);
 		return res;
 	}
 
-	public static Trabajador modTrabajador(TrabajadorBean arg0, String arg1, String arg2, Sesion sesion) {
-		TrabajadorBean bean = ClienteREST.trabajadorModTrabajador(arg0, arg1, arg2, sesion);
+	public static Trabajador modTrabajador(TrabajadorBean arg0, String codRes, String codTrab, Sesion sesion) {
+		TrabajadorBean bean = ClienteREST.trabajadorModTrabajador(arg0, codRes, codTrab, sesion);
 		Trabajador res = Trabajador.genera(bean);
 		return res;
 	}
 
-	public static boolean borraTrabajador(String arg0, String arg1, Sesion sesion) {
-		boolean res = ClienteREST.trabajadorBorraTrabajador(arg0, arg1, sesion);
+	public static boolean borraTrabajador(String codRes, String codTrab, Sesion sesion) {
+		boolean res = ClienteREST.trabajadorBorraTrabajador(codRes, codTrab, sesion);
 		return res;
 	}
 
-	public static TurnoTrabajadorDia getHorarioTrabajadorDia(String arg0, String arg1, int arg2, Sesion sesion) {
-		TurnoTrabajadorDiaBean bean = ClienteREST.trabajadorGetHorarioTrabajadorDia(arg0, arg1, arg2, sesion);
+	public static TurnoTrabajadorDia getHorarioTrabajadorDia(String codRes, String codTrab, Date time, Sesion sesion) {
+		TurnoTrabajadorDiaBean bean = ClienteREST.trabajadorGetHorarioTrabajadorDia(codRes, codTrab, time, sesion);
 		TurnoTrabajadorDia res = TurnoTrabajadorDia.genera(bean);
 		return res;
 	}
-	public TurnoTrabajadorDia getHorarioTrabajadorDia(int arg2, Sesion sesion) {
-		return Trabajador.getHorarioTrabajadorDia(beanOriginal.getCodResidencia(), beanOriginal.getCodigo(), arg2, sesion);
+	public TurnoTrabajadorDia getHorarioTrabajadorDia(Date time, Sesion sesion) {
+		return Trabajador.getHorarioTrabajadorDia(beanOriginal.getCodResidencia(), beanOriginal.getCodigo(), time, sesion);
 	}
 
-	public static List<TurnoTrabajadorDia> getHorarioTrabajadorRango(String arg0, String arg1, int arg2, int arg3, Sesion sesion) {
-		List<TurnoTrabajadorDiaBean> listBeans = ClienteREST.trabajadorGetHorarioTrabajadorRango(arg0, arg1, arg2, arg3, sesion);
+	public static List<TurnoTrabajadorDia> getHorarioTrabajadorRango(String codRes, String codTrab, Date time_ini, Date time_fin, Sesion sesion) {
+		List<TurnoTrabajadorDiaBean> listBeans = ClienteREST.trabajadorGetHorarioTrabajadorRango(codRes, codTrab, time_ini, time_fin, sesion);
 		List<TurnoTrabajadorDia> list = new LinkedList<TurnoTrabajadorDia>();
 		if (listBeans != null && !listBeans.isEmpty()) {
 			for (TurnoTrabajadorDiaBean bean : listBeans) {
@@ -77,20 +78,20 @@ public class Trabajador implements Serializable {
 		}
 		return list;
 	}
-	public List<TurnoTrabajadorDia> getHorarioTrabajadorRango(int arg2, int arg3, Sesion sesion) {
-		return Trabajador.getHorarioTrabajadorRango(beanOriginal.getCodResidencia(), beanOriginal.getCodigo(), arg2, arg3, sesion);
+	public List<TurnoTrabajadorDia> getHorarioTrabajadorRango(Date time_ini, Date time_fin, Sesion sesion) {
+		return Trabajador.getHorarioTrabajadorRango(beanOriginal.getCodResidencia(), beanOriginal.getCodigo(), time_ini, time_fin, sesion);
 	}
 
-	public static int getNumPropuestasCambio(String arg0, String arg1, Sesion sesion) {
-		int res = ClienteREST.trabajadorGetNumPropuestasCambio(arg0, arg1, sesion);
+	public static int getNumPropuestasCambio(String codRes, String codTrab, Sesion sesion) {
+		int res = ClienteREST.trabajadorGetNumPropuestasCambio(codRes, codTrab, sesion);
 		return res;
 	}
 	public int getNumPropuestasCambio(Sesion sesion) {
 		return Trabajador.getNumPropuestasCambio(beanOriginal.getCodResidencia(), beanOriginal.getCodigo(), sesion);
 	}
 
-	public static List<PropuestaCambio> getPropuestasCambio(String arg0, String arg1, Sesion sesion) {
-		List<PropuestaCambioBean> listBeans = ClienteREST.trabajadorGetPropuestasCambio(arg0, arg1, sesion);
+	public static List<PropuestaCambio> getPropuestasCambio(String codRes, String codTrab,int limite, int offset, Sesion sesion) {
+		List<PropuestaCambioBean> listBeans = ClienteREST.trabajadorGetPropuestasCambio(codRes, codTrab, limite, offset ,sesion);
 		List<PropuestaCambio> list = new LinkedList<PropuestaCambio>();
 		if (listBeans != null && !listBeans.isEmpty()) {
 			for (PropuestaCambioBean bean : listBeans) {
@@ -99,8 +100,8 @@ public class Trabajador implements Serializable {
 		}
 		return list;
 	}
-	public List<PropuestaCambio> getPropuestasCambio(Sesion sesion) {
-		return Trabajador.getPropuestasCambio(beanOriginal.getCodResidencia(), beanOriginal.getCodigo(), sesion);
+	public List<PropuestaCambio> getPropuestasCambio(int limite, int offset, Sesion sesion) {
+		return Trabajador.getPropuestasCambio(beanOriginal.getCodResidencia(), beanOriginal.getCodigo(), limite, offset ,sesion);
 	}
 
 

@@ -21,9 +21,11 @@
 	<p><a href="${_raiz}/app/res/${residencia.codigo}">${residencia.nombre} (${residencia.ciudad})</a></p>
 	<p>&nbsp;</p>
 	
-	<c:if test="not empty trabajador">
+	<c:if test="${not empty trabajador}">
 	<h2>mi horario</h2>
-	<p>Horario de <a href="${_raiz}/app/res/${residencia.codigo}/trab/${trabajador.codigo}/horario">${trabajador.nombre} ${trabajador.apellidos}</a></p>
+	<p>
+		Horario de <a href="${_raiz}/app/res/${residencia.codigo}/trab/${trabajador.codigo}/horario">${trabajador.nombre} ${trabajador.apellidos}</a>
+	</p>
 	<p>&nbsp;</p>
 	</c:if>
 	</div>

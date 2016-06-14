@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.turnos.cliente.SesionUtils;
 import com.turnos.cliente.conexion.Sesion;
 import com.turnos.cliente.modelo.Residencia;
 import com.turnos.cliente.modelo.Trabajador;
@@ -18,22 +19,11 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
 
+//		System.out.println("preHandle:");
 		String s = request.getContextPath();
-		System.out.println(s);
-		Object sAux = request.getSession().getAttribute("SesionAPI");
-		boolean b = false;
-		Sesion sesionAPI = null;
-		if(sAux != null && sAux instanceof Sesion) {
-			sesionAPI = (Sesion) sAux;
-			if(sesionAPI.isActiva()) {
-				b = true;
-			} else {
-				sesionAPI.refresca();
-				if(sesionAPI.isActiva()) {
-					b = true;
-				}
-			}
-		}
+//		System.out.println(s);
+		Sesion sesionAPI = SesionUtils.getSesionFromRequest(request);
+		boolean b = sesionAPI!=null && sesionAPI.isActiva();
 		if(b) {
 			Usuario u = sesionAPI.getUsuarioLogeado();
 			request.setAttribute("usuario", u);
@@ -42,7 +32,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 				Residencia r = u.getResidencia(true, sesionAPI);
 				request.setAttribute("residencia", r);
 				Trabajador t = null;
-				if (u.getCodTrab()!=null) {
+				if (u.getCodTrab() != null) {
+//					System.out.println("u.getCodTrab():"+u.getCodTrab());
 //					t = Trabajador.getTrabajador(u.getCodRes(), u.getCodTrab(), sesionAPI);
 					t = u.getTrabajador(true, sesionAPI);
 				}

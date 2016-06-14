@@ -412,7 +412,7 @@ public class MensajeHandler extends GenericHandler {
 
 		if (codUser >= 0) {
 			try {
-				String q = QUERY_GET_MENSAJE_COD;
+				String q = QUERY_NUM_MENSAJES_USUARIO;
 				if (!incLeidos) {
 					q += " AND " + WHSN_QUERY_MENSAJE_NO_LEIDO;
 				}

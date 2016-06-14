@@ -55,7 +55,7 @@ public class TrabajadorServicio extends GenericServicio{
 		ErrorBean errorBean = new ErrorBean();
 		int[] limiteOffset = calculaLimiteOffsetCorrectos(limite, offset);
 		limite = limiteOffset[0]; offset = limiteOffset[1];
-		ArrayList<TrabajadorBean> listaTrabajadores = TrabajadorHandler.listTrabajadores(null, codTrab, errorBean);
+		ArrayList<TrabajadorBean> listaTrabajadores = TrabajadorHandler.listTrabajadores(null, codTrab, limite, offset, errorBean);
 
 		return creaRespuestaGenericaGETLista(listaTrabajadores, errorBean, limite, offset);
 	}
@@ -113,12 +113,12 @@ public class TrabajadorServicio extends GenericServicio{
 	public Response getHorarioTrabajadorDia(@PathParam(WebServUtils.P_PARAM_COD_RES) String codRes,
 			@PathParam(WebServUtils.P_PARAM_COD_TRAB) String codTrab,
 			@QueryParam(WebServUtils.Q_PARAM_FECHA)
-			@DefaultValue("-1") int time) {
+			@DefaultValue("-1") long time) {
 		Date fecha = null;
 		ErrorBean eb = new ErrorBean();
 		try {
 			if (time > 0) {
-				fecha = new Date(time * 1000l);
+				fecha = new Date(time);
 			} else {
 				fecha = Calendar.getInstance().getTime();
 			}
@@ -143,6 +143,7 @@ public class TrabajadorServicio extends GenericServicio{
 			@DefaultValue("-1") long time_ini,
 			@QueryParam(WebServUtils.Q_PARAM_TIEMPO_FIN)
 			@DefaultValue("-1") long time_fin) {
+		System.out.println();
 		Date fecha_ini = null;
 		Date fecha_fin = null;
 		ErrorBean eb = new ErrorBean();
@@ -162,7 +163,9 @@ public class TrabajadorServicio extends GenericServicio{
 			String[] params = {String.valueOf(time_ini), String.valueOf(time_fin)};
 			ErrorBeanFabrica.generaErrorBean(eb, Status.BAD_REQUEST, "s48", loc, msg, params);
 		}
-		
+
+		System.out.println(fecha_ini.toString());
+		System.out.println(fecha_fin.toString());
 		ArrayList<TurnoTrabajadorDiaBean> listaTurnos = TurnoTrabajadorDiaHandler.getTurnosTrabajadorRango(null, codRes, codTrab, fecha_ini, fecha_fin,  eb);
 
 		return creaRespuestaGenericaGETLista(listaTurnos, eb, -1, -1 );

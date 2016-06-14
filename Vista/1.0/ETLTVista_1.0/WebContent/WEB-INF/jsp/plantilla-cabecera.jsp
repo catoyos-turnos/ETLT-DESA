@@ -16,17 +16,20 @@
 						<span class="label label-num-msg"></span>
 					</a>
 				</li>
-			<c:if test="${not empty trabajador}">
+				
+			<c:choose>
+  			<c:when test="${not empty trabajador}">
 				<li class="${(id_pag eq 'CAMBIOS')?'active':''}">
 					<a href="${_raiz}/app/cambios"> CAMBIOS
 						<span class="label label-pill label-num-cambios-in"></span>
 						<span class="label label-pill label-num-cambios-out"></span>
 					</a>
 				</li>
+			</c:when>
 			<c:otherwise>
 				<li class="disabled"> <a href="#">CAMBIOS</a></li>
 			</c:otherwise>
-			</c:if>
+			</c:choose>
 				<li class="dropdown ${(id_pag eq 'PERFIL')?'active':''}">
 					<a href="${_raiz}/app/u/${usuario.idUsuario}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 						PERFIL<span class="caret"></span>
